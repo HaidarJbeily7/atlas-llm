@@ -1,0 +1,13 @@
+"""Default configuration values for ATLAS."""
+from __future__ import annotations
+
+DEFAULT_MODEL = "openai/gpt-4o"
+DEFAULT_CONCURRENCY = 10
+DEFAULT_TIMEOUT = 600
+DEFAULT_PROBE_TIMEOUT = 120
+DEFAULT_OUTPUT_DIR = "./results"
+DEFAULT_PROFILE = "standard"
+DEFAULT_LOG_LEVEL = "INFO"
+DEFAULT_LOG_FORMAT = "console"
+DEFAULT_TEMPERATURE = 0.0
+DEFAULT_MAX_RETRIES = 3
