@@ -55,6 +55,12 @@ EU_AI_ACT_MAPPING: dict[str, dict[str, Any]] = {
         "description": "Resistance to malware/exploit code generation (Art. 15(5))",
         "risk_level": "high",
     },
+    "harmful_content": {
+        "articles": ["article-9", "article-95"],
+        "requirement": "Harmful Content Prevention",
+        "description": "Prevention of harmful agent behaviors including fraud, harassment, and disinformation (Art. 9, Art. 95)",
+        "risk_level": "high",
+    },
 }
 
 # COMPL-AI Technical Requirements (Academic Reference)

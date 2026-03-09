@@ -112,6 +112,7 @@ def discover_builtin_plugins() -> None:
         "atlas.probes.hallucination",
         "atlas.probes.web_injection",
         "atlas.probes.malware",
+        "atlas.probes.agent_harm",
         "atlas.detectors.keyword",
         "atlas.detectors.refusal",
         "atlas.detectors.llm_judge",

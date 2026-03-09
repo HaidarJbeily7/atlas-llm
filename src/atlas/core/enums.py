@@ -34,6 +34,7 @@ class VulnerabilityCategory(str, Enum):
     MALWARE = "malware"
     WEB_INJECTION = "web_injection"
     ENCODING = "encoding"
+    HARMFUL_CONTENT = "harmful_content"
     OTHER = "other"
 
 

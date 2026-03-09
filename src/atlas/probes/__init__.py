@@ -13,6 +13,7 @@ PROBE_MODULES = {
     "hallucination": "atlas.probes.hallucination",
     "web_injection": "atlas.probes.web_injection",
     "malware": "atlas.probes.malware",
+    "agent_harm": "atlas.probes.agent_harm",
 }
 
 # Mapping from probe category to recommended default detectors
@@ -25,4 +26,5 @@ DEFAULT_PROBE_DETECTORS = {
     "hallucination": ["llm_judge"],
     "web_injection": ["keyword"],
     "malware": ["refusal"],
+    "agent_harm": ["refusal", "keyword"],
 }

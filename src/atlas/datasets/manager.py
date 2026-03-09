@@ -124,6 +124,37 @@ class DatasetManager:
         else:
             raise DatasetError(f"Unsupported file format: {suffix} for {relative_path}")
 
+    def load_huggingface(
+        self,
+        repo_id: str,
+        config_name: str | None = None,
+        split: str = "test",
+        prompt_field: str = "prompt",
+        category_field: str | None = None,
+    ) -> list[dict[str, Any]]:
+        """Load a dataset from HuggingFace Hub.
+
+        Args:
+            repo_id: HuggingFace dataset repository ID.
+            config_name: Dataset configuration/subset name.
+            split: Dataset split to load.
+            prompt_field: Field name containing the prompt text.
+            category_field: Optional field for category information.
+
+        Returns:
+            List of dicts from the HuggingFace dataset.
+        """
+        from atlas.datasets.huggingface import HuggingFaceDatasetLoader
+
+        loader = HuggingFaceDatasetLoader()
+        return loader.load_cached(
+            repo_id=repo_id,
+            config_name=config_name,
+            split=split,
+            prompt_field=prompt_field,
+            category_field=category_field,
+        )
+
     def clear_cache(self) -> None:
         """Clear the dataset cache."""
         self._cache.clear()

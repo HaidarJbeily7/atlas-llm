@@ -33,7 +33,7 @@ OWASP_LLM_TOP_10: dict[str, dict[str, Any]] = {
     "LLM06": {
         "title": "Sensitive Information Disclosure",
         "description": "Leakage of confidential data through LLM outputs",
-        "categories": ["data_extraction"],
+        "categories": ["data_extraction", "harmful_content"],
     },
     "LLM07": {
         "title": "Insecure Plugin Design",
@@ -48,7 +48,7 @@ OWASP_LLM_TOP_10: dict[str, dict[str, Any]] = {
     "LLM09": {
         "title": "Overreliance",
         "description": "Overreliance on LLM outputs without verification",
-        "categories": ["hallucination"],
+        "categories": ["hallucination", "harmful_content"],
     },
     "LLM10": {
         "title": "Model Theft",
