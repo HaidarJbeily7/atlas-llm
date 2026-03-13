@@ -2,12 +2,13 @@
 from __future__ import annotations
 
 import asyncio
+import json
 from typing import Any
 
 import litellm
 
 from atlas.core.errors import AtlasConnectionError, AtlasTimeoutError, retry_on_transient_error
-from atlas.core.models import Attempt
+from atlas.core.models import Attempt, Message, ToolCall, ToolDefinition
 from atlas.logging.setup import get_logger
 from atlas.plugins.registry import register
 
@@ -58,7 +59,7 @@ class LiteLLMGenerator:
         )
 
     @classmethod
-    def from_config(cls, config) -> LiteLLMGenerator:
+    def from_config(cls, config: Any) -> LiteLLMGenerator:
         """Create generator from ProviderConfig."""
         return cls(
             model_name=config.model,
@@ -137,6 +138,142 @@ class LiteLLMGenerator:
                 ) from e
             raise
 
+    @retry_on_transient_error(max_attempts=3)
+    async def generate_conversation(
+        self, messages: list[Message], **kwargs: Any
+    ) -> str:
+        """Generate a response given a full conversation history.
+
+        Args:
+            messages: Full message history.
+            **kwargs: Additional kwargs passed to litellm.acompletion.
+
+        Returns:
+            The model's response text.
+        """
+        msg_dicts: list[dict[str, Any]] = []
+        for msg in messages:
+            d: dict[str, Any] = {"role": msg.role, "content": msg.content}
+            if msg.name:
+                d["name"] = msg.name
+            if msg.tool_call_id:
+                d["tool_call_id"] = msg.tool_call_id
+            msg_dicts.append(d)
+
+        call_kwargs = self._build_kwargs(**kwargs)
+
+        try:
+            response = await litellm.acompletion(messages=msg_dicts, **call_kwargs)
+            content = response.choices[0].message.content or ""
+            logger.debug(
+                "conversation_generation_complete",
+                model=self.model_name,
+                turns=len(messages),
+                response_len=len(content),
+            )
+            return content
+        except litellm.exceptions.Timeout as e:
+            raise AtlasTimeoutError(
+                f"LLM request timed out after {self.timeout}s",
+                operation="generate_conversation",
+                timeout_seconds=float(self.timeout),
+            ) from e
+        except Exception as e:
+            if "rate_limit" in str(e).lower() or "429" in str(e):
+                raise AtlasConnectionError(
+                    f"Rate limited by provider: {e}",
+                    provider=self.model_name.split("/")[0] if "/" in self.model_name else "unknown",
+                ) from e
+            raise
+
+    @retry_on_transient_error(max_attempts=3)
+    async def generate_with_tools(
+        self,
+        messages: list[Message],
+        tools: list[ToolDefinition],
+        **kwargs: Any,
+    ) -> dict[str, Any]:
+        """Generate a response with tool/function calling support.
+
+        Args:
+            messages: Conversation messages.
+            tools: Available tool definitions.
+            **kwargs: Additional kwargs.
+
+        Returns:
+            Dict with 'content' (str), 'tool_calls' (list[ToolCall]).
+        """
+        msg_dicts: list[dict[str, Any]] = []
+        for msg in messages:
+            d: dict[str, Any] = {"role": msg.role, "content": msg.content}
+            if msg.name:
+                d["name"] = msg.name
+            if msg.tool_call_id:
+                d["tool_call_id"] = msg.tool_call_id
+            msg_dicts.append(d)
+
+        # Convert tool definitions to OpenAI format
+        tool_dicts = [
+            {
+                "type": "function",
+                "function": {
+                    "name": t.name,
+                    "description": t.description,
+                    "parameters": t.parameters,
+                },
+            }
+            for t in tools
+        ]
+
+        call_kwargs = self._build_kwargs(**kwargs)
+
+        try:
+            response = await litellm.acompletion(
+                messages=msg_dicts, tools=tool_dicts, **call_kwargs
+            )
+            msg = response.choices[0].message
+            content = msg.content or ""
+
+            parsed_tool_calls: list[ToolCall] = []
+            if hasattr(msg, "tool_calls") and msg.tool_calls:
+                for tc in msg.tool_calls:
+                    try:
+                        args = json.loads(tc.function.arguments) if tc.function.arguments else {}
+                    except (json.JSONDecodeError, AttributeError):
+                        args = {}
+                    parsed_tool_calls.append(
+                        ToolCall(
+                            id=tc.id or "",
+                            function_name=tc.function.name,
+                            arguments=args,
+                        )
+                    )
+
+            logger.debug(
+                "tool_generation_complete",
+                model=self.model_name,
+                content_len=len(content),
+                tool_calls=len(parsed_tool_calls),
+            )
+
+            return {
+                "content": content,
+                "tool_calls": parsed_tool_calls,
+            }
+        except litellm.exceptions.Timeout as e:
+            raise AtlasTimeoutError(
+                f"LLM request timed out after {self.timeout}s",
+                operation="generate_with_tools",
+                timeout_seconds=float(self.timeout),
+            ) from e
+        except Exception as e:
+            if "rate_limit" in str(e).lower() or "429" in str(e):
+                raise AtlasConnectionError(
+                    f"Rate limited by provider: {e}",
+                    provider=self.model_name.split("/")[0] if "/" in self.model_name else "unknown",
+                ) from e
+            raise
+
     async def generate_batch(
         self,
         prompts: list[str],
@@ -144,17 +281,7 @@ class LiteLLMGenerator:
         concurrency: int = 5,
         **kwargs: Any,
     ) -> list[str]:
-        """Generate responses for multiple prompts with concurrency control.
-
-        Args:
-            prompts: List of prompts.
-            system_prompt: Optional system prompt applied to all.
-            concurrency: Max concurrent requests.
-            **kwargs: Additional kwargs passed to litellm.acompletion.
-
-        Returns:
-            List of response texts (in same order as prompts).
-        """
+        """Generate responses for multiple prompts with concurrency control."""
         semaphore = asyncio.Semaphore(concurrency)
 
         async def _generate_one(prompt: str) -> str:
@@ -165,21 +292,47 @@ class LiteLLMGenerator:
         return await asyncio.gather(*tasks)
 
     async def generate_for_attempt(self, attempt: Attempt, **kwargs: Any) -> Attempt:
-        """Generate response for an Attempt, filling in the response field.
+        """Generate response for an Attempt, filling in the response field."""
+        if attempt.images:
+            # Multimodal: build content array with image parts
+            content_parts: list[dict[str, Any]] = [
+                {"type": "text", "text": attempt.prompt}
+            ]
+            for img in attempt.images:
+                content_parts.append({
+                    "type": "image_url",
+                    "image_url": {"url": img},
+                })
+            messages_list: list[dict[str, Any]] = []
+            if attempt.system_prompt:
+                messages_list.append({"role": "system", "content": attempt.system_prompt})
+            messages_list.append({"role": "user", "content": content_parts})
 
-        Args:
-            attempt: Attempt with prompt (and optional system_prompt).
-            **kwargs: Additional kwargs passed to litellm.acompletion.
-
-        Returns:
-            The same Attempt with response filled in.
-        """
-        response = await self.generate(
-            attempt.prompt,
-            system_prompt=attempt.system_prompt,
-            **kwargs,
-        )
-        attempt.response = response
+            call_kwargs = self._build_kwargs(**kwargs)
+            try:
+                response = await litellm.acompletion(messages=messages_list, **call_kwargs)
+                attempt.response = response.choices[0].message.content or ""
+            except Exception as e:
+                logger.warning("multimodal_generation_error", error=str(e))
+                attempt.response = f"[Error: {e}]"
+        elif attempt.tool_definitions:
+            # Tool-calling mode
+            msgs = [Message(role="user", content=attempt.prompt)]
+            if attempt.system_prompt:
+                msgs.insert(0, Message(role="system", content=attempt.system_prompt))
+            result = await self.generate_with_tools(msgs, attempt.tool_definitions, **kwargs)
+            attempt.response = result["content"]
+            attempt.tool_calls = result["tool_calls"]
+        elif attempt.messages:
+            # Conversational mode - use existing message history
+            attempt.response = await self.generate_conversation(attempt.messages, **kwargs)
+        else:
+            response = await self.generate(
+                attempt.prompt,
+                system_prompt=attempt.system_prompt,
+                **kwargs,
+            )
+            attempt.response = response
         return attempt
 
     async def generate_for_attempts(

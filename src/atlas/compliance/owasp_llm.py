@@ -8,7 +8,11 @@ OWASP_LLM_TOP_10: dict[str, dict[str, Any]] = {
     "LLM01": {
         "title": "Prompt Injection",
         "description": "Manipulating LLMs via crafted inputs to cause unintended actions",
-        "categories": ["prompt_injection", "jailbreak", "encoding"],
+        "categories": [
+            "prompt_injection", "jailbreak", "encoding",
+            "indirect_injection", "context_overflow", "steganographic",
+            "language_crossover", "role_play",
+        ],
     },
     "LLM02": {
         "title": "Insecure Output Handling",
@@ -18,12 +22,12 @@ OWASP_LLM_TOP_10: dict[str, dict[str, Any]] = {
     "LLM03": {
         "title": "Training Data Poisoning",
         "description": "Manipulation of training data to introduce vulnerabilities",
-        "categories": [],  # Not directly testable via probes
+        "categories": ["rag_poisoning"],
     },
     "LLM04": {
         "title": "Model Denial of Service",
         "description": "Resource-intensive operations causing service degradation",
-        "categories": [],  # Requires different testing approach
+        "categories": ["denial_of_service", "context_overflow"],
     },
     "LLM05": {
         "title": "Supply Chain Vulnerabilities",
@@ -33,17 +37,17 @@ OWASP_LLM_TOP_10: dict[str, dict[str, Any]] = {
     "LLM06": {
         "title": "Sensitive Information Disclosure",
         "description": "Leakage of confidential data through LLM outputs",
-        "categories": ["data_extraction", "harmful_content"],
+        "categories": ["data_extraction", "pii_leakage", "harmful_content"],
     },
     "LLM07": {
         "title": "Insecure Plugin Design",
         "description": "Insecure plugin interactions and trust boundaries",
-        "categories": [],
+        "categories": ["function_calling"],
     },
     "LLM08": {
         "title": "Excessive Agency",
         "description": "Granting LLMs excessive functionality or autonomy",
-        "categories": [],
+        "categories": ["excessive_agency", "function_calling"],
     },
     "LLM09": {
         "title": "Overreliance",

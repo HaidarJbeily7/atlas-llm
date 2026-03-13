@@ -28,7 +28,7 @@ from atlas.evaluators.security_score import SecurityScoreEvaluator
 from atlas.generators.litellm import LiteLLMGenerator
 from atlas.logging.setup import get_logger
 from atlas.probes import PROBE_MODULES
-from atlas.probes.base import BaseProbe
+from atlas.probes.base import AdaptiveProbe, BaseProbe, ConversationalProbe
 
 logger = get_logger(__name__)
 
@@ -52,6 +52,12 @@ def _resolve_detector(name: str, config: dict[str, Any] | None = None) -> BaseDe
         elif name == "similarity":
             from atlas.detectors.similarity import SimilarityDetector
             return SimilarityDetector(**(config or {}))
+        elif name == "tool_call":
+            from atlas.detectors.tool_call_detector import ToolCallDetector
+            return ToolCallDetector(**(config or {}))
+        elif name == "semantic_judge":
+            from atlas.detectors.semantic_judge import SemanticJudgeDetector
+            return SemanticJudgeDetector(**(config or {}))
     except ImportError:
         pass
 
@@ -75,6 +81,8 @@ def _resolve_probe(name: str) -> BaseProbe:
             isinstance(attr, type)
             and issubclass(attr, BaseProbe)
             and attr is not BaseProbe
+            and attr is not ConversationalProbe
+            and attr is not AdaptiveProbe
             and hasattr(attr, "name")
             and attr.name == name
         ):
@@ -103,6 +111,9 @@ def _determine_severity(
         VulnerabilityCategory.JAILBREAK,
         VulnerabilityCategory.MALWARE,
         VulnerabilityCategory.DATA_EXTRACTION,
+        VulnerabilityCategory.FUNCTION_CALLING,
+        VulnerabilityCategory.EXCESSIVE_AGENCY,
+        VulnerabilityCategory.INDIRECT_INJECTION,
     }
 
     if category in high_risk:
@@ -138,17 +149,7 @@ class ScanRunner:
         detector_names: list[str] | None = None,
         checkpoint_enabled: bool = True,
     ) -> ScanResult:
-        """Execute a full security scan.
-
-        Args:
-            profile: Profile name or ProfileConfig. Defaults to 'standard'.
-            probe_names: Override probes (ignores profile).
-            detector_names: Override detectors (ignores profile).
-            checkpoint_enabled: Enable checkpoint/resume.
-
-        Returns:
-            Complete ScanResult with scores and compliance assessment.
-        """
+        """Execute a full security scan."""
         start_time = time.time()
 
         # Resolve profile
@@ -276,11 +277,17 @@ class ScanRunner:
 
         logger.info("probe_starting", probe=probe_name, attempts=len(attempts))
 
-        # Send all attempts to LLM
-        completed_attempts = await self.generator.generate_for_attempts(
-            attempts,
-            concurrency=self.config.scan.concurrency,
-        )
+        # Check if this is a conversational probe
+        if isinstance(probe, ConversationalProbe):
+            completed_attempts = await self._run_conversational_probe(probe, attempts)
+        elif isinstance(probe, AdaptiveProbe):
+            completed_attempts = await self._run_adaptive_probe(probe, attempts)
+        else:
+            # Standard single-turn: send all attempts to LLM
+            completed_attempts = await self.generator.generate_for_attempts(
+                attempts,
+                concurrency=self.config.scan.concurrency,
+            )
 
         # Run detectors on each attempt
         findings: list[Finding] = []
@@ -310,6 +317,48 @@ class ScanRunner:
             findings=findings,
             compliance_articles=compliance_articles,
         )
+
+    async def _run_conversational_probe(
+        self,
+        probe: ConversationalProbe,
+        attempts: list[Attempt],
+    ) -> list[Attempt]:
+        """Run a conversational probe with multi-turn interactions."""
+        semaphore = asyncio.Semaphore(self.config.scan.concurrency)
+
+        async def _run_one(attempt: Attempt) -> Attempt:
+            async with semaphore:
+                return await probe.run_conversation(self.generator, attempt)
+
+        tasks = [_run_one(a) for a in attempts]
+        return await asyncio.gather(*tasks)
+
+    async def _run_adaptive_probe(
+        self,
+        probe: AdaptiveProbe,
+        attempts: list[Attempt],
+    ) -> list[Attempt]:
+        """Run an adaptive probe with attacker LLM."""
+        # Create attacker generator if configured
+        attacker_model = probe.attacker_model or self.config.provider.model
+        attacker_generator = LiteLLMGenerator(
+            model_name=attacker_model,
+            api_key=self.config.provider.api_key,
+            api_base=self.config.provider.api_base,
+            timeout=self.config.provider.timeout,
+            temperature=0.7,  # Higher temperature for creative attacks
+        )
+
+        semaphore = asyncio.Semaphore(max(1, self.config.scan.concurrency // 2))
+
+        async def _run_one(attempt: Attempt) -> Attempt:
+            async with semaphore:
+                return await probe.run_adaptive_attack(
+                    self.generator, attacker_generator, attempt
+                )
+
+        tasks = [_run_one(a) for a in attempts]
+        return await asyncio.gather(*tasks)
 
     async def _detect_and_create_finding(
         self,

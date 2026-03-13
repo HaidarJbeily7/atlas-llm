@@ -73,7 +73,14 @@ def main(
 from atlas.cli.scan import scan_app
 from atlas.cli.report import report_app
 from atlas.cli.config import config_app
+from atlas.cli.history import history_app
 
 app.add_typer(scan_app, name="scan", help="Run security scans")
 app.add_typer(report_app, name="report", help="Generate reports")
 app.add_typer(config_app, name="config", help="Manage configuration")
+app.add_typer(history_app, name="history", help="View and manage scan history")
+
+# Register interactive REPL command
+from atlas.cli.repl import interactive_command
+
+app.command("interactive", help="Start an interactive REPL session")(interactive_command)

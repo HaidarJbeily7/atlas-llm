@@ -19,6 +19,7 @@ _REGISTRIES: dict[str, dict[str, type]] = {
     "generators": {},
     "evaluators": {},
     "reporters": {},
+    "targets": {},
 }
 
 
@@ -26,7 +27,7 @@ def register(plugin_type: str, name: str | None = None):
     """Decorator to register a plugin class.
 
     Args:
-        plugin_type: One of 'probes', 'detectors', 'generators', 'evaluators', 'reporters'
+        plugin_type: One of 'probes', 'detectors', 'generators', 'evaluators', 'reporters', 'targets'
         name: Optional name override; defaults to class name
 
     Usage:
@@ -93,6 +94,44 @@ def discover_entrypoints(group: str = "atlas.plugins") -> None:
         logger.warning("entrypoint_discovery_failed", error=str(e))
 
 
+def load_plugin_from_url(url: str) -> None:
+    """Load a plugin from a URL or git repository.
+
+    Supports:
+    - Git repos: git+https://github.com/user/repo.git
+    - Direct Python files: https://example.com/my_probe.py
+    """
+    import subprocess
+    import sys
+    import tempfile
+
+    if url.startswith("git+"):
+        # Install from git repo
+        subprocess.check_call(
+            [sys.executable, "-m", "pip", "install", url],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        logger.info("plugin_installed_from_git", url=url)
+    else:
+        # Download and import single file
+        import httpx
+
+        with tempfile.NamedTemporaryFile(suffix=".py", delete=False, mode="w") as f:
+            resp = httpx.get(url)
+            resp.raise_for_status()
+            f.write(resp.text)
+            temp_path = f.name
+
+        import importlib.util
+
+        spec = importlib.util.spec_from_file_location("external_plugin", temp_path)
+        if spec and spec.loader:
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            logger.info("plugin_loaded_from_url", url=url)
+
+
 def import_module_plugins(module_path: str) -> None:
     """Import a module to trigger @register decorators."""
     try:
@@ -104,6 +143,7 @@ def import_module_plugins(module_path: str) -> None:
 def discover_builtin_plugins() -> None:
     """Import all built-in ATLAS plugin modules to trigger registration."""
     builtin_modules = [
+        # Probes
         "atlas.probes.prompt_injection",
         "atlas.probes.jailbreak",
         "atlas.probes.encoding",
@@ -113,10 +153,36 @@ def discover_builtin_plugins() -> None:
         "atlas.probes.web_injection",
         "atlas.probes.malware",
         "atlas.probes.agent_harm",
+        "atlas.probes.crescendo",
+        "atlas.probes.multi_turn_injection",
+        "atlas.probes.pii_leakage",
+        "atlas.probes.bias_fairness",
+        "atlas.probes.excessive_agency",
+        "atlas.probes.denial_of_service",
+        "atlas.probes.rag_poisoning",
+        "atlas.probes.function_calling_probe",
+        "atlas.probes.indirect_injection",
+        "atlas.probes.language_crossover",
+        "atlas.probes.role_play",
+        "atlas.probes.context_overflow",
+        "atlas.probes.steganographic",
+        "atlas.probes.social_engineering",
+        "atlas.probes.visual_injection",
+        # Detectors
         "atlas.detectors.keyword",
         "atlas.detectors.refusal",
         "atlas.detectors.llm_judge",
+        "atlas.detectors.tool_call_detector",
+        "atlas.detectors.semantic_judge",
+        # Generators
         "atlas.generators.litellm",
+        # Targets
+        "atlas.targets.llm_target",
+        "atlas.targets.http_target",
+        "atlas.targets.rag_target",
+        # Reporters
+        "atlas.reports.sarif_reporter",
+        "atlas.reports.junit_reporter",
     ]
     for mod in builtin_modules:
         try:

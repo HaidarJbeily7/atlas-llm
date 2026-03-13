@@ -1,0 +1,165 @@
+name: "ATLAS Security Scan"
+description: "Run ATLAS LLM security scans in CI/CD pipelines"
+author: "ATLAS Framework"
+
+branding:
+  icon: "shield"
+  color: "blue"
+
+inputs:
+  model:
+    description: "LLM model identifier (e.g. openai/gpt-4o, anthropic/claude-3-opus)"
+    required: true
+  profile:
+    description: "Scan profile to use (quick, standard, comprehensive, eu-ai-act)"
+    required: false
+    default: "standard"
+  probes:
+    description: "Comma-separated list of specific probes to run (overrides profile)"
+    required: false
+    default: ""
+  threshold:
+    description: "Minimum security score (0-100) to pass the check"
+    required: false
+    default: "80"
+  api-key:
+    description: "API key for the LLM provider (pass as a secret)"
+    required: true
+  output-format:
+    description: "Report output format (sarif, json, markdown, html)"
+    required: false
+    default: "sarif"
+
+outputs:
+  score:
+    description: "Overall security score (0-100)"
+    value: ${{ steps.scan.outputs.score }}
+  risk-level:
+    description: "Risk level assessment (minimal, low, medium, high, critical)"
+    value: ${{ steps.scan.outputs.risk-level }}
+  pass-rate:
+    description: "Overall probe pass rate percentage"
+    value: ${{ steps.scan.outputs.pass-rate }}
+  report-path:
+    description: "Path to the generated report file"
+    value: ${{ steps.scan.outputs.report-path }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+
+    - name: Install ATLAS
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip
+        pip install atlas-llm
+
+    - name: Run ATLAS scan
+      id: scan
+      shell: bash
+      env:
+        ATLAS_API_KEY: ${{ inputs.api-key }}
+      run: |
+        # Build the atlas scan command
+        CMD="atlas scan run"
+        CMD="$CMD --model '${{ inputs.model }}'"
+        CMD="$CMD --profile '${{ inputs.profile }}'"
+        CMD="$CMD --output-format '${{ inputs.output-format }}'"
+        CMD="$CMD --threshold '${{ inputs.threshold }}'"
+        CMD="$CMD --ci"
+
+        # Add specific probes if provided
+        if [ -n "${{ inputs.probes }}" ]; then
+          CMD="$CMD --probes '${{ inputs.probes }}'"
+        fi
+
+        echo "::group::ATLAS Scan Configuration"
+        echo "Model: ${{ inputs.model }}"
+        echo "Profile: ${{ inputs.profile }}"
+        echo "Threshold: ${{ inputs.threshold }}"
+        echo "Output Format: ${{ inputs.output-format }}"
+        if [ -n "${{ inputs.probes }}" ]; then
+          echo "Probes: ${{ inputs.probes }}"
+        fi
+        echo "::endgroup::"
+
+        # Determine output directory and file extension
+        OUTPUT_DIR="$GITHUB_WORKSPACE/.atlas/results"
+        mkdir -p "$OUTPUT_DIR"
+
+        case "${{ inputs.output-format }}" in
+          sarif) EXT="sarif" ;;
+          json)  EXT="json" ;;
+          markdown) EXT="md" ;;
+          html)  EXT="html" ;;
+          *)     EXT="json" ;;
+        esac
+        REPORT_PATH="$OUTPUT_DIR/atlas-report.$EXT"
+
+        CMD="$CMD --output '$REPORT_PATH'"
+
+        echo "::group::Running ATLAS Scan"
+        # Execute the scan and capture the exit code
+        set +e
+        eval $CMD 2>&1 | tee "$OUTPUT_DIR/scan-output.log"
+        SCAN_EXIT_CODE=${PIPESTATUS[0]}
+        set -e
+        echo "::endgroup::"
+
+        # Parse results from the scan output log
+        SCORE=$(grep -oP '(?<=overall_score=)[0-9.]+' "$OUTPUT_DIR/scan-output.log" | tail -1 || echo "0")
+        RISK_LEVEL=$(grep -oP '(?<=risk_level=)[a-z]+' "$OUTPUT_DIR/scan-output.log" | tail -1 || echo "unknown")
+
+        # Calculate pass rate from the log output
+        PASS_RATE=$(grep -oP '(?<=pass_rate=)[0-9.]+' "$OUTPUT_DIR/scan-output.log" | \
+          awk '{ total += $1; count++ } END { if (count > 0) printf "%.1f", total/count; else print "0.0" }' || echo "0.0")
+
+        # Set outputs
+        echo "score=$SCORE" >> "$GITHUB_OUTPUT"
+        echo "risk-level=$RISK_LEVEL" >> "$GITHUB_OUTPUT"
+        echo "pass-rate=$PASS_RATE" >> "$GITHUB_OUTPUT"
+        echo "report-path=$REPORT_PATH" >> "$GITHUB_OUTPUT"
+
+        # Generate summary
+        echo "## ATLAS Security Scan Results" >> "$GITHUB_STEP_SUMMARY"
+        echo "" >> "$GITHUB_STEP_SUMMARY"
+        echo "| Metric | Value |" >> "$GITHUB_STEP_SUMMARY"
+        echo "|--------|-------|" >> "$GITHUB_STEP_SUMMARY"
+        echo "| Model | \`${{ inputs.model }}\` |" >> "$GITHUB_STEP_SUMMARY"
+        echo "| Security Score | **${SCORE}/100** |" >> "$GITHUB_STEP_SUMMARY"
+        echo "| Risk Level | ${RISK_LEVEL} |" >> "$GITHUB_STEP_SUMMARY"
+        echo "| Pass Rate | ${PASS_RATE}% |" >> "$GITHUB_STEP_SUMMARY"
+        echo "| Threshold | ${{ inputs.threshold }} |" >> "$GITHUB_STEP_SUMMARY"
+        echo "" >> "$GITHUB_STEP_SUMMARY"
+
+        # Determine pass/fail based on threshold
+        THRESHOLD=${{ inputs.threshold }}
+        SCORE_INT=$(echo "$SCORE" | awk '{printf "%d", $1}')
+        if [ "$SCORE_INT" -lt "$THRESHOLD" ]; then
+          echo "::error::ATLAS scan failed: security score ${SCORE} is below threshold ${THRESHOLD}"
+          echo "| **Result** | FAIL |" >> "$GITHUB_STEP_SUMMARY"
+          exit 1
+        else
+          echo "ATLAS scan passed: security score ${SCORE} meets threshold ${THRESHOLD}"
+          echo "| **Result** | PASS |" >> "$GITHUB_STEP_SUMMARY"
+        fi
+
+    - name: Upload SARIF results
+      if: inputs.output-format == 'sarif' && always()
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: ${{ steps.scan.outputs.report-path }}
+        category: "atlas-security-scan"
+      continue-on-error: true
+
+    - name: Upload scan artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: atlas-scan-report
+        path: .atlas/results/
+        retention-days: 30

@@ -57,10 +57,18 @@ embeddings = [
 huggingface = [
     "datasets>=2.0",
 ]
+repl = [
+    "prompt_toolkit>=3.0",
+]
+images = [
+    "pillow>=10.0",
+]
 all = [
     "weasyprint>=68.0",
     "sentence-transformers>=2.0",
     "datasets>=2.0",
+    "prompt_toolkit>=3.0",
+    "pillow>=10.0",
 ]
 dev = [
     "pytest>=8.0",

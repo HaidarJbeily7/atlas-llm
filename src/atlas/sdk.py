@@ -12,6 +12,14 @@ Usage:
     print(result.summary())
     print(result.score)
     result.save("report.json")
+
+    # Compare multiple models
+    comparison = await atlas.compare(
+        models=["openai/gpt-4o", "anthropic/claude-3-5-sonnet"],
+        probes=["agent_harm"],
+    )
+    for entry in comparison.leaderboard:
+        print(f"{entry.model_name}: {entry.overall_score:.1f}")
 """
 from __future__ import annotations
 
@@ -21,7 +29,7 @@ from pathlib import Path
 from typing import Any
 
 from atlas.config.models import AtlasConfig, ProviderConfig, ScanConfig
-from atlas.core.models import ScanResult
+from atlas.core.models import ComparisonResult, ScanResult
 
 
 class ScanReport:
@@ -261,5 +269,97 @@ def scan_sync(
             temperature=temperature,
             timeout=timeout,
             config=config,
+        )
+    )
+
+
+async def compare(
+    models: list[str],
+    probes: list[str] | None = None,
+    detectors: list[str] | None = None,
+    profile: str | None = None,
+    api_key: str | None = None,
+    concurrency: int = 10,
+    temperature: float = 0.0,
+    timeout: int = 30,
+) -> ComparisonResult:
+    """Compare multiple LLM models on the same security probes.
+
+    Runs identical scan configurations against each model concurrently
+    and returns a :class:`ComparisonResult` with a ranked leaderboard.
+
+    Args:
+        models: List of LiteLLM model strings to evaluate
+            (e.g. ``["openai/gpt-4o", "anthropic/claude-3-5-sonnet"]``).
+        probes: List of probe names to run. If None, uses profile defaults.
+        detectors: List of detector names. If None, uses probe defaults.
+        profile: Scan profile name (e.g. "quick", "standard", "comprehensive").
+        api_key: API key for the LLM provider(s).
+        concurrency: Max concurrent requests per model scan.
+        temperature: LLM temperature setting.
+        timeout: Per-request timeout in seconds.
+
+    Returns:
+        ComparisonResult with per-model scan results and a ranked leaderboard.
+
+    Example:
+        >>> result = await atlas.compare(
+        ...     models=["openai/gpt-4o", "anthropic/claude-3-5-sonnet"],
+        ...     probes=["agent_harm"],
+        ... )
+        >>> for entry in result.leaderboard:
+        ...     print(f"{entry.model_name}: {entry.overall_score:.1f}")
+    """
+    from atlas.engine.comparator import ModelComparator  # noqa: PLC0415
+
+    base_config = AtlasConfig(
+        provider=ProviderConfig(
+            api_key=api_key,
+            timeout=timeout,
+            temperature=temperature,
+        ),
+        scan=ScanConfig(concurrency=concurrency),
+    )
+
+    comparator = ModelComparator(base_config)
+    return await comparator.compare(
+        models=models,
+        profile=profile,
+        probe_names=probes,
+        detector_names=detectors,
+    )
+
+
+def compare_sync(
+    models: list[str],
+    probes: list[str] | None = None,
+    detectors: list[str] | None = None,
+    profile: str | None = None,
+    api_key: str | None = None,
+    concurrency: int = 10,
+    temperature: float = 0.0,
+    timeout: int = 30,
+) -> ComparisonResult:
+    """Synchronous wrapper around compare().
+
+    Same parameters as compare(). Runs the async comparison in a new event loop.
+
+    Example:
+        >>> result = atlas.compare_sync(
+        ...     models=["openai/gpt-4o", "anthropic/claude-3-5-sonnet"],
+        ...     probes=["agent_harm"],
+        ... )
+        >>> print(result.leaderboard[0].model_name)
+    """
+    return asyncio.run(
+        compare(
+            models=models,
+            probes=probes,
+            detectors=detectors,
+            profile=profile,
+            api_key=api_key,
+            concurrency=concurrency,
+            temperature=temperature,
+            timeout=timeout,
         )
     )

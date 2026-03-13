@@ -1,11 +1,11 @@
 """Detectors for classifying LLM responses."""
 from atlas.detectors.base import (
-    BaseDetector,
-    AnyOfDetector,
     AllOfDetector,
+    AnyOfDetector,
+    BaseDetector,
     NoneOfDetector,
-    any_of,
     all_of,
+    any_of,
     none_of,
 )
 from atlas.detectors.keyword import KeywordDetector
@@ -29,4 +29,6 @@ DETECTOR_REGISTRY = {
     "refusal": "atlas.detectors.refusal.RefusalDetector",
     "similarity": "atlas.detectors.similarity.SimilarityDetector",
     "llm_judge": "atlas.detectors.llm_judge.LLMJudgeDetector",
+    "tool_call": "atlas.detectors.tool_call_detector.ToolCallDetector",
+    "semantic_judge": "atlas.detectors.semantic_judge.SemanticJudgeDetector",
 }

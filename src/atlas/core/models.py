@@ -16,6 +16,41 @@ from atlas.core.enums import (
 )
 
 
+class Message(BaseModel):
+    """A single message in a conversation."""
+
+    role: str  # "system", "user", "assistant", "tool"
+    content: str
+    name: str | None = None
+    tool_calls: list[ToolCall] | None = None
+    tool_call_id: str | None = None
+
+
+class ToolCall(BaseModel):
+    """A tool/function call made by the LLM."""
+
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    function_name: str
+    arguments: dict[str, Any] = Field(default_factory=dict)
+    type: str = "function"
+
+
+class ToolResponse(BaseModel):
+    """A response from a tool/function execution."""
+
+    tool_call_id: str
+    output: str
+    error: str | None = None
+
+
+class ToolDefinition(BaseModel):
+    """Definition of a tool/function available to the LLM."""
+
+    name: str
+    description: str = ""
+    parameters: dict[str, Any] = Field(default_factory=dict)
+
+
 class Attempt(BaseModel):
     """A single probe attempt against an LLM."""
 
@@ -24,6 +59,10 @@ class Attempt(BaseModel):
     prompt: str
     response: str = ""
     system_prompt: str = ""
+    messages: list[Message] = Field(default_factory=list)
+    tool_calls: list[ToolCall] = Field(default_factory=list)
+    tool_definitions: list[ToolDefinition] = Field(default_factory=list)
+    images: list[str] = Field(default_factory=list)
     metadata: dict[str, Any] = Field(default_factory=dict)
     tags: list[str] = Field(default_factory=list)
     timestamp: datetime = Field(default_factory=lambda: datetime.now(UTC))
@@ -127,4 +166,29 @@ class ScanResult(BaseModel):
         default_factory=ComplianceAssessment
     )
     recommendations: list[str] = Field(default_factory=list)
+    metadata: dict[str, Any] = Field(default_factory=dict)
+
+
+class ModelScore(BaseModel):
+    """Score breakdown for a single model in a comparison."""
+
+    model_name: str
+    overall_score: float = 0.0
+    category_scores: dict[str, float] = Field(default_factory=dict)
+    risk_level: RiskLevel = RiskLevel.HIGH
+    pass_rate: float = 0.0
+    total_findings: int = 0
+    failed_findings: int = 0
+
+
+class ComparisonResult(BaseModel):
+    """Result of comparing multiple models on the same probes."""
+
+    comparison_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    models: list[str] = Field(default_factory=list)
+    scan_results: dict[str, ScanResult] = Field(default_factory=dict)
+    leaderboard: list[ModelScore] = Field(default_factory=list)
+    started_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    completed_at: datetime | None = None
+    duration_ms: float = 0.0
     metadata: dict[str, Any] = Field(default_factory=dict)

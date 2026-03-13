@@ -61,6 +61,78 @@ EU_AI_ACT_MAPPING: dict[str, dict[str, Any]] = {
         "description": "Prevention of harmful agent behaviors including fraud, harassment, and disinformation (Art. 9, Art. 95)",
         "risk_level": "high",
     },
+    "pii_leakage": {
+        "articles": ["article-10-5", "article-53-1-e"],
+        "requirement": "User Privacy Protection",
+        "description": "Prevention of PII and personal data disclosure (Art. 10(5), Art. 53(1)(e))",
+        "risk_level": "high",
+    },
+    "bias_fairness": {
+        "articles": ["article-10-2-f", "annex-iv-2-g", "article-15-4"],
+        "requirement": "Absence of Bias / Non-discrimination",
+        "description": "Freedom from demographic bias and discriminatory outputs (Art. 10(2)(f), Annex IV, Art. 15(4))",
+        "risk_level": "high",
+    },
+    "excessive_agency": {
+        "articles": ["article-14", "article-14-4"],
+        "requirement": "Human Oversight",
+        "description": "Prevention of LLM overstepping authority and autonomy bounds (Art. 14)",
+        "risk_level": "high",
+    },
+    "denial_of_service": {
+        "articles": ["article-15-5"],
+        "requirement": "Cyberattack Resilience",
+        "description": "Resistance to resource exhaustion and denial of service attacks (Art. 15(5))",
+        "risk_level": "high",
+    },
+    "rag_poisoning": {
+        "articles": ["article-10", "article-10-2"],
+        "requirement": "Data and Data Governance",
+        "description": "Protection against RAG context poisoning and data manipulation (Art. 10)",
+        "risk_level": "high",
+    },
+    "function_calling": {
+        "articles": ["article-15-5", "article-14"],
+        "requirement": "Cyberattack Resilience / Human Oversight",
+        "description": "Secure tool/function call behavior and plugin interaction (Art. 15(5), Art. 14)",
+        "risk_level": "high",
+    },
+    "indirect_injection": {
+        "articles": ["article-15-5"],
+        "requirement": "Cyberattack Resilience",
+        "description": "Resistance to injection via retrieved documents and external content (Art. 15(5))",
+        "risk_level": "high",
+    },
+    "language_crossover": {
+        "articles": ["article-15-5"],
+        "requirement": "Cyberattack Resilience",
+        "description": "Resistance to safety filter bypass via language switching (Art. 15(5))",
+        "risk_level": "high",
+    },
+    "role_play": {
+        "articles": ["article-15-5", "article-55-1-d"],
+        "requirement": "Cyberattack Resilience",
+        "description": "Resistance to persona/character-based jailbreak attacks (Art. 15(5))",
+        "risk_level": "high",
+    },
+    "context_overflow": {
+        "articles": ["article-15-5"],
+        "requirement": "Cyberattack Resilience",
+        "description": "Resistance to context window overflow and attention dilution attacks (Art. 15(5))",
+        "risk_level": "high",
+    },
+    "steganographic": {
+        "articles": ["article-15-5"],
+        "requirement": "Cyberattack Resilience",
+        "description": "Resistance to hidden instructions in seemingly normal text (Art. 15(5))",
+        "risk_level": "high",
+    },
+    "social_engineering": {
+        "articles": ["article-9", "article-95"],
+        "requirement": "Harmful Content Prevention",
+        "description": "Resistance to emotional manipulation and authority-based safety bypasses (Art. 9, Art. 95)",
+        "risk_level": "high",
+    },
 }
 
 # COMPL-AI Technical Requirements (Academic Reference)

@@ -35,6 +35,18 @@ class VulnerabilityCategory(str, Enum):
     WEB_INJECTION = "web_injection"
     ENCODING = "encoding"
     HARMFUL_CONTENT = "harmful_content"
+    PII_LEAKAGE = "pii_leakage"
+    BIAS_FAIRNESS = "bias_fairness"
+    EXCESSIVE_AGENCY = "excessive_agency"
+    DENIAL_OF_SERVICE = "denial_of_service"
+    RAG_POISONING = "rag_poisoning"
+    FUNCTION_CALLING = "function_calling"
+    INDIRECT_INJECTION = "indirect_injection"
+    LANGUAGE_CROSSOVER = "language_crossover"
+    ROLE_PLAY = "role_play"
+    CONTEXT_OVERFLOW = "context_overflow"
+    STEGANOGRAPHIC = "steganographic"
+    SOCIAL_ENGINEERING = "social_engineering"
     OTHER = "other"
 
 
