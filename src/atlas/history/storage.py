@@ -3,9 +3,10 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterator
 
 from atlas.core.models import ScanResult
 
@@ -58,11 +59,19 @@ class HistoryStorage:
                 "CREATE INDEX IF NOT EXISTS idx_scans_score ON scans (overall_score)"
             )
 
-    def _connect(self) -> sqlite3.Connection:
-        """Create a database connection with row factory."""
+    @contextmanager
+    def _connect(self) -> Iterator[sqlite3.Connection]:
+        """Create a database connection that is properly closed after use."""
         conn = sqlite3.connect(str(self.db_path))
         conn.row_factory = sqlite3.Row
-        return conn
+        try:
+            yield conn
+            conn.commit()
+        except Exception:
+            conn.rollback()
+            raise
+        finally:
+            conn.close()
 
     def save_scan(self, result: ScanResult) -> None:
         """Save a scan result to the database.
