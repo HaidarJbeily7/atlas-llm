@@ -13,6 +13,7 @@ from typing import Optional
 import typer
 from rich.console import Console
 from rich.panel import Panel
+from rich.progress import BarColumn, MofNCompleteColumn, Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
 from rich.table import Table
 
 console = Console()
@@ -195,6 +196,61 @@ def _print_ci_summary(result, pass_rate: float, threshold: float) -> None:
 
 
 # ---------------------------------------------------------------------------
+# Progress-bar wrapper
+# ---------------------------------------------------------------------------
+
+async def _run_with_progress(
+    runner,
+    *,
+    profile: str,
+    probe_list: list[str] | None,
+    detector_list: list[str] | None,
+    checkpoint_enabled: bool,
+):
+    """Run a scan while displaying Rich progress bars."""
+    progress = Progress(
+        SpinnerColumn(),
+        TextColumn("[bold blue]{task.description}"),
+        BarColumn(),
+        MofNCompleteColumn(),
+        TimeElapsedColumn(),
+        console=console,
+    )
+    probe_tasks: dict[str, int] = {}  # probe_name -> task_id
+
+    def on_progress(event: str, data: dict) -> None:
+        if event == "probe_start":
+            task_id = progress.add_task(data["probe"], total=data["total"])
+            probe_tasks[data["probe"]] = task_id
+        elif event == "attempt_done":
+            task_id = probe_tasks.get(data["probe"])
+            if task_id is not None:
+                progress.advance(task_id)
+        elif event == "probe_done":
+            task_id = probe_tasks.get(data["probe"])
+            if task_id is not None:
+                rate = data["pass_rate"]
+                color = "green" if rate >= 80 else "yellow" if rate >= 60 else "red"
+                progress.update(
+                    task_id,
+                    description=f"[{color}]{data['probe']} ({rate:.0f}% pass)",
+                )
+        elif event == "probe_error":
+            task_id = probe_tasks.get(data["probe"])
+            if task_id is not None:
+                progress.update(task_id, description=f"[red]{data['probe']} (error)")
+
+    with progress:
+        return await runner.run(
+            profile=profile,
+            probe_names=probe_list,
+            detector_names=detector_list,
+            checkpoint_enabled=checkpoint_enabled,
+            on_progress=on_progress,
+        )
+
+
+# ---------------------------------------------------------------------------
 # scan run
 # ---------------------------------------------------------------------------
 
@@ -243,12 +299,21 @@ def scan_run(
     runner = ScanRunner(config)
 
     try:
-        result = asyncio.run(runner.run(
-            profile=profile,
-            probe_names=probe_list,
-            detector_names=detector_list,
-            checkpoint_enabled=not no_checkpoint,
-        ))
+        if ci:
+            result = asyncio.run(runner.run(
+                profile=profile,
+                probe_names=probe_list,
+                detector_names=detector_list,
+                checkpoint_enabled=not no_checkpoint,
+            ))
+        else:
+            result = asyncio.run(_run_with_progress(
+                runner,
+                profile=profile,
+                probe_list=probe_list,
+                detector_list=detector_list,
+                checkpoint_enabled=not no_checkpoint,
+            ))
     except KeyboardInterrupt:
         if ci:
             print("[ATLAS] Scan interrupted.")
@@ -532,6 +597,43 @@ def _display_scan_summary(result) -> None:
         )
 
     console.print(table)
+
+    # Detector verdict breakdown for failed findings
+    failed_findings = [f for pr in result.probe_results.values() for f in pr.findings if not f.passed]
+    if failed_findings:
+        det_table = Table(title="Detector Verdicts (failed findings)")
+        det_table.add_column("Finding", style="cyan")
+        det_table.add_column("Detector", style="bold")
+        det_table.add_column("Verdict", justify="center")
+        det_table.add_column("Confidence", justify="right")
+        det_table.add_column("Weight", justify="right")
+
+        for finding in failed_findings:
+            finding_label = f"{finding.attempt.probe_name}:{finding.id[:8]}"
+            pass_w = sum(r.confidence for r in finding.detector_results if r.passed)
+            fail_w = sum(r.confidence for r in finding.detector_results if not r.passed)
+            for i, dr in enumerate(finding.detector_results):
+                verdict_color = "green" if dr.passed else "red"
+                verdict_text = f"[{verdict_color}]{'pass' if dr.passed else 'fail'}[/{verdict_color}]"
+                weight_text = f"[{verdict_color}]{dr.confidence:.2f} {'pass' if dr.passed else 'fail'}[/{verdict_color}]"
+                det_table.add_row(
+                    finding_label if i == 0 else "",
+                    dr.detector_name,
+                    verdict_text,
+                    f"{dr.confidence:.2f}",
+                    weight_text,
+                )
+            # Summary row
+            result_color = "green" if pass_w >= fail_w else "red"
+            det_table.add_row(
+                "",
+                "[dim]total[/dim]",
+                "",
+                "",
+                f"[{result_color}]pass={pass_w:.2f} fail={fail_w:.2f}[/{result_color}]",
+            )
+
+        console.print(det_table)
 
     # Severity summary
     vuln = score.vulnerabilities_by_severity

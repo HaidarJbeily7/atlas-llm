@@ -5,6 +5,7 @@ import asyncio
 import importlib
 import time
 from datetime import UTC, datetime
+from collections.abc import Callable
 from typing import Any
 
 from atlas.compliance.mapper import ComplianceMapper
@@ -23,7 +24,6 @@ from atlas.detectors.base import BaseDetector
 from atlas.detectors.keyword import KeywordDetector
 from atlas.detectors.refusal import RefusalDetector
 from atlas.engine.checkpoint import ScanCheckpoint
-from atlas.engine.scheduler import AsyncScheduler
 from atlas.evaluators.security_score import SecurityScoreEvaluator
 from atlas.generators.litellm import LiteLLMGenerator
 from atlas.logging.setup import get_logger
@@ -138,7 +138,6 @@ class ScanRunner:
     def __init__(self, config: AtlasConfig) -> None:
         self.config = config
         self.generator = LiteLLMGenerator.from_config(config.provider)
-        self.scheduler = AsyncScheduler(config.scan.concurrency)
         self.compliance_mapper = ComplianceMapper()
         self.score_evaluator = SecurityScoreEvaluator()
 
@@ -148,8 +147,14 @@ class ScanRunner:
         probe_names: list[str] | None = None,
         detector_names: list[str] | None = None,
         checkpoint_enabled: bool = True,
+        on_progress: Callable[[str, dict[str, Any]], None] | None = None,
     ) -> ScanResult:
-        """Execute a full security scan."""
+        """Execute a full security scan.
+
+        Args:
+            on_progress: Optional callback ``(event, data)`` for progress updates.
+                Events: ``probe_start``, ``attempt_done``, ``probe_done``, ``probe_error``.
+        """
         start_time = time.time()
 
         # Resolve profile
@@ -158,14 +163,6 @@ class ScanRunner:
         # Resolve probes and detectors
         probes_to_run = probe_names or profile_config.probes
         detectors_to_use = detector_names or profile_config.detectors
-
-        logger.info(
-            "scan_starting",
-            model=self.config.provider.model,
-            profile=profile_config.name,
-            probes=probes_to_run,
-            detectors=detectors_to_use,
-        )
 
         # Initialize checkpoint
         scan_result = ScanResult(
@@ -193,8 +190,6 @@ class ScanRunner:
         for probe_name in probes_to_run:
             # Skip if already completed (checkpoint resume)
             if checkpoint and checkpoint.is_completed(probe_name):
-                logger.info("probe_skipped_checkpoint", probe=probe_name)
-                # Load cached result
                 cached = checkpoint.partial_results.get(probe_name)
                 if cached:
                     pr = ProbeResult.model_validate(cached)
@@ -203,7 +198,9 @@ class ScanRunner:
                 continue
 
             try:
-                probe_result = await self._run_probe(probe_name, detectors)
+                probe_result = await self._run_probe(
+                    probe_name, detectors, on_progress=on_progress,
+                )
                 probe_results[probe_name] = probe_result
                 all_findings.extend(probe_result.findings)
 
@@ -212,16 +209,17 @@ class ScanRunner:
                         probe_name, probe_result.model_dump(mode="json")
                     )
 
-                logger.info(
-                    "probe_complete",
-                    probe=probe_name,
-                    total=probe_result.total_attempts,
-                    passed=probe_result.passed,
-                    failed=probe_result.failed,
-                    pass_rate=f"{probe_result.pass_rate:.1f}%",
-                )
+                if on_progress:
+                    on_progress("probe_done", {
+                        "probe": probe_name,
+                        "passed": probe_result.passed,
+                        "failed": probe_result.failed,
+                        "pass_rate": probe_result.pass_rate,
+                    })
             except Exception as e:
                 logger.error("probe_failed", probe=probe_name, error=str(e))
+                if on_progress:
+                    on_progress("probe_error", {"probe": probe_name, "error": str(e)})
                 if checkpoint:
                     checkpoint.add_failed_probe(probe_name, str(e))
                 if not self.config.scan.continue_on_error:
@@ -252,21 +250,13 @@ class ScanRunner:
         if checkpoint:
             checkpoint.cleanup()
 
-        logger.info(
-            "scan_complete",
-            scan_id=scan_result.scan_id,
-            duration_ms=f"{elapsed_ms:.0f}",
-            overall_score=f"{security_score.overall_score:.1f}",
-            risk_level=security_score.risk_level.value,
-            total_findings=len(all_findings),
-        )
-
         return scan_result
 
     async def _run_probe(
         self,
         probe_name: str,
         detectors: list[BaseDetector],
+        on_progress: Callable[[str, dict[str, Any]], None] | None = None,
     ) -> ProbeResult:
         """Run a single probe: generate prompts, send to LLM, detect, aggregate."""
         probe = _resolve_probe(probe_name)
@@ -275,25 +265,47 @@ class ScanRunner:
         if not attempts:
             return ProbeResult(probe_name=probe_name, category=probe.category)
 
-        logger.info("probe_starting", probe=probe_name, attempts=len(attempts))
+        if on_progress:
+            on_progress("probe_start", {"probe": probe_name, "total": len(attempts)})
 
-        # Check if this is a conversational probe
-        if isinstance(probe, ConversationalProbe):
-            completed_attempts = await self._run_conversational_probe(probe, attempts)
-        elif isinstance(probe, AdaptiveProbe):
-            completed_attempts = await self._run_adaptive_probe(probe, attempts)
-        else:
-            # Standard single-turn: send all attempts to LLM
-            completed_attempts = await self.generator.generate_for_attempts(
-                attempts,
-                concurrency=self.config.scan.concurrency,
+        # Pipeline: each attempt goes through generate -> detect as soon as
+        # its generation completes, instead of waiting for all generations
+        # to finish before starting any detection.
+        semaphore = asyncio.Semaphore(self.config.scan.concurrency)
+
+        # Pre-create attacker generator for adaptive probes (shared across attempts)
+        attacker_generator = None
+        if isinstance(probe, AdaptiveProbe):
+            attacker_model = probe.attacker_model or self.config.provider.model
+            attacker_generator = LiteLLMGenerator(
+                model_name=attacker_model,
+                api_key=self.config.provider.api_key,
+                api_base=self.config.provider.api_base,
+                timeout=self.config.provider.timeout,
+                temperature=0.7,
             )
 
-        # Run detectors on each attempt
-        findings: list[Finding] = []
-        for attempt in completed_attempts:
+        async def _process_attempt(attempt: Attempt) -> Finding:
+            # Generation phase (concurrency-limited)
+            if isinstance(probe, ConversationalProbe):
+                async with semaphore:
+                    attempt = await probe.run_conversation(self.generator, attempt)
+            elif isinstance(probe, AdaptiveProbe):
+                async with semaphore:
+                    attempt = await probe.run_adaptive_attack(
+                        self.generator, attacker_generator, attempt
+                    )
+            else:
+                async with semaphore:
+                    attempt = await self.generator.generate_for_attempt(attempt)
+
+            # Detection phase (runs immediately after this attempt's generation)
             finding = await self._detect_and_create_finding(attempt, detectors, probe)
-            findings.append(finding)
+            if on_progress:
+                on_progress("attempt_done", {"probe": probe_name, "passed": finding.passed})
+            return finding
+
+        findings = await asyncio.gather(*[_process_attempt(a) for a in attempts])
 
         # Aggregate
         passed = sum(1 for f in findings if f.passed)
@@ -317,48 +329,6 @@ class ScanRunner:
             findings=findings,
             compliance_articles=compliance_articles,
         )
-
-    async def _run_conversational_probe(
-        self,
-        probe: ConversationalProbe,
-        attempts: list[Attempt],
-    ) -> list[Attempt]:
-        """Run a conversational probe with multi-turn interactions."""
-        semaphore = asyncio.Semaphore(self.config.scan.concurrency)
-
-        async def _run_one(attempt: Attempt) -> Attempt:
-            async with semaphore:
-                return await probe.run_conversation(self.generator, attempt)
-
-        tasks = [_run_one(a) for a in attempts]
-        return await asyncio.gather(*tasks)
-
-    async def _run_adaptive_probe(
-        self,
-        probe: AdaptiveProbe,
-        attempts: list[Attempt],
-    ) -> list[Attempt]:
-        """Run an adaptive probe with attacker LLM."""
-        # Create attacker generator if configured
-        attacker_model = probe.attacker_model or self.config.provider.model
-        attacker_generator = LiteLLMGenerator(
-            model_name=attacker_model,
-            api_key=self.config.provider.api_key,
-            api_base=self.config.provider.api_base,
-            timeout=self.config.provider.timeout,
-            temperature=0.7,  # Higher temperature for creative attacks
-        )
-
-        semaphore = asyncio.Semaphore(max(1, self.config.scan.concurrency // 2))
-
-        async def _run_one(attempt: Attempt) -> Attempt:
-            async with semaphore:
-                return await probe.run_adaptive_attack(
-                    self.generator, attacker_generator, attempt
-                )
-
-        tasks = [_run_one(a) for a in attempts]
-        return await asyncio.gather(*tasks)
 
     async def _detect_and_create_finding(
         self,
