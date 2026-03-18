@@ -41,8 +41,8 @@ def setup_logging(
     # Configure standard library logging
     logging.basicConfig(format="%(message)s", level=log_level, force=True)
 
-    # Suppress noisy loggers
-    for name in ("httpx", "httpcore", "urllib3", "litellm", "openai"):
+    # Suppress noisy third-party loggers
+    for name in ("httpx", "httpcore", "urllib3", "litellm", "LiteLLM", "openai"):
         logging.getLogger(name).setLevel(logging.WARNING)
 
     shared_processors: list[Any] = [

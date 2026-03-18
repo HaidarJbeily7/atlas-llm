@@ -16,6 +16,7 @@ logger = get_logger(__name__)
 
 # Suppress litellm's verbose logging
 litellm.suppress_debug_info = True
+litellm.set_verbose = False
 
 
 @register("generators", name="litellm")

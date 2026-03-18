@@ -7,9 +7,13 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+from dotenv import load_dotenv
 
 from atlas.config.models import AtlasConfig
 from atlas.core.errors import AtlasConfigError
+
+# Load .env file once at import time so ${ENV_VAR} references resolve automatically
+load_dotenv()
 
 # Pattern for ${ENV_VAR} or ${ENV_VAR:default}
 ENV_VAR_PATTERN = re.compile(r"\$\{([^}:]+)(?::([^}]*))?\}")
