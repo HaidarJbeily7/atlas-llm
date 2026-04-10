@@ -8,11 +8,10 @@ import { getProbeLabel, PROBE_COLORS } from '../lib/data';
 import clsx from 'clsx';
 
 export default function Models() {
-  const { models, loading } = useExperimentData();
+  const { summary, models, loading } = useExperimentData();
 
-  if (loading) return <LoadingSpinner />;
+  if (loading || !summary) return <LoadingSpinner />;
 
-  // Heatmap data: model x probe
   const probeNames = [...new Set(models.flatMap((m) => Object.keys(m.probes)))];
   const heatmapData = models.map((m) => {
     const row: Record<string, unknown> = { model: m.modelShort };
@@ -22,12 +21,10 @@ export default function Models() {
     return row;
   });
 
-  // Cost comparison
   const costData = models.map((m) => ({
     name: m.modelShort,
     cost: Number(m.totalCost.toFixed(4)),
     tokens: m.totalTokens,
-    latency: Number((m.avgLatency / 1000).toFixed(1)),
   }));
 
   return (
@@ -37,7 +34,6 @@ export default function Models() {
         <p className="text-gray-500 mt-1">Side-by-side analysis across all tested models</p>
       </div>
 
-      {/* Model cards */}
       <div className="grid grid-cols-1 gap-4">
         {models.map((m) => (
           <div key={m.model} className="card">
@@ -47,27 +43,19 @@ export default function Models() {
                 <p className="text-xs text-gray-500 font-mono">{m.model}</p>
               </div>
               <div className="flex items-center gap-3">
-                <span
-                  className={clsx('badge', {
-                    'badge-success': m.riskLevel === 'low',
-                    'badge-warning': m.riskLevel === 'medium',
-                    'badge-danger': m.riskLevel === 'high' || m.riskLevel === 'critical',
-                  })}
-                >
-                  {m.riskLevel} risk
-                </span>
-                <span
-                  className={clsx('badge', {
-                    'badge-success': m.complianceStatus === 'compliant',
-                    'badge-danger': m.complianceStatus === 'non-compliant',
-                  })}
-                >
-                  {m.complianceStatus}
-                </span>
+                <span className={clsx('badge', {
+                  'badge-success': m.riskLevel === 'low',
+                  'badge-warning': m.riskLevel === 'medium',
+                  'badge-danger': m.riskLevel === 'high' || m.riskLevel === 'critical',
+                })}>{m.riskLevel} risk</span>
+                <span className={clsx('badge', {
+                  'badge-success': m.complianceStatus === 'compliant',
+                  'badge-danger': m.complianceStatus === 'non-compliant',
+                })}>{m.complianceStatus}</span>
               </div>
             </div>
 
-            <div className="grid grid-cols-5 gap-4 mb-4">
+            <div className="grid grid-cols-4 gap-4 mb-4">
               <div>
                 <p className="text-xs text-gray-500">Pass Rate</p>
                 <p className="text-xl font-bold text-white">{m.overallPassRate.toFixed(1)}%</p>
@@ -84,26 +72,17 @@ export default function Models() {
                 <p className="text-xs text-gray-500">Cost</p>
                 <p className="text-xl font-bold text-white">${m.totalCost.toFixed(3)}</p>
               </div>
-              <div>
-                <p className="text-xs text-gray-500">Avg Latency</p>
-                <p className="text-xl font-bold text-white">{(m.avgLatency / 1000).toFixed(1)}s</p>
-              </div>
             </div>
 
             <div className="space-y-2">
               {Object.entries(m.probes).map(([probe, result]) => (
-                <ScoreBar
-                  key={probe}
-                  label={getProbeLabel(probe)}
-                  value={result.pass_rate}
-                />
+                <ScoreBar key={probe} label={getProbeLabel(probe)} value={result.pass_rate} />
               ))}
             </div>
           </div>
         ))}
       </div>
 
-      {/* Pass rate heatmap as grouped bar */}
       <div className="card">
         <h2 className="text-lg font-semibold text-white mb-4">Pass Rate Comparison by Probe</h2>
         <ResponsiveContainer width="100%" height={350}>
@@ -111,50 +90,27 @@ export default function Models() {
             <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
             <XAxis dataKey="model" tick={{ fill: '#9ca3af', fontSize: 12 }} />
             <YAxis domain={[0, 100]} tick={{ fill: '#9ca3af', fontSize: 12 }} />
-            <Tooltip
-              contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px' }}
-              labelStyle={{ color: '#fff' }}
-            />
+            <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px' }} labelStyle={{ color: '#fff' }} />
             {probeNames.map((probe) => (
-              <Bar
-                key={probe}
-                dataKey={probe}
-                name={getProbeLabel(probe)}
-                fill={PROBE_COLORS[probe] ?? '#6b7280'}
-                radius={[2, 2, 0, 0]}
-              />
+              <Bar key={probe} dataKey={probe} name={getProbeLabel(probe)}
+                fill={PROBE_COLORS[probe] ?? '#6b7280'} radius={[2, 2, 0, 0]} />
             ))}
             <Legend wrapperStyle={{ fontSize: 12 }} />
           </BarChart>
         </ResponsiveContainer>
       </div>
 
-      {/* Cost & latency */}
-      <div className="grid grid-cols-2 gap-6">
-        <div className="card">
-          <h2 className="text-lg font-semibold text-white mb-4">Cost per Model ($)</h2>
-          <ResponsiveContainer width="100%" height={250}>
-            <BarChart data={costData} layout="vertical">
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-              <XAxis type="number" tick={{ fill: '#9ca3af', fontSize: 12 }} />
-              <YAxis dataKey="name" type="category" width={120} tick={{ fill: '#9ca3af', fontSize: 12 }} />
-              <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px' }} />
-              <Bar dataKey="cost" fill="#8b5cf6" radius={[0, 4, 4, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-        <div className="card">
-          <h2 className="text-lg font-semibold text-white mb-4">Avg Latency per Model (s)</h2>
-          <ResponsiveContainer width="100%" height={250}>
-            <BarChart data={costData} layout="vertical">
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-              <XAxis type="number" tick={{ fill: '#9ca3af', fontSize: 12 }} />
-              <YAxis dataKey="name" type="category" width={120} tick={{ fill: '#9ca3af', fontSize: 12 }} />
-              <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px' }} />
-              <Bar dataKey="latency" fill="#14b8a6" radius={[0, 4, 4, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+      <div className="card">
+        <h2 className="text-lg font-semibold text-white mb-4">Cost per Model ($)</h2>
+        <ResponsiveContainer width="100%" height={250}>
+          <BarChart data={costData} layout="vertical">
+            <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+            <XAxis type="number" tick={{ fill: '#9ca3af', fontSize: 12 }} />
+            <YAxis dataKey="name" type="category" width={120} tick={{ fill: '#9ca3af', fontSize: 12 }} />
+            <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px' }} />
+            <Bar dataKey="cost" fill="#8b5cf6" radius={[0, 4, 4, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );

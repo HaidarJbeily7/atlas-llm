@@ -1,31 +1,22 @@
-import type { Manifest, ScanResult, ModelSummary, Finding } from '../types';
+import type { Summary, ScanSummary, ModelAggregation, FindingDetail } from '../types';
 
-let cachedManifest: Manifest | null = null;
-const scanCache = new Map<string, ScanResult>();
+let cachedSummary: Summary | null = null;
+const findingCache = new Map<string, FindingDetail>();
 
-export async function loadManifest(): Promise<Manifest> {
-  if (cachedManifest) return cachedManifest;
-  const res = await fetch('/data/manifest.json');
-  cachedManifest = await res.json();
-  return cachedManifest!;
+export async function loadSummary(): Promise<Summary> {
+  if (cachedSummary) return cachedSummary;
+  const res = await fetch('/data/summary.json');
+  cachedSummary = await res.json();
+  return cachedSummary!;
 }
 
-export async function loadScan(path: string): Promise<ScanResult> {
-  const cached = scanCache.get(path);
+export async function loadFindingDetail(id: string): Promise<FindingDetail> {
+  const cached = findingCache.get(id);
   if (cached) return cached;
-  const res = await fetch(`/data/${path}`);
+  const res = await fetch(`/data/findings/${id}.json`);
   const data = await res.json();
-  scanCache.set(path, data);
+  findingCache.set(id, data);
   return data;
-}
-
-export async function loadAllScans(): Promise<ScanResult[]> {
-  const manifest = await loadManifest();
-  const experiment = manifest.experiments[0];
-  const scans = await Promise.all(
-    experiment.scans.map((s) => loadScan(s.file))
-  );
-  return scans;
 }
 
 export function shortModelName(model: string): string {
@@ -33,16 +24,16 @@ export function shortModelName(model: string): string {
   return parts[parts.length - 1];
 }
 
-export function aggregateByModel(scans: ScanResult[]): ModelSummary[] {
-  const byModel = new Map<string, ScanResult[]>();
+export function aggregateByModel(scans: ScanSummary[]): ModelAggregation[] {
+  const byModel = new Map<string, ScanSummary[]>();
 
   for (const scan of scans) {
-    const existing = byModel.get(scan.model_name) ?? [];
+    const existing = byModel.get(scan.model) ?? [];
     existing.push(scan);
-    byModel.set(scan.model_name, existing);
+    byModel.set(scan.model, existing);
   }
 
-  const summaries: ModelSummary[] = [];
+  const summaries: ModelAggregation[] = [];
 
   for (const [model, modelScans] of byModel) {
     let totalAttempts = 0;
@@ -50,26 +41,17 @@ export function aggregateByModel(scans: ScanResult[]): ModelSummary[] {
     let totalFailed = 0;
     let totalCost = 0;
     let totalTokens = 0;
-    let totalLatency = 0;
-    let latencyCount = 0;
-    const probes: Record<string, import('../types').ProbeResult> = {};
+    const probes: Record<string, import('../types').ProbeResultSummary> = {};
 
     for (const scan of modelScans) {
       totalCost += scan.total_cost_usd;
       totalTokens += scan.total_target_tokens + scan.total_attacker_tokens;
 
-      for (const [probeName, probeResult] of Object.entries(scan.probe_results)) {
-        totalAttempts += probeResult.total_attempts;
-        totalPassed += probeResult.passed;
-        totalFailed += probeResult.failed;
-        probes[probeName] = probeResult;
-
-        for (const finding of probeResult.findings) {
-          if (finding.attempt.latency_ms > 0) {
-            totalLatency += finding.attempt.latency_ms;
-            latencyCount++;
-          }
-        }
+      for (const [probeName, pr] of Object.entries(scan.probe_results_summary)) {
+        totalAttempts += pr.total_attempts;
+        totalPassed += pr.passed;
+        totalFailed += pr.failed;
+        probes[probeName] = pr;
       }
     }
 
@@ -85,7 +67,7 @@ export function aggregateByModel(scans: ScanResult[]): ModelSummary[] {
       totalFailed,
       totalCost,
       totalTokens,
-      avgLatency: latencyCount > 0 ? totalLatency / latencyCount : 0,
+      avgLatency: 0, // computed from findings_index if needed
       riskLevel: lastScan.security_score.risk_level,
       complianceStatus: lastScan.compliance_assessment.overall_status,
       securityScore: lastScan.security_score.overall_score,
@@ -93,16 +75,6 @@ export function aggregateByModel(scans: ScanResult[]): ModelSummary[] {
   }
 
   return summaries.sort((a, b) => b.overallPassRate - a.overallPassRate);
-}
-
-export function getAllFindings(scans: ScanResult[]): Finding[] {
-  const findings: Finding[] = [];
-  for (const scan of scans) {
-    for (const probeResult of Object.values(scan.probe_results)) {
-      findings.push(...probeResult.findings);
-    }
-  }
-  return findings;
 }
 
 export function getProbeLabel(probe: string): string {

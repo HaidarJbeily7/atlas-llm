@@ -1,29 +1,29 @@
 import { useEffect, useState } from 'react';
-import type { ScanResult, ModelSummary } from '../types';
-import { loadAllScans, aggregateByModel } from '../lib/data';
+import type { Summary, ModelAggregation } from '../types';
+import { loadSummary, aggregateByModel } from '../lib/data';
 
 interface ExperimentData {
-  scans: ScanResult[];
-  models: ModelSummary[];
+  summary: Summary | null;
+  models: ModelAggregation[];
   loading: boolean;
   error: string | null;
 }
 
 export function useExperimentData(): ExperimentData {
-  const [scans, setScans] = useState<ScanResult[]>([]);
-  const [models, setModels] = useState<ModelSummary[]>([]);
+  const [summary, setSummary] = useState<Summary | null>(null);
+  const [models, setModels] = useState<ModelAggregation[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    loadAllScans()
+    loadSummary()
       .then((data) => {
-        setScans(data);
-        setModels(aggregateByModel(data));
+        setSummary(data);
+        setModels(aggregateByModel(data.scans));
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
   }, []);
 
-  return { scans, models, loading, error };
+  return { summary, models, loading, error };
 }

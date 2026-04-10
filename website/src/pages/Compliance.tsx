@@ -4,66 +4,57 @@ import {
 } from 'recharts';
 import { useExperimentData } from '../hooks/useExperimentData';
 import LoadingSpinner from '../components/LoadingSpinner';
-import { shortModelName } from '../lib/data';
+// data utilities
 import clsx from 'clsx';
 
-interface ArticleSummary {
-  article_id: string;
-  title: string;
-  models: Record<string, { status: string; findings: number; critical: number }>;
-}
-
 export default function Compliance() {
-  const { scans, models, loading } = useExperimentData();
+  const { summary, models, loading } = useExperimentData();
 
   const articleMap = useMemo(() => {
-    const map = new Map<string, ArticleSummary>();
+    if (!summary) return [];
+    const map = new Map<string, {
+      article_id: string;
+      title: string;
+      models: Record<string, { status: string; findings: number; critical: number }>;
+    }>();
 
-    for (const scan of scans) {
-      const modelKey = shortModelName(scan.model_name);
-      for (const article of scan.compliance_assessment.article_details) {
-        const existing = map.get(article.article_id) ?? {
-          article_id: article.article_id,
-          title: article.title,
-          models: {},
-        };
-        existing.models[modelKey] = {
-          status: article.status,
-          findings: (existing.models[modelKey]?.findings ?? 0) + article.findings_count,
-          critical: (existing.models[modelKey]?.critical ?? 0) + article.critical_findings,
-        };
-        map.set(article.article_id, existing);
-      }
+    for (const entry of summary.compliance) {
+      const existing = map.get(entry.article_id) ?? {
+        article_id: entry.article_id,
+        title: entry.title,
+        models: {},
+      };
+      existing.models[entry.model_short] = {
+        status: entry.status,
+        findings: (existing.models[entry.model_short]?.findings ?? 0) + entry.findings_count,
+        critical: (existing.models[entry.model_short]?.critical ?? 0) + entry.critical_findings,
+      };
+      map.set(entry.article_id, existing);
     }
-
     return Array.from(map.values());
-  }, [scans]);
+  }, [summary]);
 
-  // Overall compliance per model
+  if (loading || !summary) return <LoadingSpinner />;
+
   const complianceData = models.map((m) => {
-    const modelScans = scans.filter((s) => s.model_name === m.model);
+    const modelScans = summary.scans.filter((s) => s.model === m.model);
     const totalArticles = modelScans.reduce((s, sc) => s + sc.compliance_assessment.articles_assessed, 0);
     const passedArticles = modelScans.reduce((s, sc) => s + sc.compliance_assessment.articles_passed, 0);
     return {
       model: m.modelShort,
-      assessed: totalArticles,
       passed: passedArticles,
       failed: totalArticles - passedArticles,
-      passRate: totalArticles > 0 ? (passedArticles / totalArticles) * 100 : 0,
     };
   });
 
-  // Critical findings per model
   const criticalData = models.map((m) => {
-    const modelScans = scans.filter((s) => s.model_name === m.model);
+    const modelScans = summary.scans.filter((s) => s.model === m.model);
     let critical = 0;
     for (const scan of modelScans) {
       critical += scan.security_score.vulnerabilities_by_severity.critical ?? 0;
     }
     return { model: m.modelShort, critical };
   });
-
-  if (loading) return <LoadingSpinner />;
 
   const allModelNames = models.map((m) => m.modelShort);
 
@@ -74,7 +65,6 @@ export default function Compliance() {
         <p className="text-gray-500 mt-1">EU AI Act & OWASP LLM Top 10 compliance analysis</p>
       </div>
 
-      {/* Compliance overview chart */}
       <div className="grid grid-cols-2 gap-6">
         <div className="card">
           <h2 className="text-lg font-semibold text-white mb-4">Article Compliance by Model</h2>
@@ -105,7 +95,6 @@ export default function Compliance() {
         </div>
       </div>
 
-      {/* Article heatmap table */}
       <div className="card overflow-x-auto">
         <h2 className="text-lg font-semibold text-white mb-4">Compliance Heatmap</h2>
         <table className="w-full text-sm">
@@ -128,14 +117,10 @@ export default function Compliance() {
                   if (!data) return <td key={model} className="py-3 px-4 text-center text-gray-600">-</td>;
                   return (
                     <td key={model} className="py-3 px-4 text-center">
-                      <span
-                        className={clsx(
-                          'inline-flex items-center justify-center w-20 py-1 rounded text-xs font-medium',
-                          data.status === 'compliant'
-                            ? 'bg-green-900/30 text-green-400'
-                            : 'bg-red-900/30 text-red-400'
-                        )}
-                      >
+                      <span className={clsx(
+                        'inline-flex items-center justify-center w-20 py-1 rounded text-xs font-medium',
+                        data.status === 'compliant' ? 'bg-green-900/30 text-green-400' : 'bg-red-900/30 text-red-400'
+                      )}>
                         {data.status === 'compliant' ? 'PASS' : `${data.critical} crit`}
                       </span>
                     </td>
@@ -147,16 +132,15 @@ export default function Compliance() {
         </table>
       </div>
 
-      {/* Recommendations */}
       <div className="card">
         <h2 className="text-lg font-semibold text-white mb-4">Recommendations</h2>
         <div className="space-y-3">
-          {scans.slice(0, 5).flatMap((scan) =>
+          {summary.scans.slice(0, 5).flatMap((scan) =>
             scan.recommendations.map((rec, i) => (
               <div key={`${scan.scan_id}-${i}`} className="flex gap-3 text-sm">
                 <span className="text-amber-500 flex-shrink-0">!</span>
                 <div>
-                  <span className="text-gray-400 font-mono text-xs">{shortModelName(scan.model_name)}</span>
+                  <span className="text-gray-400 font-mono text-xs">{scan.model_short}</span>
                   <p className="text-gray-300 mt-0.5">{rec}</p>
                 </div>
               </div>

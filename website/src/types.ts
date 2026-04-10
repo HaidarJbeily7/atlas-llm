@@ -1,27 +1,123 @@
-export interface ExperimentMeta {
-  timestamp: string;
-  models: string[];
-  conditions: string[];
-  all_detectors: boolean;
+// --- Summary types (loaded from summary.json, ~1.2 MB) ---
+
+export interface Summary {
+  experiment: ExperimentInfo;
+  scans: ScanSummary[];
+  probes: ProbeSummary[];
+  findings_index: FindingIndex[];
+  compliance: ComplianceEntry[];
 }
 
-export interface Manifest {
-  experiments: ExperimentEntry[];
-}
-
-export interface ExperimentEntry {
+export interface ExperimentInfo {
   id: string;
   timestamp: string;
   models: string[];
   conditions: string[];
-  scans: ScanRef[];
 }
 
-export interface ScanRef {
-  model_dir: string;
-  probe: string;
-  file: string;
+export interface ProbeResultSummary {
+  probe_name: string;
+  category: string;
+  total_attempts: number;
+  passed: number;
+  failed: number;
+  pass_rate: number;
 }
+
+export interface SecurityScore {
+  overall_score: number;
+  category_scores: Record<string, number>;
+  risk_level: string;
+  vulnerabilities_by_severity: Record<string, number>;
+}
+
+export interface ComplianceAssessment {
+  overall_status: string;
+  articles_assessed: number;
+  articles_passed: number;
+  articles_failed: number;
+  high_risk_areas: string[];
+  article_details: ArticleDetail[];
+}
+
+export interface ArticleDetail {
+  article_id: string;
+  title: string;
+  status: string;
+  findings_count: number;
+  critical_findings: number;
+  risk_score: number;
+}
+
+export interface ScanSummary {
+  model: string;
+  model_short: string;
+  scan_id: string;
+  probe: string;
+  started_at: string;
+  completed_at: string;
+  duration_ms: number;
+  total_cost_usd: number;
+  total_target_tokens: number;
+  total_attacker_tokens: number;
+  security_score: SecurityScore;
+  compliance_assessment: ComplianceAssessment;
+  recommendations: string[];
+  probe_results_summary: Record<string, ProbeResultSummary>;
+}
+
+export interface ProbeSummary {
+  probe_name: string;
+  total_attempts: number;
+  passed: number;
+  failed: number;
+  models: Record<string, {
+    pass_rate: number;
+    passed: number;
+    failed: number;
+    total_attempts: number;
+  }>;
+}
+
+export interface DetectorSummaryEntry {
+  name: string;
+  passed: boolean;
+  score: number;
+}
+
+export interface FindingIndex {
+  id: string;
+  model: string;
+  model_short: string;
+  probe: string;
+  passed: boolean;
+  severity: string;
+  prompt_preview: string;
+  condition: string;
+  adaptivity: string;
+  interaction_mode: string;
+  num_messages: number;
+  num_target_calls: number;
+  num_attacker_calls: number;
+  cost_usd: number;
+  latency_ms: number;
+  target_tokens: number;
+  attacker_tokens: number;
+  detector_summary: DetectorSummaryEntry[];
+}
+
+export interface ComplianceEntry {
+  model: string;
+  model_short: string;
+  article_id: string;
+  title: string;
+  status: string;
+  findings_count: number;
+  critical_findings: number;
+  risk_score: number;
+}
+
+// --- Full finding detail (loaded on-demand per finding) ---
 
 export interface DetectorResult {
   detector_name: string;
@@ -47,7 +143,7 @@ export interface Attempt {
   prompt: string;
   response: string;
   system_prompt: string;
-  messages: unknown[];
+  messages: Array<{ role: string; content: string }>;
   metadata: Record<string, unknown>;
   tags: string[];
   timestamp: string;
@@ -61,7 +157,7 @@ export interface Attempt {
   num_attacker_calls: number;
 }
 
-export interface Finding {
+export interface FindingDetail {
   id: string;
   attempt: Attempt;
   detector_results: DetectorResult[];
@@ -73,61 +169,12 @@ export interface Finding {
   owasp_categories: string[];
 }
 
-export interface ProbeResult {
-  probe_name: string;
-  category: string;
-  total_attempts: number;
-  passed: number;
-  failed: number;
-  pass_rate: number;
-  findings: Finding[];
-}
+// --- Aggregated types for dashboard ---
 
-export interface SecurityScore {
-  overall_score: number;
-  category_scores: Record<string, number>;
-  risk_level: string;
-  vulnerabilities_by_severity: Record<string, number>;
-}
-
-export interface ComplianceAssessment {
-  overall_status: string;
-  articles_assessed: number;
-  articles_passed: number;
-  articles_failed: number;
-  high_risk_areas: string[];
-  article_details: Array<{
-    article_id: string;
-    title: string;
-    status: string;
-    findings_count: number;
-    critical_findings: number;
-    risk_score: number;
-  }>;
-}
-
-export interface ScanResult {
-  scan_id: string;
-  model_name: string;
-  provider: string;
-  profile: string;
-  started_at: string;
-  completed_at: string;
-  duration_ms: number;
-  probe_results: Record<string, ProbeResult>;
-  security_score: SecurityScore;
-  compliance_assessment: ComplianceAssessment;
-  recommendations: string[];
-  total_cost_usd: number;
-  total_target_tokens: number;
-  total_attacker_tokens: number;
-}
-
-// Aggregated types for dashboard
-export interface ModelSummary {
+export interface ModelAggregation {
   model: string;
   modelShort: string;
-  probes: Record<string, ProbeResult>;
+  probes: Record<string, ProbeResultSummary>;
   overallPassRate: number;
   totalAttempts: number;
   totalPassed: number;
