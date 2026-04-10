@@ -1,0 +1,213 @@
+[ATLAS] Starting scan: model=openrouter/meta-llama/llama-3.1-70b-instruct profile=experiment
+[2m2026-04-10T09:57:03.219463Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.237989Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.242555Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.242976Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.243328Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.243642Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.244020Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.244478Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.244844Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.245253Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.245960Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.246383Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.246455Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.246511Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.246550Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.246583Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.247378Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.247434Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.247472Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.247505Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.247537Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.247569Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.247609Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.247713Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.247758Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.247797Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.247839Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.247876Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.248156Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.248238Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.248284Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.248324Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.248363Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.248397Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.248428Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.248460Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.248491Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.248522Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.248552Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.248588Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.248620Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.248650Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.248680Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.248710Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.248740Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.248771Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.248801Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.248840Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.248871Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.248900Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.248930Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.248959Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.248995Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.249028Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.249060Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.249090Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.249120Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.249150Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.249182Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.249251Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.249309Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.249347Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.249381Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.249417Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[2m2026-04-10T09:57:03.249448Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/meta-llama/llama-3.1-70b-instruct[0m [36msession_id[0m=[35m34b29bca[0m [36mtimeout[0m=[35m30[0m
+[1mUse pytorch device_name: mps  [0m
+[1mLoad pretrained SentenceTransformer: all-MiniLM-L6-v2[0m
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[1mWarning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.[0m
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 7294.56it/s]
+[1mBertModel LOAD REPORT[0m from: sentence-transformers/all-MiniLM-L6-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  7.93it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  7.92it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 14.32it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 27.05it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 93.38it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 32.07it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 100.74it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 27.89it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 101.10it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 30.59it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 102.18it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  2.33it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  2.33it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 101.74it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 32.97it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 104.19it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 27.75it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 99.96it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 33.12it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 102.73it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 17.41it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 92.76it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  2.14it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  2.14it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 97.98it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 117.21it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 101.04it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 10.82it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 95.57it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 26.93it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 97.35it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 27.98it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 97.76it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 28.75it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 97.30it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 31.17it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 72.38it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 32.60it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 103.82it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 28.64it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 96.53it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 10.49it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 102.72it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 24.09it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 89.52it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 64.70it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 90.54it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 23.27it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 94.10it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 29.86it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 97.57it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 17.26it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 88.95it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 18.83it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 81.02it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 61.61it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 79.99it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 55.47it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 71.83it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 18.25it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 87.03it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 17.85it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 96.92it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 69.29it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 73.06it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 20.29it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 103.02it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 117.52it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 101.66it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 25.37it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 78.69it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 65.48it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 78.93it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 16.55it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 91.52it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 16.84it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 87.87it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 26.65it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 100.52it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 114.16it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 95.63it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 22.94it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 99.25it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 79.40it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 91.41it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 26.27it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 84.85it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 69.74it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 87.70it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  1.57it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  1.57it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 99.18it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 49.86it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 76.26it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 87.53it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 83.48it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 47.02it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 62.86it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 60.97it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 65.17it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 64.59it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 74.17it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 19.21it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 91.68it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 99.22it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 86.65it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 17.01it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 95.90it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 11.59it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 99.03it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 28.16it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 89.02it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 78.13it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 87.80it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 16.67it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 58.36it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 13.21it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 81.31it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 13.08it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 87.98it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 88.02it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 99.12it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 11.82it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 93.24it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 25.71it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 82.58it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 11.16it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 97.24it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 20.05it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 95.10it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 13.08it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 94.99it/s]
+[ATLAS] Scan complete: openrouter/meta-llama/llama-3.1-70b-instruct
+[ATLAS] Security score: 31.2/100
+[ATLAS] Overall pass rate: 29.7% (threshold: 80.0%)
+[ATLAS] Risk level: HIGH
+[ATLAS] Vulnerabilities: 41 critical, 4 high, 0 medium, 0 low
+[ATLAS]   FAIL jailbreak: 29.7% (19/64)
+[ATLAS] Result: FAIL

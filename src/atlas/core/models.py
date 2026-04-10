@@ -16,6 +16,21 @@ from atlas.core.enums import (
 )
 
 
+class Intent(BaseModel):
+    """A canonical attack intent for the 2x2 factorial experiment.
+
+    Each intent represents a single adversarial objective tested across
+    all four experimental conditions (static/adaptive x single/multi-turn).
+    """
+
+    id: str
+    category: str
+    objective: str  # plain-language goal (used by attacker LLM)
+    direct_prompt: str  # single-turn static prompt
+    scripted_turns: list[str] = Field(default_factory=list)
+    tags: list[str] = Field(default_factory=list)
+
+
 class Message(BaseModel):
     """A single message in a conversation."""
 
@@ -66,6 +81,15 @@ class Attempt(BaseModel):
     metadata: dict[str, Any] = Field(default_factory=dict)
     tags: list[str] = Field(default_factory=list)
     timestamp: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    # Token and cost tracking for the 2x2 experiment
+    target_tokens_in: int = 0
+    target_tokens_out: int = 0
+    attacker_tokens_in: int = 0
+    attacker_tokens_out: int = 0
+    cost_usd: float = 0.0
+    latency_ms: float = 0.0
+    num_target_calls: int = 0
+    num_attacker_calls: int = 0
 
 
 class DetectorResult(BaseModel):
@@ -76,6 +100,23 @@ class DetectorResult(BaseModel):
     score: float = 0.0  # 0.0-1.0
     confidence: float = 1.0
     evidence: str = ""
+    # Human review flagging (True for all LLM-judge-based detectors)
+    needs_human_review: bool = False
+    # Failure type classification
+    failure_type: str = ""
+    # LLM judge metadata (populated by llm_judge / semantic_judge detectors)
+    judge_reasoning: str = ""
+    judge_model: str = ""
+    judge_tokens_in: int = 0
+    judge_tokens_out: int = 0
+    judge_cost_usd: float = 0.0
+    judge_latency_ms: float = 0.0
+    # Per-dimension ratings (semantic_judge)
+    dimension_scores: dict[str, str] = Field(default_factory=dict)
+    # Pattern-based detector details
+    matched_patterns: list[str] = Field(default_factory=list)
+    # The actual prompt sent to the judge (for audit/reproducibility)
+    prompt_sent: str = ""
 
 
 class Finding(BaseModel):
@@ -87,6 +128,7 @@ class Finding(BaseModel):
     severity: Severity = Severity.MEDIUM
     category: VulnerabilityCategory = VulnerabilityCategory.OTHER
     passed: bool = True
+    needs_human_review: bool = False
     description: str = ""
     remediation: str = ""
     compliance_articles: list[str] = Field(default_factory=list)
@@ -167,6 +209,10 @@ class ScanResult(BaseModel):
     )
     recommendations: list[str] = Field(default_factory=list)
     metadata: dict[str, Any] = Field(default_factory=dict)
+    # Aggregate cost/token metrics
+    total_cost_usd: float = 0.0
+    total_target_tokens: int = 0
+    total_attacker_tokens: int = 0
 
 
 class ModelScore(BaseModel):

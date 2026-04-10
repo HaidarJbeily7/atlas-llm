@@ -206,6 +206,7 @@ async def _run_with_progress(
     probe_list: list[str] | None,
     detector_list: list[str] | None,
     checkpoint_enabled: bool,
+    run_all_detectors: bool = False,
 ):
     """Run a scan while displaying Rich progress bars."""
     progress = Progress(
@@ -247,6 +248,7 @@ async def _run_with_progress(
             detector_names=detector_list,
             checkpoint_enabled=checkpoint_enabled,
             on_progress=on_progress,
+            run_all_detectors=run_all_detectors,
         )
 
 
@@ -265,6 +267,7 @@ def scan_run(
     no_checkpoint: bool = typer.Option(False, "--no-checkpoint", help="Disable checkpoint/resume"),
     ci: bool = typer.Option(False, "--ci", help="CI mode: minimal output, exit codes (0=pass, 1=fail, 2=error)"),
     threshold: float = typer.Option(80.0, "--threshold", help="Minimum pass rate to pass in CI mode (0-100)"),
+    all_detectors: bool = typer.Option(False, "--all-detectors", help="Run ALL detectors on every attempt (for experiment/analysis)"),
     sarif: Optional[Path] = typer.Option(None, "--sarif", help="Output path for SARIF report"),
     junit: Optional[Path] = typer.Option(None, "--junit", help="Output path for JUnit XML report"),
     ctx: typer.Context = typer.Option(None, hidden=True),
@@ -305,6 +308,7 @@ def scan_run(
                 probe_names=probe_list,
                 detector_names=detector_list,
                 checkpoint_enabled=not no_checkpoint,
+                run_all_detectors=all_detectors,
             ))
         else:
             result = asyncio.run(_run_with_progress(
@@ -313,6 +317,7 @@ def scan_run(
                 probe_list=probe_list,
                 detector_list=detector_list,
                 checkpoint_enabled=not no_checkpoint,
+                run_all_detectors=all_detectors,
             ))
     except KeyboardInterrupt:
         if ci:

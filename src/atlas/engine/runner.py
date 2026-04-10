@@ -20,6 +20,7 @@ from atlas.core.models import (
     ScanResult,
     SecurityScore,
 )
+from atlas.core.token_tracking import TokenAccumulator
 from atlas.detectors.base import BaseDetector
 from atlas.detectors.keyword import KeywordDetector
 from atlas.detectors.refusal import RefusalDetector
@@ -122,6 +123,48 @@ def _determine_severity(
         return Severity.HIGH if avg_confidence > 0.8 else Severity.MEDIUM
 
 
+def _get_all_detectors(
+    judge_model: str | None = None,
+    api_key: str | None = None,
+) -> list[BaseDetector]:
+    """Instantiate all available detectors for the full detection matrix.
+
+    Args:
+        judge_model: Model string for LLM-based judges. When provided,
+            LLMJudgeDetector and SemanticJudgeDetector use this model
+            instead of their default (openai/gpt-4o-mini).
+        api_key: API key passed to the judge detectors.
+    """
+    detectors: list[BaseDetector] = [KeywordDetector(), RefusalDetector()]
+    judge_kwargs: dict[str, str] = {}
+    if judge_model:
+        judge_kwargs["judge_model"] = judge_model
+    if api_key:
+        judge_kwargs["api_key"] = api_key
+
+    try:
+        from atlas.detectors.llm_judge import LLMJudgeDetector
+        detectors.append(LLMJudgeDetector(**judge_kwargs))
+    except ImportError:
+        pass
+    try:
+        from atlas.detectors.similarity import SimilarityDetector
+        detectors.append(SimilarityDetector())
+    except ImportError:
+        pass
+    try:
+        from atlas.detectors.tool_call_detector import ToolCallDetector
+        detectors.append(ToolCallDetector())
+    except ImportError:
+        pass
+    try:
+        from atlas.detectors.semantic_judge import SemanticJudgeDetector
+        detectors.append(SemanticJudgeDetector(**judge_kwargs))
+    except ImportError:
+        pass
+    return detectors
+
+
 class ScanRunner:
     """Async orchestrator for ATLAS security scans.
 
@@ -148,6 +191,7 @@ class ScanRunner:
         detector_names: list[str] | None = None,
         checkpoint_enabled: bool = True,
         on_progress: Callable[[str, dict[str, Any]], None] | None = None,
+        run_all_detectors: bool = False,
     ) -> ScanResult:
         """Execute a full security scan.
 
@@ -179,9 +223,15 @@ class ScanRunner:
             )
 
         # Resolve detectors
-        detectors = [_resolve_detector(name) for name in detectors_to_use]
-        if not detectors:
-            detectors = [KeywordDetector(), RefusalDetector()]
+        if run_all_detectors:
+            detectors = _get_all_detectors(
+                judge_model=self.config.provider.model,
+                api_key=self.config.provider.api_key,
+            )
+        else:
+            detectors = [_resolve_detector(name) for name in detectors_to_use]
+            if not detectors:
+                detectors = [KeywordDetector(), RefusalDetector()]
 
         all_findings: list[Finding] = []
         probe_results: dict[str, ProbeResult] = {}
@@ -246,6 +296,19 @@ class ScanRunner:
         scan_result.completed_at = datetime.now(UTC)
         scan_result.duration_ms = elapsed_ms
 
+        # Aggregate cost/token metrics
+        scan_result.total_cost_usd = sum(
+            f.attempt.cost_usd for f in all_findings
+        )
+        scan_result.total_target_tokens = sum(
+            f.attempt.target_tokens_in + f.attempt.target_tokens_out
+            for f in all_findings
+        )
+        scan_result.total_attacker_tokens = sum(
+            f.attempt.attacker_tokens_in + f.attempt.attacker_tokens_out
+            for f in all_findings
+        )
+
         # Clean up checkpoint on success
         if checkpoint:
             checkpoint.cleanup()
@@ -286,18 +349,59 @@ class ScanRunner:
             )
 
         async def _process_attempt(attempt: Attempt) -> Finding:
+            # Each attempt gets its own accumulators to avoid races
+            # between concurrent tasks sharing the same generator.
+            target_acc = TokenAccumulator(role="target")
+
+            # Create a lightweight copy of the target generator with
+            # its own accumulator so concurrent attempts don't clobber
+            # each other's token tracking.
+            local_gen = LiteLLMGenerator(
+                model_name=self.generator.model_name,
+                api_key=self.generator.api_key,
+                api_base=self.generator.api_base,
+                timeout=self.generator.timeout,
+                max_retries=self.generator.max_retries,
+                temperature=self.generator.temperature,
+                max_tokens=self.generator.max_tokens,
+                extra=self.generator.extra,
+            )
+            local_gen.accumulator = target_acc
+
+            import time as _time
+            t0 = _time.monotonic()
+
             # Generation phase (concurrency-limited)
             if isinstance(probe, ConversationalProbe):
                 async with semaphore:
-                    attempt = await probe.run_conversation(self.generator, attempt)
+                    attempt = await probe.run_conversation(local_gen, attempt)
             elif isinstance(probe, AdaptiveProbe):
+                # Per-attempt attacker accumulator
+                attacker_acc = TokenAccumulator(role="attacker")
+                local_attacker = LiteLLMGenerator(
+                    model_name=attacker_generator.model_name,
+                    api_key=attacker_generator.api_key,
+                    api_base=attacker_generator.api_base,
+                    timeout=attacker_generator.timeout,
+                    max_retries=attacker_generator.max_retries,
+                    temperature=attacker_generator.temperature,
+                    max_tokens=attacker_generator.max_tokens,
+                    extra=attacker_generator.extra,
+                )
+                local_attacker.accumulator = attacker_acc
                 async with semaphore:
                     attempt = await probe.run_adaptive_attack(
-                        self.generator, attacker_generator, attempt
+                        local_gen, local_attacker, attempt
                     )
+                # Apply attacker token counts
+                attacker_acc.apply_to(attempt)
             else:
                 async with semaphore:
-                    attempt = await self.generator.generate_for_attempt(attempt)
+                    attempt = await local_gen.generate_for_attempt(attempt)
+
+            # Apply target token counts and latency
+            target_acc.apply_to(attempt)
+            attempt.latency_ms = (_time.monotonic() - t0) * 1000
 
             # Detection phase (runs immediately after this attempt's generation)
             finding = await self._detect_and_create_finding(attempt, detectors, probe)
@@ -336,19 +440,20 @@ class ScanRunner:
         detectors: list[BaseDetector],
         probe: BaseProbe,
     ) -> Finding:
-        """Run all detectors on an attempt and create a Finding."""
-        detector_results: list[DetectorResult] = []
-
-        for detector in detectors:
+        """Run all detectors on an attempt in parallel and create a Finding."""
+        async def _run_detector(detector: BaseDetector) -> DetectorResult | None:
             try:
-                result = await detector.detect(attempt)
-                detector_results.append(result)
+                return await detector.detect(attempt)
             except Exception as e:
                 logger.warning(
                     "detector_error",
                     detector=detector.name,
                     error=str(e),
                 )
+                return None
+
+        results = await asyncio.gather(*[_run_detector(d) for d in detectors])
+        detector_results: list[DetectorResult] = [r for r in results if r is not None]
 
         # Overall pass = all detectors pass
         passed = all(r.passed for r in detector_results) if detector_results else True
@@ -358,12 +463,18 @@ class ScanRunner:
         articles = self.compliance_mapper.get_articles_for_category(probe.category.value)
         owasp = self.compliance_mapper.get_owasp_for_category(probe.category.value)
 
+        # Flag finding for human review if any detector requires it
+        needs_human_review = any(
+            r.needs_human_review for r in detector_results
+        )
+
         return Finding(
             attempt=attempt,
             detector_results=detector_results,
             severity=severity,
             category=probe.category,
             passed=passed,
+            needs_human_review=needs_human_review,
             compliance_articles=articles,
             owasp_categories=owasp,
         )

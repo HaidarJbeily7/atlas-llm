@@ -2,8 +2,8 @@
 # See README.md for documentation
 
 provider:
-  model: openai/gpt-4o
-  api_key: ${OPENAI_API_KEY}
+  model: openrouter/openai/gpt-4o-mini
+  api_key: ${OPENROUTER_API_KEY}
   timeout: 30
   max_retries: 3
   temperature: 0.0

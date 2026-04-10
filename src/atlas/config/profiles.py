@@ -86,12 +86,26 @@ CI_PROFILE = ProfileConfig(
     scan=ScanConfig(concurrency=5, timeout=180, probe_timeout=60),
 )
 
+EXPERIMENT_PROFILE = ProfileConfig(
+    name="experiment",
+    description="2x2 factorial experiment: static/adaptive x single/multi-turn",
+    probes=[
+        "jailbreak",               # static single-turn
+        "scripted_multi_turn",     # static multi-turn
+        "adaptive_single_turn",    # adaptive single-turn
+        "adaptive_multi_turn",     # adaptive multi-turn
+    ],
+    detectors=["keyword", "refusal"],
+    scan=ScanConfig(concurrency=5, timeout=7200, probe_timeout=600),
+)
+
 BUILTIN_PROFILES: dict[str, ProfileConfig] = {
     "quick": QUICK_PROFILE,
     "standard": STANDARD_PROFILE,
     "full": FULL_PROFILE,
     "multi-turn": MULTI_TURN_PROFILE,
     "ci": CI_PROFILE,
+    "experiment": EXPERIMENT_PROFILE,
 }
 
 

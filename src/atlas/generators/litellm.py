@@ -9,6 +9,7 @@ import litellm
 
 from atlas.core.errors import AtlasConnectionError, AtlasTimeoutError, retry_on_transient_error
 from atlas.core.models import Attempt, Message, ToolCall, ToolDefinition
+from atlas.core.token_tracking import CostCalculator, TokenAccumulator
 from atlas.logging.setup import get_logger
 from atlas.plugins.registry import register
 
@@ -51,6 +52,7 @@ class LiteLLMGenerator:
         self.temperature = temperature
         self.max_tokens = max_tokens
         self.extra = extra or {}
+        self.accumulator: TokenAccumulator | None = None
 
         logger.info(
             "generator_initialized",
@@ -72,6 +74,18 @@ class LiteLLMGenerator:
             max_tokens=config.max_tokens,
             extra=config.extra,
         )
+
+    def _record_usage(self, response: Any) -> None:
+        """Extract token usage from a litellm response and record it."""
+        if self.accumulator is None:
+            return
+        usage = getattr(response, "usage", None)
+        if usage is None:
+            return
+        prompt_tokens = getattr(usage, "prompt_tokens", 0) or 0
+        completion_tokens = getattr(usage, "completion_tokens", 0) or 0
+        cost = CostCalculator.cost_from_response(response, model=self.model_name)
+        self.accumulator.record(prompt_tokens, completion_tokens, cost)
 
     def _build_kwargs(self, **overrides: Any) -> dict[str, Any]:
         """Build keyword arguments for litellm.acompletion."""
@@ -112,6 +126,7 @@ class LiteLLMGenerator:
 
         try:
             response = await litellm.acompletion(messages=messages, **call_kwargs)
+            self._record_usage(response)
             content = response.choices[0].message.content or ""
             logger.debug(
                 "generation_complete",
@@ -165,6 +180,7 @@ class LiteLLMGenerator:
 
         try:
             response = await litellm.acompletion(messages=msg_dicts, **call_kwargs)
+            self._record_usage(response)
             content = response.choices[0].message.content or ""
             logger.debug(
                 "conversation_generation_complete",
@@ -232,6 +248,7 @@ class LiteLLMGenerator:
             response = await litellm.acompletion(
                 messages=msg_dicts, tools=tool_dicts, **call_kwargs
             )
+            self._record_usage(response)
             msg = response.choices[0].message
             content = msg.content or ""
 
@@ -312,6 +329,7 @@ class LiteLLMGenerator:
             call_kwargs = self._build_kwargs(**kwargs)
             try:
                 response = await litellm.acompletion(messages=messages_list, **call_kwargs)
+                self._record_usage(response)
                 attempt.response = response.choices[0].message.content or ""
             except Exception as e:
                 logger.warning("multimodal_generation_error", error=str(e))

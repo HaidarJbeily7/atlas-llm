@@ -34,6 +34,10 @@ PROBE_MODULES = {
     "social_engineering": "atlas.probes.social_engineering",
     # Multimodal probes
     "visual_injection": "atlas.probes.visual_injection",
+    # Experiment probes (2x2 factorial)
+    "scripted_multi_turn": "atlas.probes.scripted_multi_turn",
+    "adaptive_single_turn": "atlas.probes.adaptive_single_turn",
+    "adaptive_multi_turn": "atlas.probes.adaptive_multi_turn",
 }
 
 # Mapping from probe category to recommended default detectors
@@ -62,4 +66,7 @@ DEFAULT_PROBE_DETECTORS = {
     "steganographic": ["keyword"],
     "social_engineering": ["refusal"],
     "visual_injection": ["keyword", "refusal"],
+    "scripted_multi_turn": ["keyword", "refusal"],
+    "adaptive_single_turn": ["keyword", "refusal"],
+    "adaptive_multi_turn": ["keyword", "refusal"],
 }
