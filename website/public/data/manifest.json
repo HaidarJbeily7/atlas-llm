@@ -1,0 +1,118 @@
+{
+  "experiments": [
+    {
+      "id": "20260410_121121",
+      "timestamp": "20260410_121121",
+      "models": [
+        "openrouter/openai/gpt-4o",
+        "openrouter/openai/gpt-4o-mini",
+        "openrouter/google/gemini-2.5-flash",
+        "openrouter/anthropic/claude-sonnet-4.5",
+        "openrouter/meta-llama/llama-3.1-70b-instruct"
+      ],
+      "conditions": [
+        "jailbreak",
+        "scripted_multi_turn",
+        "adaptive_single_turn",
+        "adaptive_multi_turn"
+      ],
+      "scans": [
+        {
+          "model_dir": "openrouter_anthropic_claude-sonnet-4_5",
+          "probe": "adaptive_multi_turn",
+          "file": "20260410_121121/openrouter_anthropic_claude-sonnet-4_5/adaptive_multi_turn/scan_c0b8bf16.json"
+        },
+        {
+          "model_dir": "openrouter_anthropic_claude-sonnet-4_5",
+          "probe": "adaptive_single_turn",
+          "file": "20260410_121121/openrouter_anthropic_claude-sonnet-4_5/adaptive_single_turn/scan_8430720f.json"
+        },
+        {
+          "model_dir": "openrouter_anthropic_claude-sonnet-4_5",
+          "probe": "jailbreak",
+          "file": "20260410_121121/openrouter_anthropic_claude-sonnet-4_5/jailbreak/scan_9a8bc82d.json"
+        },
+        {
+          "model_dir": "openrouter_anthropic_claude-sonnet-4_5",
+          "probe": "scripted_multi_turn",
+          "file": "20260410_121121/openrouter_anthropic_claude-sonnet-4_5/scripted_multi_turn/scan_0bf82e12.json"
+        },
+        {
+          "model_dir": "openrouter_google_gemini-2_5-flash",
+          "probe": "adaptive_multi_turn",
+          "file": "20260410_121121/openrouter_google_gemini-2_5-flash/adaptive_multi_turn/scan_d5928d0b.json"
+        },
+        {
+          "model_dir": "openrouter_google_gemini-2_5-flash",
+          "probe": "adaptive_single_turn",
+          "file": "20260410_121121/openrouter_google_gemini-2_5-flash/adaptive_single_turn/scan_0de47d2b.json"
+        },
+        {
+          "model_dir": "openrouter_google_gemini-2_5-flash",
+          "probe": "jailbreak",
+          "file": "20260410_121121/openrouter_google_gemini-2_5-flash/jailbreak/scan_668cbe5d.json"
+        },
+        {
+          "model_dir": "openrouter_google_gemini-2_5-flash",
+          "probe": "scripted_multi_turn",
+          "file": "20260410_121121/openrouter_google_gemini-2_5-flash/scripted_multi_turn/scan_45175c53.json"
+        },
+        {
+          "model_dir": "openrouter_meta-llama_llama-3_1-70b-instruct",
+          "probe": "adaptive_multi_turn",
+          "file": "20260410_121121/openrouter_meta-llama_llama-3_1-70b-instruct/adaptive_multi_turn/scan_ab8eb59c.json"
+        },
+        {
+          "model_dir": "openrouter_meta-llama_llama-3_1-70b-instruct",
+          "probe": "adaptive_single_turn",
+          "file": "20260410_121121/openrouter_meta-llama_llama-3_1-70b-instruct/adaptive_single_turn/scan_594e1585.json"
+        },
+        {
+          "model_dir": "openrouter_meta-llama_llama-3_1-70b-instruct",
+          "probe": "jailbreak",
+          "file": "20260410_121121/openrouter_meta-llama_llama-3_1-70b-instruct/jailbreak/scan_b132c0f8.json"
+        },
+        {
+          "model_dir": "openrouter_meta-llama_llama-3_1-70b-instruct",
+          "probe": "scripted_multi_turn",
+          "file": "20260410_121121/openrouter_meta-llama_llama-3_1-70b-instruct/scripted_multi_turn/scan_3469cfb5.json"
+        },
+        {
+          "model_dir": "openrouter_openai_gpt-4o",
+          "probe": "adaptive_multi_turn",
+          "file": "20260410_121121/openrouter_openai_gpt-4o/adaptive_multi_turn/scan_ed7a3f7b.json"
+        },
+        {
+          "model_dir": "openrouter_openai_gpt-4o",
+          "probe": "adaptive_single_turn",
+          "file": "20260410_121121/openrouter_openai_gpt-4o/adaptive_single_turn/scan_58c9dea0.json"
+        },
+        {
+          "model_dir": "openrouter_openai_gpt-4o",
+          "probe": "jailbreak",
+          "file": "20260410_121121/openrouter_openai_gpt-4o/jailbreak/scan_e09e5dea.json"
+        },
+        {
+          "model_dir": "openrouter_openai_gpt-4o",
+          "probe": "scripted_multi_turn",
+          "file": "20260410_121121/openrouter_openai_gpt-4o/scripted_multi_turn/scan_61f8abbc.json"
+        },
+        {
+          "model_dir": "openrouter_openai_gpt-4o-mini",
+          "probe": "adaptive_multi_turn",
+          "file": "20260410_121121/openrouter_openai_gpt-4o-mini/adaptive_multi_turn/scan_e3d8c50a.json"
+        },
+        {
+          "model_dir": "openrouter_openai_gpt-4o-mini",
+          "probe": "adaptive_single_turn",
+          "file": "20260410_121121/openrouter_openai_gpt-4o-mini/adaptive_single_turn/scan_8ba58b27.json"
+        },
+        {
+          "model_dir": "openrouter_openai_gpt-4o-mini",
+          "probe": "scripted_multi_turn",
+          "file": "20260410_121121/openrouter_openai_gpt-4o-mini/scripted_multi_turn/scan_9c600306.json"
+        }
+      ]
+    }
+  ]
+}

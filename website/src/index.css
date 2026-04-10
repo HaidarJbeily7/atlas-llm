@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+:root {
+  --color-primary: #6366f1;
+  --color-danger: #ef4444;
+  --color-warning: #f59e0b;
+  --color-success: #22c55e;
+  --color-info: #3b82f6;
+}
+
+body {
+  @apply bg-gray-950 text-gray-100 antialiased;
+  margin: 0;
+}
+
+.card {
+  @apply bg-gray-900 border border-gray-800 rounded-xl p-6;
+}
+
+.badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+.badge-success { @apply bg-green-900/50 text-green-400 border border-green-800; }
+.badge-danger  { @apply bg-red-900/50 text-red-400 border border-red-800; }
+.badge-warning { @apply bg-amber-900/50 text-amber-400 border border-amber-800; }
+.badge-info    { @apply bg-blue-900/50 text-blue-400 border border-blue-800; }
