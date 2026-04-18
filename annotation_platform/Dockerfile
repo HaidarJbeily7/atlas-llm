@@ -19,6 +19,7 @@ COPY backend/pyproject.toml backend/uv.lock ./
 RUN uv sync --no-dev --no-install-project
 
 # Copy backend source + alembic
+COPY backend/README.md ./
 COPY backend/atlas_backend/ ./atlas_backend/
 COPY backend/alembic.ini ./
 COPY backend/alembic/ ./alembic/
