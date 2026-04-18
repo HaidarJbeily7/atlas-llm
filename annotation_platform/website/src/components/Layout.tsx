@@ -1,6 +1,8 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { Shield, BarChart3, Search, FileCheck, Activity } from 'lucide-react';
 import clsx from 'clsx';
+import ExperimentPicker from './ExperimentPicker';
+import AuthBar from './AuthBar';
 
 const NAV_ITEMS = [
   { to: '/', label: 'Dashboard', icon: Activity },
@@ -43,6 +45,8 @@ export default function Layout() {
             </NavLink>
           ))}
         </nav>
+        <ExperimentPicker />
+        <AuthBar />
         <div className="p-4 border-t border-gray-800">
           <p className="text-xs text-gray-600">2x2 Factorial Experiment</p>
         </div>

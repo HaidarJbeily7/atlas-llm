@@ -1,7 +1,19 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useExperimentData } from '../hooks/useExperimentData';
 import LoadingSpinner from '../components/LoadingSpinner';
+import AnnotationPanel from '../components/AnnotationPanel';
 import { getProbeLabel, shortModelName, loadFindingDetail } from '../lib/data';
+import {
+  listReviews,
+  annotationCounts,
+  reviewStatusColor,
+  reviewStatusLabel,
+  settlementColor,
+  settlementLabel,
+  type ReviewAggregate,
+  type ReviewStatus,
+  type Settlement,
+} from '../lib/annotations';
 import type { FindingIndex, FindingDetail } from '../types';
 import clsx from 'clsx';
 
@@ -152,10 +164,32 @@ export default function Findings() {
   const [filterPassed, setFilterPassed] = useState<'all' | 'passed' | 'failed'>('all');
   const [filterModel, setFilterModel] = useState<string>('all');
   const [filterProbe, setFilterProbe] = useState<string>('all');
+  const [filterReview, setFilterReview] = useState<'all' | Settlement | ReviewStatus>('all');
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [expandedDetail, setExpandedDetail] = useState<FindingDetail | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
   const [page, setPage] = useState(0);
+
+  const [reviewMap, setReviewMap] = useState<Record<string, ReviewAggregate>>({});
+  const [annMap, setAnnMap] = useState<Record<string, number>>({});
+  const [backendOk, setBackendOk] = useState<boolean | null>(null);
+
+  const refreshBackendState = useCallback(async () => {
+    try {
+      const [reviews, counts] = await Promise.all([listReviews(), annotationCounts()]);
+      const m: Record<string, ReviewAggregate> = {};
+      for (const r of reviews) m[r.finding_id] = r;
+      setReviewMap(m);
+      setAnnMap(counts);
+      setBackendOk(true);
+    } catch {
+      setBackendOk(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void refreshBackendState();
+  }, [refreshBackendState]);
 
   const PAGE_SIZE = 20;
 
@@ -169,9 +203,20 @@ export default function Findings() {
       if (filterPassed === 'failed' && f.passed) return false;
       if (filterModel !== 'all' && f.model !== filterModel) return false;
       if (filterProbe !== 'all' && f.probe !== filterProbe) return false;
+      if (filterReview !== 'all') {
+        const rev = reviewMap[f.id];
+        const settlement: Settlement = rev?.settlement ?? 'open';
+        const status = rev?.status ?? null;
+        if (filterReview === 'open' || filterReview === 'partial'
+            || filterReview === 'settled' || filterReview === 'disputed') {
+          if (settlement !== filterReview) return false;
+        } else if (status !== filterReview) {
+          return false;
+        }
+      }
       return true;
     });
-  }, [findings, filterPassed, filterModel, filterProbe]);
+  }, [findings, filterPassed, filterModel, filterProbe, filterReview, reviewMap]);
 
   const paged = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
@@ -200,7 +245,14 @@ export default function Findings() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-white">Findings Explorer</h1>
-        <p className="text-gray-500 mt-1">{findings.length} total findings across all scans</p>
+        <p className="text-gray-500 mt-1">
+          {findings.length} total findings across all scans
+          {backendOk === false ? (
+            <span className="ml-2 text-amber-400 text-xs">
+              (annotation backend unreachable — investigation features disabled)
+            </span>
+          ) : null}
+        </p>
       </div>
 
       {/* Filters */}
@@ -233,6 +285,27 @@ export default function Findings() {
             {probeNames.map((p) => <option key={p} value={p}>{getProbeLabel(p)}</option>)}
           </select>
         </div>
+        <div>
+          <label className="text-xs text-gray-500 block mb-1">Review</label>
+          <select value={filterReview}
+            onChange={(e) => { setFilterReview(e.target.value as 'all' | Settlement | ReviewStatus); setPage(0); }}
+            disabled={!backendOk}
+            className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-sm text-gray-200 disabled:opacity-40">
+            <option value="all">All</option>
+            <optgroup label="Settlement">
+              <option value="open">Open (no votes)</option>
+              <option value="partial">Partial (1 voter)</option>
+              <option value="settled">Settled</option>
+              <option value="disputed">Disputed</option>
+            </optgroup>
+            <optgroup label="Settled status">
+              <option value="confirmed_vulnerability">Confirmed</option>
+              <option value="false_positive">False Positive</option>
+              <option value="needs_investigation">Investigating</option>
+              <option value="wont_fix">Won't Fix</option>
+            </optgroup>
+          </select>
+        </div>
         <div className="ml-auto text-sm text-gray-400">
           Showing {filtered.length} findings
         </div>
@@ -240,44 +313,85 @@ export default function Findings() {
 
       {/* Findings list */}
       <div className="space-y-2">
-        {paged.map((f) => (
-          <div key={f.id} className="card !p-0 overflow-hidden">
-            <button
-              onClick={() => handleExpand(f)}
-              className="w-full text-left px-4 py-3 flex items-center gap-4 hover:bg-gray-800/50 transition-colors"
-            >
-              <span className={clsx('w-2 h-2 rounded-full flex-shrink-0', f.passed ? 'bg-green-500' : 'bg-red-500')} />
-              <span className="text-sm font-medium text-white flex-1 truncate">
-                {f.prompt_preview}...
-              </span>
-              {f.num_messages > 0 && (
-                <span className="badge badge-warning text-[10px]">{Math.ceil(f.num_messages / 2)} turns</span>
-              )}
-              {f.num_attacker_calls > 0 && (
-                <span className="text-[10px] text-purple-400 font-medium">ADAPTIVE</span>
-              )}
-              <span className="badge badge-info text-xs">{f.model_short}</span>
-              <span className="text-xs text-gray-500">{getProbeLabel(f.probe)}</span>
-              <span className={clsx('badge', f.passed ? 'badge-success' : 'badge-danger')}>
-                {f.passed ? 'PASS' : 'FAIL'}
-              </span>
-            </button>
+        {paged.map((f) => {
+          const rev = reviewMap[f.id];
+          const settlement: Settlement = rev?.settlement ?? 'open';
+          const settledStatus = rev?.status ?? null;
+          const annCount = annMap[f.id] ?? 0;
+          return (
+            <div key={f.id} className="card !p-0 overflow-hidden">
+              <button
+                onClick={() => handleExpand(f)}
+                className="w-full text-left px-4 py-3 flex items-center gap-4 hover:bg-gray-800/50 transition-colors"
+              >
+                <span className={clsx('w-2 h-2 rounded-full flex-shrink-0', f.passed ? 'bg-green-500' : 'bg-red-500')} />
+                <span className="text-sm font-medium text-white flex-1 truncate">
+                  {f.prompt_preview}...
+                </span>
+                {annCount > 0 && (
+                  <span className="text-[10px] text-indigo-300 bg-indigo-900/30 border border-indigo-800/40 rounded px-1.5 py-0.5">
+                    {annCount} note{annCount === 1 ? '' : 's'}
+                  </span>
+                )}
+                {backendOk && settlement !== 'open' && (
+                  <span className={clsx('text-[10px] font-medium rounded px-1.5 py-0.5', settlementColor(settlement))}>
+                    {settlementLabel(settlement)}
+                    {rev && rev.distinct_voter_count > 1 ? ` · ${rev.distinct_voter_count}` : ''}
+                  </span>
+                )}
+                {backendOk && settlement === 'settled' && settledStatus && (
+                  <span className={clsx('text-[10px] font-medium rounded px-1.5 py-0.5', reviewStatusColor(settledStatus))}>
+                    {reviewStatusLabel(settledStatus)}
+                  </span>
+                )}
+                {f.num_messages > 0 && (
+                  <span className="badge badge-warning text-[10px]">{Math.ceil(f.num_messages / 2)} turns</span>
+                )}
+                {f.num_attacker_calls > 0 && (
+                  <span className="text-[10px] text-purple-400 font-medium">ADAPTIVE</span>
+                )}
+                <span className="badge badge-info text-xs">{f.model_short}</span>
+                <span className="text-xs text-gray-500">{getProbeLabel(f.probe)}</span>
+                <span className={clsx('badge', f.passed ? 'badge-success' : 'badge-danger')}>
+                  {f.passed ? 'PASS' : 'FAIL'}
+                </span>
+              </button>
 
-            {expandedId === f.id && (
-              detailLoading ? (
-                <div className="border-t border-gray-800 px-4 py-6">
-                  <LoadingSpinner />
-                </div>
-              ) : expandedDetail ? (
-                <FindingExpanded finding={expandedDetail} />
-              ) : (
-                <div className="border-t border-gray-800 px-4 py-4 text-sm text-red-400">
-                  Failed to load finding details
-                </div>
-              )
-            )}
-          </div>
-        ))}
+              {expandedId === f.id && (
+                detailLoading ? (
+                  <div className="border-t border-gray-800 px-4 py-6">
+                    <LoadingSpinner />
+                  </div>
+                ) : expandedDetail ? (
+                  <>
+                    <FindingExpanded finding={expandedDetail} />
+                    {backendOk ? (
+                      <AnnotationPanel
+                        key={f.id}
+                        findingId={f.id}
+                        onReviewChange={(r) => setReviewMap((prev) => ({
+                          ...prev,
+                          [f.id]: {
+                            finding_id: r.finding_id,
+                            settlement: r.settlement,
+                            status: r.status,
+                            vote_count: r.vote_count,
+                            distinct_voter_count: r.distinct_voter_count,
+                          },
+                        }))}
+                        onAnnotationsChange={(n) => setAnnMap((prev) => ({ ...prev, [f.id]: n }))}
+                      />
+                    ) : null}
+                  </>
+                ) : (
+                  <div className="border-t border-gray-800 px-4 py-4 text-sm text-red-400">
+                    Failed to load finding details
+                  </div>
+                )
+              )}
+            </div>
+          );
+        })}
       </div>
 
       {/* Pagination */}

@@ -1,10 +1,56 @@
 import type { Summary, ScanSummary, ModelAggregation, FindingDetail } from '../types';
 
+const API_BASE = import.meta.env.VITE_API_BASE ?? '';
+
+// Currently-selected experiment id (null = latest). Setter invalidates caches.
+let activeExperimentId: string | null = null;
 let cachedSummary: Summary | null = null;
-const findingCache = new Map<string, FindingDetail>();
+let findingCache = new Map<string, FindingDetail>();
+
+const EXPERIMENT_CHANGE_EVENT = 'atlas:experiment-change';
+
+export function setActiveExperiment(id: string | null): void {
+  if (activeExperimentId === id) return;
+  activeExperimentId = id;
+  cachedSummary = null;
+  findingCache = new Map();
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent(EXPERIMENT_CHANGE_EVENT, { detail: id }));
+  }
+}
+
+export function subscribeActiveExperiment(cb: (id: string | null) => void): () => void {
+  if (typeof window === 'undefined') return () => {};
+  const handler = (e: Event) => cb((e as CustomEvent<string | null>).detail);
+  window.addEventListener(EXPERIMENT_CHANGE_EVENT, handler);
+  return () => window.removeEventListener(EXPERIMENT_CHANGE_EVENT, handler);
+}
+
+export function getActiveExperiment(): string | null {
+  return activeExperimentId;
+}
+
+async function tryFetchJson<T>(url: string): Promise<T | null> {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    return (await res.json()) as T;
+  } catch {
+    return null;
+  }
+}
 
 export async function loadSummary(): Promise<Summary> {
   if (cachedSummary) return cachedSummary;
+  // Prefer the DB-backed API; fall back to the static file when the backend isn't running.
+  const apiUrl = activeExperimentId
+    ? `${API_BASE}/api/experiments/${encodeURIComponent(activeExperimentId)}`
+    : `${API_BASE}/api/summary`;
+  const apiData = await tryFetchJson<Summary>(apiUrl);
+  if (apiData) {
+    cachedSummary = apiData;
+    return apiData;
+  }
   const res = await fetch('/data/summary.json');
   cachedSummary = await res.json();
   return cachedSummary!;
@@ -13,6 +59,14 @@ export async function loadSummary(): Promise<Summary> {
 export async function loadFindingDetail(id: string): Promise<FindingDetail> {
   const cached = findingCache.get(id);
   if (cached) return cached;
+  const apiUrl = activeExperimentId
+    ? `${API_BASE}/api/experiments/${encodeURIComponent(activeExperimentId)}/findings/${encodeURIComponent(id)}`
+    : `${API_BASE}/api/findings/${encodeURIComponent(id)}`;
+  const apiData = await tryFetchJson<FindingDetail>(apiUrl);
+  if (apiData) {
+    findingCache.set(id, apiData);
+    return apiData;
+  }
   const res = await fetch(`/data/findings/${id}.json`);
   const data = await res.json();
   findingCache.set(id, data);
