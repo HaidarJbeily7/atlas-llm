@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
@@ -13,10 +12,7 @@ import { getProbeLabel, CHART_COLORS } from '../lib/data';
 
 export default function Dashboard() {
   const { summary, models, loading } = useExperimentData();
-  const { backendOk, computeReviewStats } = useReviewData();
-
-  const findings = summary?.findings_index ?? [];
-  const reviewStats = useMemo(() => computeReviewStats(findings), [computeReviewStats, findings]);
+  const { reviewStats, backendOk } = useReviewData();
 
   if (loading || !summary) return <LoadingSpinner />;
 
@@ -101,7 +97,7 @@ export default function Dashboard() {
       </div>
 
       {/* Review progress & reviewed-only stats */}
-      {backendOk && (
+      {backendOk && reviewStats && (
         <div className="card">
           <div className="flex items-center gap-3 mb-4">
             <ClipboardCheck className="w-5 h-5 text-indigo-400" />
@@ -119,7 +115,7 @@ export default function Dashboard() {
             </div>
             <div>
               <p className="text-xs text-gray-500">Needs Review</p>
-              <p className="text-xl font-bold text-amber-400">{reviewStats.needsReview}</p>
+              <p className="text-xl font-bold text-amber-400">{reviewStats.needs_review}</p>
             </div>
             <div>
               <p className="text-xs text-gray-500">Confirmed Vulnerabilities</p>
@@ -127,15 +123,15 @@ export default function Dashboard() {
             </div>
             <div>
               <p className="text-xs text-gray-500">False Positives</p>
-              <p className="text-xl font-bold text-green-400">{reviewStats.falsePositive}</p>
+              <p className="text-xl font-bold text-green-400">{reviewStats.false_positive}</p>
             </div>
             <div>
               <p className="text-xs text-gray-500">Reviewed Pass Rate</p>
               <p className="text-xl font-bold text-white">
-                {reviewStats.reviewedPassRate !== null ? `${reviewStats.reviewedPassRate.toFixed(1)}%` : '-'}
+                {reviewStats.reviewed_pass_rate !== null ? `${reviewStats.reviewed_pass_rate.toFixed(1)}%` : '-'}
               </p>
               <p className="text-xs text-gray-500">
-                {reviewStats.reviewedPassCount} pass / {reviewStats.reviewedFailCount} fail
+                {reviewStats.reviewed_pass_count} pass / {reviewStats.reviewed_fail_count} fail
               </p>
             </div>
           </div>

@@ -618,3 +618,102 @@ def all_review_summaries(session: Session) -> list[dict]:
             "distinct_voter_count": len({v["user_id"] for v in votes}),
         })
     return out
+
+
+def review_stats_for_experiment(session: Session, experiment_id: str) -> dict:
+    """Compute review progress and reviewed-only stats for an experiment.
+
+    Returns counts of reviewed/unreviewed findings, breakdown by status,
+    and pass/fail rates computed only from reviewed findings.
+    """
+    # Get all findings for this experiment
+    findings = findings_index(session, experiment_id)
+    if not findings:
+        return _empty_review_stats()
+
+    # Get all votes, grouped by finding
+    vote_stmt = (
+        select(ReviewVote, User.username)
+        .join(User, User.id == ReviewVote.user_id)
+    )
+    vote_rows = session.execute(vote_stmt).all()
+    votes_by_finding: dict[str, list[dict]] = {}
+    for r in vote_rows:
+        vote_dict = _vote_to_dict(r.ReviewVote, r.username)
+        votes_by_finding.setdefault(r.ReviewVote.finding_id, []).append(vote_dict)
+
+    # Build a set of finding IDs in this experiment for fast lookup
+    exp_finding_ids = {f["id"] for f in findings}
+
+    needs_review = 0
+    reviewed = 0
+    confirmed = 0
+    false_positive = 0
+    investigating = 0
+    wont_fix = 0
+    disputed = 0
+    reviewed_pass = 0
+    reviewed_fail = 0
+
+    for f in findings:
+        fid = f["id"]
+        votes = votes_by_finding.get(fid, [])
+        # Only consider votes for findings in this experiment
+        if fid not in exp_finding_ids:
+            continue
+
+        settlement, status = compute_settlement(votes)
+
+        if settlement == SETTLEMENT_OPEN:
+            needs_review += 1
+        else:
+            reviewed += 1
+            if settlement == SETTLEMENT_DISPUTED:
+                disputed += 1
+            elif status == "confirmed_vulnerability":
+                confirmed += 1
+            elif status == "false_positive":
+                false_positive += 1
+            elif status == "needs_investigation":
+                investigating += 1
+            elif status == "wont_fix":
+                wont_fix += 1
+
+            if f["passed"]:
+                reviewed_pass += 1
+            else:
+                reviewed_fail += 1
+
+    total = len(findings)
+    reviewed_total = reviewed_pass + reviewed_fail
+    return {
+        "total": total,
+        "needs_review": needs_review,
+        "reviewed": reviewed,
+        "confirmed": confirmed,
+        "false_positive": false_positive,
+        "investigating": investigating,
+        "wont_fix": wont_fix,
+        "disputed": disputed,
+        "reviewed_pass_rate": round((reviewed_pass / reviewed_total) * 100, 1)
+        if reviewed_total > 0
+        else None,
+        "reviewed_fail_count": reviewed_fail,
+        "reviewed_pass_count": reviewed_pass,
+    }
+
+
+def _empty_review_stats() -> dict:
+    return {
+        "total": 0,
+        "needs_review": 0,
+        "reviewed": 0,
+        "confirmed": 0,
+        "false_positive": 0,
+        "investigating": 0,
+        "wont_fix": 0,
+        "disputed": 0,
+        "reviewed_pass_rate": None,
+        "reviewed_fail_count": 0,
+        "reviewed_pass_count": 0,
+    }

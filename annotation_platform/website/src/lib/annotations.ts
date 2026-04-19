@@ -126,6 +126,29 @@ export function listReviews(): Promise<ReviewAggregate[]> {
   return req('/api/reviews');
 }
 
+// ---- review stats (backend-computed) ------------------------------------
+
+export interface ReviewStats {
+  total: number;
+  needs_review: number;
+  reviewed: number;
+  confirmed: number;
+  false_positive: number;
+  investigating: number;
+  wont_fix: number;
+  disputed: number;
+  reviewed_pass_rate: number | null;
+  reviewed_fail_count: number;
+  reviewed_pass_count: number;
+}
+
+export function fetchReviewStats(experimentId?: string): Promise<ReviewStats> {
+  const path = experimentId
+    ? `/api/experiments/${encodeURIComponent(experimentId)}/review-stats`
+    : '/api/review-stats';
+  return req(path);
+}
+
 // ---- labels / colors ----------------------------------------------------
 
 export function reviewStatusLabel(s: ReviewStatus): string {

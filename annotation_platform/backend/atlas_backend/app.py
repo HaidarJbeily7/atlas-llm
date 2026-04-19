@@ -390,6 +390,25 @@ def get_stats(session: Session = Depends(get_db)) -> dict:
     return db.stats(session)
 
 
+@app.get("/api/review-stats")
+def get_review_stats(session: Session = Depends(get_db)) -> dict:
+    """Review progress stats for the latest experiment."""
+    exp_id = db.get_latest_experiment_id(session)
+    if exp_id is None:
+        raise HTTPException(404, "No experiments in DB")
+    return db.review_stats_for_experiment(session, exp_id)
+
+
+@app.get("/api/experiments/{exp_id}/review-stats")
+def get_experiment_review_stats(
+    exp_id: str, session: Session = Depends(get_db)
+) -> dict:
+    """Review progress stats for a specific experiment."""
+    if db.get_experiment(session, exp_id) is None:
+        raise HTTPException(404, f"Experiment {exp_id} not found")
+    return db.review_stats_for_experiment(session, exp_id)
+
+
 # ---- Static data + built frontend ---------------------------------------
 
 if DATA_DIR.exists():

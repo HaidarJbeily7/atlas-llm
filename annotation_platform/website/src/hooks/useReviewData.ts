@@ -2,49 +2,59 @@ import { useEffect, useState, useCallback } from 'react';
 import {
   listReviews,
   annotationCounts,
+  fetchReviewStats,
   type ReviewAggregate,
-  type Settlement,
+  type ReviewStats,
 } from '../lib/annotations';
-import type { FindingIndex } from '../types';
+import { getActiveExperiment } from '../lib/data';
 
-export interface ReviewStats {
-  total: number;
-  needsReview: number;
-  reviewed: number;
-  confirmed: number;
-  falsePositive: number;
-  investigating: number;
-  wontFix: number;
-  disputed: number;
-  reviewedPassRate: number | null;
-  reviewedFailCount: number;
-  reviewedPassCount: number;
-}
+export type { ReviewStats } from '../lib/annotations';
 
 interface ReviewData {
   reviewMap: Record<string, ReviewAggregate>;
   annMap: Record<string, number>;
+  reviewStats: ReviewStats | null;
   backendOk: boolean | null;
   refresh: () => Promise<void>;
-  getSettlement: (findingId: string) => Settlement;
-  computeReviewStats: (findings: FindingIndex[]) => ReviewStats;
 }
+
+const EMPTY_STATS: ReviewStats = {
+  total: 0,
+  needs_review: 0,
+  reviewed: 0,
+  confirmed: 0,
+  false_positive: 0,
+  investigating: 0,
+  wont_fix: 0,
+  disputed: 0,
+  reviewed_pass_rate: null,
+  reviewed_fail_count: 0,
+  reviewed_pass_count: 0,
+};
 
 export function useReviewData(): ReviewData {
   const [reviewMap, setReviewMap] = useState<Record<string, ReviewAggregate>>({});
   const [annMap, setAnnMap] = useState<Record<string, number>>({});
+  const [reviewStats, setReviewStats] = useState<ReviewStats | null>(null);
   const [backendOk, setBackendOk] = useState<boolean | null>(null);
 
   const refresh = useCallback(async () => {
     try {
-      const [reviews, counts] = await Promise.all([listReviews(), annotationCounts()]);
+      const expId = getActiveExperiment() ?? undefined;
+      const [reviews, counts, stats] = await Promise.all([
+        listReviews(),
+        annotationCounts(),
+        fetchReviewStats(expId),
+      ]);
       const m: Record<string, ReviewAggregate> = {};
       for (const r of reviews) m[r.finding_id] = r;
       setReviewMap(m);
       setAnnMap(counts);
+      setReviewStats(stats);
       setBackendOk(true);
     } catch {
       setBackendOk(false);
+      setReviewStats(EMPTY_STATS);
     }
   }, []);
 
@@ -52,64 +62,5 @@ export function useReviewData(): ReviewData {
     void refresh();
   }, [refresh]);
 
-  const getSettlement = useCallback(
-    (findingId: string): Settlement => reviewMap[findingId]?.settlement ?? 'open',
-    [reviewMap],
-  );
-
-  const computeReviewStats = useCallback(
-    (findings: FindingIndex[]): ReviewStats => {
-      let needsReview = 0;
-      let reviewed = 0;
-      let confirmed = 0;
-      let falsePositive = 0;
-      let investigating = 0;
-      let wontFix = 0;
-      let disputed = 0;
-      let reviewedPass = 0;
-      let reviewedFail = 0;
-
-      for (const f of findings) {
-        const rev = reviewMap[f.id];
-        const settlement: Settlement = rev?.settlement ?? 'open';
-
-        if (settlement === 'open') {
-          needsReview++;
-        } else {
-          reviewed++;
-          if (settlement === 'disputed') {
-            disputed++;
-          } else {
-            // partial or settled — count pass/fail from the reviewed data
-            if (rev?.status === 'confirmed_vulnerability') confirmed++;
-            else if (rev?.status === 'false_positive') falsePositive++;
-            else if (rev?.status === 'needs_investigation') investigating++;
-            else if (rev?.status === 'wont_fix') wontFix++;
-          }
-
-          // For reviewed stats, use the finding's pass/fail
-          if (f.passed) reviewedPass++;
-          else reviewedFail++;
-        }
-      }
-
-      const reviewedTotal = reviewedPass + reviewedFail;
-      return {
-        total: findings.length,
-        needsReview,
-        reviewed,
-        confirmed,
-        falsePositive,
-        investigating,
-        wontFix,
-        disputed,
-        reviewedPassRate: reviewedTotal > 0 ? (reviewedPass / reviewedTotal) * 100 : null,
-        reviewedFailCount: reviewedFail,
-        reviewedPassCount: reviewedPass,
-      };
-    },
-    [reviewMap],
-  );
-
-  return { reviewMap, annMap, backendOk, refresh, getSettlement, computeReviewStats };
+  return { reviewMap, annMap, reviewStats, backendOk, refresh };
 }

@@ -25,8 +25,8 @@ function DetectorCard({ d }: { d: FindingDetail['detector_results'][number] }) {
       d.passed ? 'bg-green-900/20 border-green-800/50' : 'bg-red-900/20 border-red-800/50')}>
       <button
         type="button"
-        onClick={() => setOpen(!open)}
-        className="w-full text-left px-3 py-2"
+        onClick={(e) => { e.stopPropagation(); setOpen(!open); }}
+        className="w-full text-left px-3 py-2 cursor-pointer"
       >
         <div className="flex justify-between items-center mb-1">
           <span className="font-medium text-gray-200">{d.detector_name}</span>
@@ -49,32 +49,45 @@ function DetectorCard({ d }: { d: FindingDetail['detector_results'][number] }) {
       </button>
 
       {open && (
-        <div className="border-t border-gray-700/50 px-3 py-2 space-y-2">
-          {d.failure_type && (
-            <div>
-              <span className="text-gray-500">Failure Type: </span>
-              <span className="text-gray-300">{d.failure_type}</span>
-            </div>
-          )}
+        <div className="border-t border-gray-700/50 px-3 py-2 space-y-2 text-xs">
+          {/* Full evidence (always shown when expanded) */}
+          <div>
+            <p className="text-gray-500 mb-1">Evidence:</p>
+            <pre className="text-gray-300 bg-gray-800/60 rounded px-2 py-1.5 whitespace-pre-wrap max-h-48 overflow-auto">
+              {d.evidence || '(none)'}
+            </pre>
+          </div>
 
-          {d.judge_reasoning && (
-            <div>
-              <p className="text-gray-500 mb-1">Judge Reasoning:</p>
-              <pre className="text-gray-300 bg-gray-800/60 rounded px-2 py-1.5 whitespace-pre-wrap max-h-48 overflow-auto">
-                {d.judge_reasoning}
-              </pre>
-            </div>
-          )}
+          {/* Key details grid — always visible */}
+          <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-gray-400">
+            <span>Score: <span className="text-white">{d.score.toFixed(3)}</span></span>
+            <span>Confidence: <span className="text-white">{d.confidence.toFixed(3)}</span></span>
+            <span>Status: <span className={d.passed ? 'text-green-400' : 'text-red-400'}>{d.passed ? 'PASS' : 'FAIL'}</span></span>
+            <span>Needs Human Review: <span className={d.needs_human_review ? 'text-amber-400' : 'text-gray-500'}>{d.needs_human_review ? 'Yes' : 'No'}</span></span>
+            <span>Failure Type: <span className="text-white">{d.failure_type || '-'}</span></span>
+          </div>
 
-          {d.judge_model && (
-            <div className="flex flex-wrap gap-3 text-gray-500">
-              <span>Judge: <span className="text-gray-300">{d.judge_model}</span></span>
-              <span>Tokens: <span className="text-gray-300">{d.judge_tokens_in} in / {d.judge_tokens_out} out</span></span>
-              <span>Cost: <span className="text-gray-300">${d.judge_cost_usd.toFixed(4)}</span></span>
-              <span>Latency: <span className="text-gray-300">{(d.judge_latency_ms / 1000).toFixed(1)}s</span></span>
-            </div>
-          )}
+          {/* Judge reasoning */}
+          <div>
+            <p className="text-gray-500 mb-1">Judge Reasoning:</p>
+            <pre className="text-gray-300 bg-gray-800/60 rounded px-2 py-1.5 whitespace-pre-wrap max-h-48 overflow-auto">
+              {d.judge_reasoning || '(no reasoning available)'}
+            </pre>
+          </div>
 
+          {/* Judge metadata */}
+          <div className="flex flex-wrap gap-3 text-gray-400">
+            <span>Judge Model: <span className="text-gray-200">{d.judge_model || '-'}</span></span>
+            {d.judge_model && (
+              <>
+                <span>Tokens: <span className="text-gray-200">{d.judge_tokens_in} in / {d.judge_tokens_out} out</span></span>
+                <span>Cost: <span className="text-gray-200">${(d.judge_cost_usd ?? 0).toFixed(4)}</span></span>
+                <span>Latency: <span className="text-gray-200">{((d.judge_latency_ms ?? 0) / 1000).toFixed(1)}s</span></span>
+              </>
+            )}
+          </div>
+
+          {/* Dimension scores */}
           {hasDimensions && (
             <div>
               <p className="text-gray-500 mb-1">Dimension Scores:</p>
@@ -88,6 +101,7 @@ function DetectorCard({ d }: { d: FindingDetail['detector_results'][number] }) {
             </div>
           )}
 
+          {/* Matched patterns */}
           {hasPatterns && (
             <div>
               <p className="text-gray-500 mb-1">Matched Patterns:</p>
@@ -237,7 +251,7 @@ function FindingExpanded({ finding }: { finding: FindingDetail }) {
 
 export default function Findings() {
   const { summary, loading } = useExperimentData();
-  const { reviewMap, annMap, backendOk, refresh: refreshReviews, computeReviewStats } = useReviewData();
+  const { reviewMap, annMap, reviewStats, backendOk, refresh: refreshReviews } = useReviewData();
   const [filterPassed, setFilterPassed] = useState<'all' | 'passed' | 'failed'>('all');
   const [filterModel, setFilterModel] = useState<string>('all');
   const [filterProbe, setFilterProbe] = useState<string>('all');
@@ -299,12 +313,9 @@ export default function Findings() {
 
   if (loading) return <LoadingSpinner />;
 
-  const reviewStats = useMemo(
-    () => computeReviewStats(findings),
-    [computeReviewStats, findings],
-  );
-
-  const reviewPct = reviewStats.total > 0 ? (reviewStats.reviewed / reviewStats.total) * 100 : 0;
+  const reviewPct = reviewStats && reviewStats.total > 0
+    ? (reviewStats.reviewed / reviewStats.total) * 100
+    : 0;
 
   return (
     <div className="space-y-6">
@@ -321,7 +332,7 @@ export default function Findings() {
       </div>
 
       {/* Review progress bar */}
-      {backendOk && (
+      {backendOk && reviewStats && (
         <div className="card space-y-3">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold text-white">Review Progress</h2>
@@ -345,7 +356,7 @@ export default function Findings() {
                   : 'bg-amber-900/20 text-amber-400 border border-amber-800/30 hover:bg-amber-900/30',
               )}
             >
-              Needs Review: {reviewStats.needsReview}
+              Needs Review: {reviewStats.needs_review}
             </button>
             <button
               onClick={() => { setFilterReview('confirmed_vulnerability'); setPage(0); }}
@@ -367,7 +378,7 @@ export default function Findings() {
                   : 'bg-green-900/20 text-green-400 border border-green-800/30 hover:bg-green-900/30',
               )}
             >
-              False Positive: {reviewStats.falsePositive}
+              False Positive: {reviewStats.false_positive}
             </button>
             <button
               onClick={() => { setFilterReview('needs_investigation'); setPage(0); }}
@@ -403,9 +414,9 @@ export default function Findings() {
           {reviewStats.reviewed > 0 && (
             <div className="flex gap-4 text-xs text-gray-500 border-t border-gray-800 pt-2">
               <span>Reviewed stats:</span>
-              <span>Pass rate: <span className="text-white font-medium">{reviewStats.reviewedPassRate?.toFixed(1)}%</span></span>
-              <span>Passed: <span className="text-green-400 font-medium">{reviewStats.reviewedPassCount}</span></span>
-              <span>Failed: <span className="text-red-400 font-medium">{reviewStats.reviewedFailCount}</span></span>
+              <span>Pass rate: <span className="text-white font-medium">{reviewStats.reviewed_pass_rate?.toFixed(1)}%</span></span>
+              <span>Passed: <span className="text-green-400 font-medium">{reviewStats.reviewed_pass_count}</span></span>
+              <span>Failed: <span className="text-red-400 font-medium">{reviewStats.reviewed_fail_count}</span></span>
             </div>
           )}
         </div>
