@@ -1,16 +1,14 @@
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useExperimentData } from '../hooks/useExperimentData';
+import { useReviewData } from '../hooks/useReviewData';
 import LoadingSpinner from '../components/LoadingSpinner';
 import AnnotationPanel from '../components/AnnotationPanel';
 import { getProbeLabel, shortModelName, loadFindingDetail } from '../lib/data';
 import {
-  listReviews,
-  annotationCounts,
   reviewStatusColor,
   reviewStatusLabel,
   settlementColor,
   settlementLabel,
-  type ReviewAggregate,
   type ReviewStatus,
   type Settlement,
 } from '../lib/annotations';
@@ -239,35 +237,15 @@ function FindingExpanded({ finding }: { finding: FindingDetail }) {
 
 export default function Findings() {
   const { summary, loading } = useExperimentData();
+  const { reviewMap, annMap, backendOk, refresh: refreshReviews, computeReviewStats } = useReviewData();
   const [filterPassed, setFilterPassed] = useState<'all' | 'passed' | 'failed'>('all');
   const [filterModel, setFilterModel] = useState<string>('all');
   const [filterProbe, setFilterProbe] = useState<string>('all');
-  const [filterReview, setFilterReview] = useState<'all' | Settlement | ReviewStatus>('all');
+  const [filterReview, setFilterReview] = useState<'all' | 'needs_review' | Settlement | ReviewStatus>('all');
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [expandedDetail, setExpandedDetail] = useState<FindingDetail | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
   const [page, setPage] = useState(0);
-
-  const [reviewMap, setReviewMap] = useState<Record<string, ReviewAggregate>>({});
-  const [annMap, setAnnMap] = useState<Record<string, number>>({});
-  const [backendOk, setBackendOk] = useState<boolean | null>(null);
-
-  const refreshBackendState = useCallback(async () => {
-    try {
-      const [reviews, counts] = await Promise.all([listReviews(), annotationCounts()]);
-      const m: Record<string, ReviewAggregate> = {};
-      for (const r of reviews) m[r.finding_id] = r;
-      setReviewMap(m);
-      setAnnMap(counts);
-      setBackendOk(true);
-    } catch {
-      setBackendOk(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    void refreshBackendState();
-  }, [refreshBackendState]);
 
   const PAGE_SIZE = 20;
 
@@ -285,7 +263,9 @@ export default function Findings() {
         const rev = reviewMap[f.id];
         const settlement: Settlement = rev?.settlement ?? 'open';
         const status = rev?.status ?? null;
-        if (filterReview === 'open' || filterReview === 'partial'
+        if (filterReview === 'needs_review') {
+          if (settlement !== 'open') return false;
+        } else if (filterReview === 'open' || filterReview === 'partial'
             || filterReview === 'settled' || filterReview === 'disputed') {
           if (settlement !== filterReview) return false;
         } else if (status !== filterReview) {
@@ -319,6 +299,13 @@ export default function Findings() {
 
   if (loading) return <LoadingSpinner />;
 
+  const reviewStats = useMemo(
+    () => computeReviewStats(findings),
+    [computeReviewStats, findings],
+  );
+
+  const reviewPct = reviewStats.total > 0 ? (reviewStats.reviewed / reviewStats.total) * 100 : 0;
+
   return (
     <div className="space-y-6">
       <div>
@@ -332,6 +319,97 @@ export default function Findings() {
           ) : null}
         </p>
       </div>
+
+      {/* Review progress bar */}
+      {backendOk && (
+        <div className="card space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-white">Review Progress</h2>
+            <span className="text-xs text-gray-400">
+              {reviewStats.reviewed} / {reviewStats.total} reviewed ({reviewPct.toFixed(0)}%)
+            </span>
+          </div>
+          <div className="w-full bg-gray-800 rounded-full h-2.5 overflow-hidden">
+            <div
+              className="h-full rounded-full transition-all bg-indigo-500"
+              style={{ width: `${reviewPct}%` }}
+            />
+          </div>
+          <div className="flex flex-wrap gap-3 text-xs">
+            <button
+              onClick={() => { setFilterReview('needs_review'); setPage(0); }}
+              className={clsx(
+                'rounded px-2 py-1 transition-colors',
+                filterReview === 'needs_review'
+                  ? 'bg-amber-500/30 text-amber-300 border border-amber-500/50'
+                  : 'bg-amber-900/20 text-amber-400 border border-amber-800/30 hover:bg-amber-900/30',
+              )}
+            >
+              Needs Review: {reviewStats.needsReview}
+            </button>
+            <button
+              onClick={() => { setFilterReview('confirmed_vulnerability'); setPage(0); }}
+              className={clsx(
+                'rounded px-2 py-1 transition-colors',
+                filterReview === 'confirmed_vulnerability'
+                  ? 'bg-red-500/30 text-red-300 border border-red-500/50'
+                  : 'bg-red-900/20 text-red-400 border border-red-800/30 hover:bg-red-900/30',
+              )}
+            >
+              Confirmed: {reviewStats.confirmed}
+            </button>
+            <button
+              onClick={() => { setFilterReview('false_positive'); setPage(0); }}
+              className={clsx(
+                'rounded px-2 py-1 transition-colors',
+                filterReview === 'false_positive'
+                  ? 'bg-green-500/30 text-green-300 border border-green-500/50'
+                  : 'bg-green-900/20 text-green-400 border border-green-800/30 hover:bg-green-900/30',
+              )}
+            >
+              False Positive: {reviewStats.falsePositive}
+            </button>
+            <button
+              onClick={() => { setFilterReview('needs_investigation'); setPage(0); }}
+              className={clsx(
+                'rounded px-2 py-1 transition-colors',
+                filterReview === 'needs_investigation'
+                  ? 'bg-amber-500/30 text-amber-200 border border-amber-500/50'
+                  : 'bg-gray-800 text-amber-300 border border-gray-700 hover:bg-gray-700',
+              )}
+            >
+              Investigating: {reviewStats.investigating}
+            </button>
+            <button
+              onClick={() => { setFilterReview('disputed'); setPage(0); }}
+              className={clsx(
+                'rounded px-2 py-1 transition-colors',
+                filterReview === 'disputed'
+                  ? 'bg-orange-500/30 text-orange-300 border border-orange-500/50'
+                  : 'bg-orange-900/20 text-orange-400 border border-orange-800/30 hover:bg-orange-900/30',
+              )}
+            >
+              Disputed: {reviewStats.disputed}
+            </button>
+            {filterReview !== 'all' && (
+              <button
+                onClick={() => { setFilterReview('all'); setPage(0); }}
+                className="rounded px-2 py-1 bg-gray-800 text-gray-400 border border-gray-700 hover:bg-gray-700"
+              >
+                Clear filter
+              </button>
+            )}
+          </div>
+          {reviewStats.reviewed > 0 && (
+            <div className="flex gap-4 text-xs text-gray-500 border-t border-gray-800 pt-2">
+              <span>Reviewed stats:</span>
+              <span>Pass rate: <span className="text-white font-medium">{reviewStats.reviewedPassRate?.toFixed(1)}%</span></span>
+              <span>Passed: <span className="text-green-400 font-medium">{reviewStats.reviewedPassCount}</span></span>
+              <span>Failed: <span className="text-red-400 font-medium">{reviewStats.reviewedFailCount}</span></span>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Filters */}
       <div className="card flex flex-wrap gap-4 items-center">
@@ -366,10 +444,11 @@ export default function Findings() {
         <div>
           <label className="text-xs text-gray-500 block mb-1">Review</label>
           <select value={filterReview}
-            onChange={(e) => { setFilterReview(e.target.value as 'all' | Settlement | ReviewStatus); setPage(0); }}
+            onChange={(e) => { setFilterReview(e.target.value as 'all' | 'needs_review' | Settlement | ReviewStatus); setPage(0); }}
             disabled={!backendOk}
             className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-sm text-gray-200 disabled:opacity-40">
             <option value="all">All</option>
+            <option value="needs_review">Needs Review</option>
             <optgroup label="Settlement">
               <option value="open">Open (no votes)</option>
               <option value="partial">Partial (1 voter)</option>
@@ -411,6 +490,11 @@ export default function Findings() {
                     {annCount} note{annCount === 1 ? '' : 's'}
                   </span>
                 )}
+                {backendOk && settlement === 'open' && (
+                  <span className="text-[10px] font-medium rounded px-1.5 py-0.5 bg-amber-900/40 text-amber-300 border border-amber-700/50 animate-pulse">
+                    Needs Review
+                  </span>
+                )}
                 {backendOk && settlement !== 'open' && (
                   <span className={clsx('text-[10px] font-medium rounded px-1.5 py-0.5', settlementColor(settlement))}>
                     {settlementLabel(settlement)}
@@ -447,17 +531,8 @@ export default function Findings() {
                       <AnnotationPanel
                         key={f.id}
                         findingId={f.id}
-                        onReviewChange={(r) => setReviewMap((prev) => ({
-                          ...prev,
-                          [f.id]: {
-                            finding_id: r.finding_id,
-                            settlement: r.settlement,
-                            status: r.status,
-                            vote_count: r.vote_count,
-                            distinct_voter_count: r.distinct_voter_count,
-                          },
-                        }))}
-                        onAnnotationsChange={(n) => setAnnMap((prev) => ({ ...prev, [f.id]: n }))}
+                        onReviewChange={() => { void refreshReviews(); }}
+                        onAnnotationsChange={() => { void refreshReviews(); }}
                       />
                     ) : null}
                   </>
