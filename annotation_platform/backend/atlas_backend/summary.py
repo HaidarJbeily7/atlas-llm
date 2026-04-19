@@ -1,15 +1,18 @@
-"""Compute the experiment summary on-the-fly from DB tables, with caching."""
+"""Compute the experiment summary on-the-fly from DB tables, with a 3-minute TTL cache."""
 
 from __future__ import annotations
 
 import threading
+import time
 
 from sqlalchemy.orm import Session
 
 from . import db
 
+_CACHE_TTL_SECONDS = 180  # 3 minutes
+
 _cache_lock = threading.Lock()
-_cache: dict[str, dict] = {}
+_cache: dict[str, tuple[float, dict]] = {}  # experiment_id -> (timestamp, data)
 
 
 def invalidate(experiment_id: str | None = None) -> None:
@@ -21,17 +24,23 @@ def invalidate(experiment_id: str | None = None) -> None:
 
 
 def get_summary(session: Session, experiment_id: str) -> dict | None:
+    now = time.monotonic()
     with _cache_lock:
-        cached = _cache.get(experiment_id)
-    if cached is not None:
-        return cached
+        entry = _cache.get(experiment_id)
+    if entry is not None:
+        cached_at, data = entry
+        if now - cached_at < _CACHE_TTL_SECONDS:
+            return data
+        # Expired — remove it
+        with _cache_lock:
+            _cache.pop(experiment_id, None)
 
     result = _compute(session, experiment_id)
     if result is None:
         return None
 
     with _cache_lock:
-        _cache[experiment_id] = result
+        _cache[experiment_id] = (now, result)
     return result
 
 
