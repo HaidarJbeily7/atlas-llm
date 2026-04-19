@@ -110,14 +110,10 @@ def seed_experiment(
 
         probe_results_summary: dict[str, dict] = {}
         for probe_name, pr in scan.get("probe_results", {}).items():
-            probe_results_summary[probe_name] = {
-                "probe_name": pr.get("probe_name", probe_name),
-                "category": pr.get("category", ""),
-                "total_attempts": pr.get("total_attempts", 0),
-                "passed": pr.get("passed", 0),
-                "failed": pr.get("failed", 0),
-                "pass_rate": pr.get("pass_rate", 0),
-            }
+            # We'll recompute passed/failed counts after processing findings
+            probe_recomputed_passed = 0
+            probe_recomputed_failed = 0
+            probe_total = 0
 
             for finding in pr.get("findings", []):
                 fid = finding.get("id")
@@ -126,14 +122,33 @@ def seed_experiment(
                 attempt = finding.get("attempt", {})
                 fmeta = attempt.get("metadata", {})
 
+                raw_detectors = finding.get("detector_results", [])
                 detector_summary = [
                     {
                         "name": d.get("detector_name", ""),
                         "passed": d.get("passed", False),
                         "score": d.get("score", 0),
                     }
-                    for d in finding.get("detector_results", [])
+                    for d in raw_detectors
                 ]
+
+                # Recompute passed ignoring keyword & refusal detectors
+                _IGNORED_DETECTORS = {"keyword", "refusal"}
+                scoring_detectors = [
+                    d for d in raw_detectors
+                    if d.get("detector_name", "") not in _IGNORED_DETECTORS
+                ]
+                finding_passed = (
+                    all(d.get("passed", False) for d in scoring_detectors)
+                    if scoring_detectors
+                    else True
+                )
+
+                probe_total += 1
+                if finding_passed:
+                    probe_recomputed_passed += 1
+                else:
+                    probe_recomputed_failed += 1
 
                 finding_rows.append({
                     "id": fid,
@@ -141,7 +156,7 @@ def seed_experiment(
                     "model": model,
                     "model_short": model_short,
                     "probe": attempt.get("probe_name", probe_name),
-                    "passed": bool(finding.get("passed")),
+                    "passed": finding_passed,
                     "severity": finding.get("severity", ""),
                     "prompt_preview": str(attempt.get("prompt", ""))[:120],
                     "condition": str(fmeta.get("condition", "")),
@@ -163,6 +178,17 @@ def seed_experiment(
                     "detector_summary": detector_summary,
                     "detail_json": json.dumps(finding, default=str),
                 })
+
+            # Store recomputed counts (ignoring keyword & refusal detectors)
+            total = probe_total or pr.get("total_attempts", 0)
+            probe_results_summary[probe_name] = {
+                "probe_name": pr.get("probe_name", probe_name),
+                "category": pr.get("category", ""),
+                "total_attempts": total,
+                "passed": probe_recomputed_passed,
+                "failed": probe_recomputed_failed,
+                "pass_rate": round(probe_recomputed_passed / total * 100, 2) if total else 0,
+            }
 
         scan_rows.append({
             "scan_id": scan.get("scan_id", scan_path.stem),

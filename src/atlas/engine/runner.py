@@ -455,8 +455,10 @@ class ScanRunner:
         results = await asyncio.gather(*[_run_detector(d) for d in detectors])
         detector_results: list[DetectorResult] = [r for r in results if r is not None]
 
-        # Overall pass = all detectors pass
-        passed = all(r.passed for r in detector_results) if detector_results else True
+        # Overall pass = all detectors pass (ignoring keyword & refusal detectors)
+        _IGNORED_DETECTORS = {"keyword", "refusal"}
+        scoring_results = [r for r in detector_results if r.detector_name not in _IGNORED_DETECTORS]
+        passed = all(r.passed for r in scoring_results) if scoring_results else True
         severity = _determine_severity(detector_results, probe.category)
 
         # Map to compliance frameworks
