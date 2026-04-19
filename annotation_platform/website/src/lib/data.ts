@@ -5,6 +5,8 @@ const API_BASE = import.meta.env.VITE_API_BASE ?? '';
 // Currently-selected experiment id (null = latest). Setter invalidates caches.
 let activeExperimentId: string | null = null;
 let cachedSummary: Summary | null = null;
+let cachedSummaryAt = 0;
+const SUMMARY_TTL_MS = 180_000; // 3 minutes
 let findingCache = new Map<string, FindingDetail>();
 
 const EXPERIMENT_CHANGE_EVENT = 'atlas:experiment-change';
@@ -13,6 +15,7 @@ export function setActiveExperiment(id: string | null): void {
   if (activeExperimentId === id) return;
   activeExperimentId = id;
   cachedSummary = null;
+  cachedSummaryAt = 0;
   findingCache = new Map();
   if (typeof window !== 'undefined') {
     window.dispatchEvent(new CustomEvent(EXPERIMENT_CHANGE_EVENT, { detail: id }));
@@ -30,30 +33,21 @@ export function getActiveExperiment(): string | null {
   return activeExperimentId;
 }
 
-async function tryFetchJson<T>(url: string): Promise<T | null> {
-  try {
-    const res = await fetch(url);
-    if (!res.ok) return null;
-    return (await res.json()) as T;
-  } catch {
-    return null;
-  }
-}
-
 export async function loadSummary(): Promise<Summary> {
-  if (cachedSummary) return cachedSummary;
-  // Prefer the DB-backed API; fall back to the static file when the backend isn't running.
+  if (cachedSummary && Date.now() - cachedSummaryAt < SUMMARY_TTL_MS) {
+    return cachedSummary;
+  }
   const apiUrl = activeExperimentId
     ? `${API_BASE}/api/experiments/${encodeURIComponent(activeExperimentId)}`
     : `${API_BASE}/api/summary`;
-  const apiData = await tryFetchJson<Summary>(apiUrl);
-  if (apiData) {
-    cachedSummary = apiData;
-    return apiData;
+  const res = await fetch(apiUrl);
+  if (!res.ok) {
+    throw new Error(`Failed to load summary: ${res.status} ${res.statusText}`);
   }
-  const res = await fetch('/data/summary.json');
-  cachedSummary = await res.json();
-  return cachedSummary!;
+  const data = (await res.json()) as Summary;
+  cachedSummary = data;
+  cachedSummaryAt = Date.now();
+  return data;
 }
 
 export async function loadFindingDetail(id: string): Promise<FindingDetail> {
@@ -62,13 +56,11 @@ export async function loadFindingDetail(id: string): Promise<FindingDetail> {
   const apiUrl = activeExperimentId
     ? `${API_BASE}/api/experiments/${encodeURIComponent(activeExperimentId)}/findings/${encodeURIComponent(id)}`
     : `${API_BASE}/api/findings/${encodeURIComponent(id)}`;
-  const apiData = await tryFetchJson<FindingDetail>(apiUrl);
-  if (apiData) {
-    findingCache.set(id, apiData);
-    return apiData;
+  const res = await fetch(apiUrl);
+  if (!res.ok) {
+    throw new Error(`Failed to load finding: ${res.status} ${res.statusText}`);
   }
-  const res = await fetch(`/data/findings/${id}.json`);
-  const data = await res.json();
+  const data = (await res.json()) as FindingDetail;
   findingCache.set(id, data);
   return data;
 }
