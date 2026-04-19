@@ -17,6 +17,95 @@ import {
 import type { FindingIndex, FindingDetail } from '../types';
 import clsx from 'clsx';
 
+function DetectorCard({ d }: { d: FindingDetail['detector_results'][number] }) {
+  const [open, setOpen] = useState(false);
+  const hasDimensions = d.dimension_scores && Object.keys(d.dimension_scores).length > 0;
+  const hasPatterns = d.matched_patterns && d.matched_patterns.length > 0;
+
+  return (
+    <div className={clsx('rounded-lg text-xs border transition-colors',
+      d.passed ? 'bg-green-900/20 border-green-800/50' : 'bg-red-900/20 border-red-800/50')}>
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="w-full text-left px-3 py-2"
+      >
+        <div className="flex justify-between items-center mb-1">
+          <span className="font-medium text-gray-200">{d.detector_name}</span>
+          <span className="flex items-center gap-1.5">
+            {d.needs_human_review && (
+              <span className="text-amber-400" title="Needs human review">⚠</span>
+            )}
+            <span className={d.passed ? 'text-green-400' : 'text-red-400'}>{d.passed ? 'PASS' : 'FAIL'}</span>
+            <svg className={clsx('w-3 h-3 text-gray-500 transition-transform', open && 'rotate-180')}
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </span>
+        </div>
+        <p className={clsx('text-gray-400', !open && 'truncate')}>{d.evidence}</p>
+        <div className="flex gap-3 mt-1 text-gray-500">
+          <span>score: {d.score.toFixed(2)}</span>
+          <span>conf: {d.confidence.toFixed(2)}</span>
+        </div>
+      </button>
+
+      {open && (
+        <div className="border-t border-gray-700/50 px-3 py-2 space-y-2">
+          {d.failure_type && (
+            <div>
+              <span className="text-gray-500">Failure Type: </span>
+              <span className="text-gray-300">{d.failure_type}</span>
+            </div>
+          )}
+
+          {d.judge_reasoning && (
+            <div>
+              <p className="text-gray-500 mb-1">Judge Reasoning:</p>
+              <pre className="text-gray-300 bg-gray-800/60 rounded px-2 py-1.5 whitespace-pre-wrap max-h-48 overflow-auto">
+                {d.judge_reasoning}
+              </pre>
+            </div>
+          )}
+
+          {d.judge_model && (
+            <div className="flex flex-wrap gap-3 text-gray-500">
+              <span>Judge: <span className="text-gray-300">{d.judge_model}</span></span>
+              <span>Tokens: <span className="text-gray-300">{d.judge_tokens_in} in / {d.judge_tokens_out} out</span></span>
+              <span>Cost: <span className="text-gray-300">${d.judge_cost_usd.toFixed(4)}</span></span>
+              <span>Latency: <span className="text-gray-300">{(d.judge_latency_ms / 1000).toFixed(1)}s</span></span>
+            </div>
+          )}
+
+          {hasDimensions && (
+            <div>
+              <p className="text-gray-500 mb-1">Dimension Scores:</p>
+              <div className="flex flex-wrap gap-2">
+                {Object.entries(d.dimension_scores).map(([dim, val]) => (
+                  <span key={dim} className="bg-gray-800/60 rounded px-2 py-0.5 text-gray-300">
+                    {dim}: <span className="text-white font-medium">{val}</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {hasPatterns && (
+            <div>
+              <p className="text-gray-500 mb-1">Matched Patterns:</p>
+              <div className="flex flex-wrap gap-1">
+                {d.matched_patterns.map((p, i) => (
+                  <span key={i} className="bg-gray-800/60 rounded px-2 py-0.5 text-amber-300">{p}</span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function FindingExpanded({ finding }: { finding: FindingDetail }) {
   const a = finding.attempt;
   const meta = a.metadata;
@@ -133,18 +222,7 @@ function FindingExpanded({ finding }: { finding: FindingDetail }) {
         <p className="text-xs text-gray-500 mb-2 font-medium">Detector Results</p>
         <div className="grid grid-cols-3 gap-2">
           {finding.detector_results.map((d, i) => (
-            <div key={i} className={clsx('rounded-lg px-3 py-2 text-xs border',
-              d.passed ? 'bg-green-900/20 border-green-800/50' : 'bg-red-900/20 border-red-800/50')}>
-              <div className="flex justify-between items-center mb-1">
-                <span className="font-medium text-gray-200">{d.detector_name}</span>
-                <span className={d.passed ? 'text-green-400' : 'text-red-400'}>{d.passed ? 'PASS' : 'FAIL'}</span>
-              </div>
-              <p className="text-gray-400 truncate">{d.evidence}</p>
-              <div className="flex gap-3 mt-1 text-gray-500">
-                <span>score: {d.score.toFixed(2)}</span>
-                <span>conf: {d.confidence.toFixed(2)}</span>
-              </div>
-            </div>
+            <DetectorCard key={i} d={d} />
           ))}
         </div>
       </div>
