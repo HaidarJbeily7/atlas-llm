@@ -1,9 +1,10 @@
+import { Fragment } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
+  RadarChart, Radar as RechartsRadar, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
   PieChart, Pie, Cell, Legend,
 } from 'recharts';
-import { Shield, AlertTriangle, DollarSign, Zap, ClipboardCheck, Crosshair, Activity } from 'lucide-react';
+import { Shield, AlertTriangle, DollarSign, Zap, ClipboardCheck, Crosshair, Activity, FlaskConical, Bug, Radar } from 'lucide-react';
 import { useExperimentData } from '../hooks/useExperimentData';
 import { useReviewData } from '../hooks/useReviewData';
 import StatCard from '../components/StatCard';
@@ -230,7 +231,7 @@ export default function Dashboard() {
               <PolarAngleAxis dataKey="probe" tick={{ fill: '#9ca3af', fontSize: 11 }} />
               <PolarRadiusAxis domain={[0, 100]} tick={{ fill: '#6b7280', fontSize: 10 }} />
               {models.map((m, i) => (
-                <Radar key={m.model} name={m.modelShort} dataKey={m.modelShort}
+                <RechartsRadar key={m.model} name={m.modelShort} dataKey={m.modelShort}
                   stroke={CHART_COLORS[i % CHART_COLORS.length]}
                   fill={CHART_COLORS[i % CHART_COLORS.length]} fillOpacity={0.1} />
               ))}
@@ -272,6 +273,198 @@ export default function Dashboard() {
           </ResponsiveContainer>
         </div>
       </div>
+
+      {/* ── RQ1: Attack Budget & Cost Effectiveness ── */}
+      {summary.condition_stats && summary.condition_stats.length > 0 && (
+        <div className="card">
+          <div className="flex items-center gap-3 mb-4">
+            <FlaskConical className="w-5 h-5 text-amber-400" />
+            <div>
+              <h2 className="text-lg font-semibold text-white">RQ1 — Attack Budget & Cost Effectiveness</h2>
+              <p className="text-xs text-gray-500">ASR and cost breakdown by experimental condition</p>
+            </div>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-xs text-gray-500 border-b border-gray-800">
+                  <th className="pb-2 pr-4">Condition</th>
+                  <th className="pb-2 pr-4 text-right">Attempts</th>
+                  <th className="pb-2 pr-4 text-right">Failed</th>
+                  <th className="pb-2 pr-4 text-right">ASR</th>
+                  <th className="pb-2 pr-4 text-right">Target Cost</th>
+                  <th className="pb-2 pr-4 text-right">Attacker Cost</th>
+                  <th className="pb-2 pr-4 text-right">Total Cost</th>
+                  <th className="pb-2 text-right">Cost / Attack</th>
+                </tr>
+              </thead>
+              <tbody>
+                {summary.condition_stats.map((c) => (
+                  <tr key={c.condition} className="border-b border-gray-800/50">
+                    <td className="py-2 pr-4 text-gray-200 font-medium">{getProbeLabel(c.condition)}</td>
+                    <td className="py-2 pr-4 text-right text-gray-400">{c.total}</td>
+                    <td className="py-2 pr-4 text-right text-red-400">{c.failed}</td>
+                    <td className="py-2 pr-4 text-right font-semibold text-amber-400">{c.asr}%</td>
+                    <td className="py-2 pr-4 text-right text-gray-300">{formatCost(c.target_cost)}</td>
+                    <td className="py-2 pr-4 text-right text-purple-300">{formatCost(c.attacker_cost)}</td>
+                    <td className="py-2 pr-4 text-right text-white">{formatCost(c.total_cost)}</td>
+                    <td className="py-2 text-right text-amber-300">{c.failed > 0 ? formatCost(c.cost_per_attack) : '-'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="mt-4">
+            <ResponsiveContainer width="100%" height={220}>
+              <BarChart data={summary.condition_stats.map((c) => ({
+                name: getProbeLabel(c.condition).replace(/\(.*\)/, '').trim(),
+                ASR: c.asr,
+                'Cost/Attack': c.failed > 0 ? c.cost_per_attack : 0,
+              }))}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <XAxis dataKey="name" tick={{ fill: '#9ca3af', fontSize: 11 }} />
+                <YAxis yAxisId="asr" domain={[0, 100]} tick={{ fill: '#9ca3af', fontSize: 12 }} label={{ value: 'ASR %', angle: -90, position: 'insideLeft', fill: '#9ca3af', fontSize: 11 }} />
+                <YAxis yAxisId="cost" orientation="right" tick={{ fill: '#9ca3af', fontSize: 12 }} label={{ value: '$/attack', angle: 90, position: 'insideRight', fill: '#9ca3af', fontSize: 11 }} />
+                <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px' }} labelStyle={{ color: '#fff' }} />
+                <Bar yAxisId="asr" dataKey="ASR" fill="#f59e0b" name="ASR %" radius={[4, 4, 0, 0]} />
+                <Bar yAxisId="cost" dataKey="Cost/Attack" fill="#8b5cf6" name="Cost per Attack ($)" radius={[4, 4, 0, 0]} />
+                <Legend wrapperStyle={{ fontSize: 12 }} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      )}
+
+      {/* ── RQ2: Failure-Type Distribution ── */}
+      {summary.failure_type_distribution && summary.failure_type_distribution.length > 0 && (() => {
+        const allDetectors = [...new Set(summary.failure_type_distribution.flatMap((f) => Object.keys(f.detector_failures)))];
+        const ftData = summary.failure_type_distribution.map((f) => {
+          const row: Record<string, unknown> = { condition: getProbeLabel(f.condition).replace(/\(.*\)/, '').trim() };
+          for (const det of allDetectors) row[det] = f.detector_failures[det] ?? 0;
+          return row;
+        });
+        const detColors = ['#ef4444', '#f97316', '#f59e0b', '#6366f1', '#8b5cf6', '#ec4899'];
+        return (
+          <div className="card">
+            <div className="flex items-center gap-3 mb-4">
+              <Bug className="w-5 h-5 text-red-400" />
+              <div>
+                <h2 className="text-lg font-semibold text-white">RQ2 — Failure-Type Distribution</h2>
+                <p className="text-xs text-gray-500">Which detectors flag failures, by condition (failed findings only)</p>
+              </div>
+            </div>
+            <div className="overflow-x-auto mb-4">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-left text-xs text-gray-500 border-b border-gray-800">
+                    <th className="pb-2 pr-4">Condition</th>
+                    {allDetectors.map((d) => (
+                      <th key={d} className="pb-2 pr-4 text-right">{d}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {summary.failure_type_distribution.map((f) => (
+                    <tr key={f.condition} className="border-b border-gray-800/50">
+                      <td className="py-2 pr-4 text-gray-200 font-medium">{getProbeLabel(f.condition)}</td>
+                      {allDetectors.map((d) => (
+                        <td key={d} className="py-2 pr-4 text-right text-red-400">
+                          {f.detector_failures[d] ?? 0}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <ResponsiveContainer width="100%" height={240}>
+              <BarChart data={ftData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <XAxis dataKey="condition" tick={{ fill: '#9ca3af', fontSize: 11 }} />
+                <YAxis tick={{ fill: '#9ca3af', fontSize: 12 }} />
+                <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px' }} labelStyle={{ color: '#fff' }} />
+                {allDetectors.map((det, i) => (
+                  <Bar key={det} dataKey={det} stackId="a" fill={detColors[i % detColors.length]} name={det}
+                    radius={i === allDetectors.length - 1 ? [4, 4, 0, 0] : undefined} />
+                ))}
+                <Legend wrapperStyle={{ fontSize: 12 }} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        );
+      })()}
+
+      {/* ── RQ3: Detector Sensitivity by Condition ── */}
+      {summary.detector_by_condition && summary.detector_by_condition.length > 0 && (() => {
+        const conditions = [...new Set(summary.detector_by_condition.flatMap((d) => Object.keys(d.by_condition)))];
+        return (
+          <div className="card">
+            <div className="flex items-center gap-3 mb-4">
+              <Radar className="w-5 h-5 text-emerald-400" />
+              <div>
+                <h2 className="text-lg font-semibold text-white">RQ3 — Detector Sensitivity by Condition</h2>
+                <p className="text-xs text-gray-500">How detector fail rates change across attack sophistication and interaction mode</p>
+              </div>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-left text-xs text-gray-500 border-b border-gray-800">
+                    <th className="pb-2 pr-4">Detector</th>
+                    {conditions.map((c) => (
+                      <th key={c} className="pb-2 pr-2 text-center" colSpan={2}>{getProbeLabel(c).replace(/\(.*\)/, '').trim()}</th>
+                    ))}
+                  </tr>
+                  <tr className="text-left text-[10px] text-gray-600 border-b border-gray-800">
+                    <th className="pb-1"></th>
+                    {conditions.map((c) => (
+                      <Fragment key={c}><th className="pb-1 pr-1 text-right">Fail Rate</th><th className="pb-1 pr-2 text-right">Avg Score</th></Fragment>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {summary.detector_by_condition.map((d) => (
+                    <tr key={d.detector} className="border-b border-gray-800/50">
+                      <td className="py-2 pr-4 text-gray-200 font-medium">{d.detector}</td>
+                      {conditions.map((c) => {
+                        const s = d.by_condition[c];
+                        return (
+                          <Fragment key={c}>
+                            <td className="py-2 pr-1 text-right text-amber-400">{s ? `${s.fail_rate}%` : '-'}</td>
+                            <td className="py-2 pr-2 text-right text-gray-400">{s ? s.avg_score.toFixed(3) : '-'}</td>
+                          </Fragment>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {/* Sensitivity heatmap as grouped bars */}
+            <div className="mt-4">
+              <ResponsiveContainer width="100%" height={260}>
+                <BarChart data={summary.detector_by_condition.map((d) => {
+                  const row: Record<string, unknown> = { detector: d.detector };
+                  for (const c of conditions) {
+                    row[getProbeLabel(c).replace(/\(.*\)/, '').trim()] = d.by_condition[c]?.fail_rate ?? 0;
+                  }
+                  return row;
+                })}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <XAxis dataKey="detector" tick={{ fill: '#9ca3af', fontSize: 11 }} />
+                  <YAxis domain={[0, 100]} tick={{ fill: '#9ca3af', fontSize: 12 }} label={{ value: 'Fail Rate %', angle: -90, position: 'insideLeft', fill: '#9ca3af', fontSize: 11 }} />
+                  <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px' }} labelStyle={{ color: '#fff' }} />
+                  {conditions.map((c, i) => (
+                    <Bar key={c} dataKey={getProbeLabel(c).replace(/\(.*\)/, '').trim()}
+                      fill={CHART_COLORS[i % CHART_COLORS.length]} radius={[2, 2, 0, 0]} />
+                  ))}
+                  <Legend wrapperStyle={{ fontSize: 12 }} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }

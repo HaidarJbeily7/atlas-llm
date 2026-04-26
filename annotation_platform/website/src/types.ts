@@ -8,6 +8,36 @@ export interface DetectorStats {
   avg_score: number;
 }
 
+export interface ConditionStats {
+  condition: string;
+  total: number;
+  passed: number;
+  failed: number;
+  asr: number;
+  total_cost: number;
+  target_cost: number;
+  attacker_cost: number;
+  cost_per_attack: number;
+  target_tokens: number;
+  attacker_tokens: number;
+}
+
+export interface FailureTypeDistribution {
+  condition: string;
+  detector_failures: Record<string, number>;
+}
+
+export interface DetectorByCondition {
+  detector: string;
+  by_condition: Record<string, {
+    total: number;
+    passed: number;
+    failed: number;
+    fail_rate: number;
+    avg_score: number;
+  }>;
+}
+
 export interface Summary {
   experiment: ExperimentInfo;
   scans: ScanSummary[];
@@ -15,6 +45,9 @@ export interface Summary {
   findings_index: FindingIndex[];
   compliance: ComplianceEntry[];
   detector_stats: DetectorStats[];
+  condition_stats: ConditionStats[];
+  failure_type_distribution: FailureTypeDistribution[];
+  detector_by_condition: DetectorByCondition[];
 }
 
 export interface ExperimentInfo {
