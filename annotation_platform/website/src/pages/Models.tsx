@@ -114,7 +114,7 @@ export default function Models() {
             <YAxis dataKey="name" type="category" width={120} tick={{ fill: '#9ca3af', fontSize: 12 }} />
             <Tooltip
               contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px' }}
-              formatter={(value: number) => formatCost(value)}
+              formatter={(value) => formatCost(Number(value ?? 0))}
             />
             <Bar dataKey="targetCost" stackId="cost" fill="#6366f1" name="Target Cost" />
             <Bar dataKey="attackerCost" stackId="cost" fill="#a855f7" name="Attacker Cost" radius={[0, 4, 4, 0]} />
