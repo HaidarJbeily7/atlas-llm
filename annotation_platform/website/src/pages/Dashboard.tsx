@@ -274,14 +274,14 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* ── RQ1: Attack Budget & Cost Effectiveness (confirmed only) ── */}
+      {/* ── RQ1: Attack Budget & Cost Effectiveness ── */}
       {summary.condition_stats && summary.condition_stats.length > 0 && (
         <div className="card">
           <div className="flex items-center gap-3 mb-4">
             <FlaskConical className="w-5 h-5 text-amber-400" />
             <div>
               <h2 className="text-lg font-semibold text-white">RQ1 — Attack Budget & Cost Effectiveness</h2>
-              <p className="text-xs text-gray-500">Confirmed-only ASR and cost breakdown by condition (false positives excluded)</p>
+              <p className="text-xs text-gray-500">Adjusted ASR = raw failures minus human-confirmed false positives (detector errors removed)</p>
             </div>
           </div>
           <div className="overflow-x-auto">
@@ -290,37 +290,40 @@ export default function Dashboard() {
                 <tr className="text-left text-xs text-gray-500 border-b border-gray-800">
                   <th className="pb-2 pr-4">Condition</th>
                   <th className="pb-2 pr-4 text-right">Attempts</th>
-                  <th className="pb-2 pr-4 text-right">Confirmed</th>
+                  <th className="pb-2 pr-4 text-right">Adj. Failed</th>
                   <th className="pb-2 pr-4 text-right">FP Removed</th>
-                  <th className="pb-2 pr-4 text-right">Confirmed ASR</th>
+                  <th className="pb-2 pr-4 text-right">Adj. ASR</th>
                   <th className="pb-2 pr-4 text-right">Raw ASR</th>
                   <th className="pb-2 pr-4 text-right">Target Cost</th>
                   <th className="pb-2 pr-4 text-right">Attacker Cost</th>
-                  <th className="pb-2 text-right">Cost / Confirmed</th>
+                  <th className="pb-2 text-right">Cost / Attack</th>
                 </tr>
               </thead>
               <tbody>
                 {summary.condition_stats.map((c) => (
                   <tr key={c.condition} className="border-b border-gray-800/50">
                     <td className="py-2 pr-4 text-gray-200 font-medium">{getProbeLabel(c.condition)}</td>
-                    <td className="py-2 pr-4 text-right text-gray-400">{c.confirmed_total}</td>
-                    <td className="py-2 pr-4 text-right text-red-400">{c.confirmed_failed}</td>
+                    <td className="py-2 pr-4 text-right text-gray-400">{c.adj_total}</td>
+                    <td className="py-2 pr-4 text-right text-red-400">{c.adj_failed}</td>
                     <td className="py-2 pr-4 text-right text-green-400">{c.false_positives}</td>
-                    <td className="py-2 pr-4 text-right font-semibold text-amber-400">{c.confirmed_asr}%</td>
+                    <td className="py-2 pr-4 text-right font-semibold text-amber-400">{c.adj_asr}%</td>
                     <td className="py-2 pr-4 text-right text-gray-500">{c.asr}%</td>
                     <td className="py-2 pr-4 text-right text-gray-300">{formatCost(c.target_cost)}</td>
                     <td className="py-2 pr-4 text-right text-purple-300">{formatCost(c.attacker_cost)}</td>
-                    <td className="py-2 text-right text-amber-300">{c.confirmed_failed > 0 ? formatCost(c.cost_per_attack) : '-'}</td>
+                    <td className="py-2 text-right text-amber-300">{c.adj_failed > 0 ? formatCost(c.cost_per_attack) : '-'}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+          <p className="text-[10px] text-gray-600 mt-2">
+            Adj. ASR excludes findings where the judge was wrong (human-marked as false positive). Unreviewed findings trust the judge.
+          </p>
           <div className="mt-4">
             <ResponsiveContainer width="100%" height={220}>
               <BarChart data={summary.condition_stats.map((c) => ({
                 name: getProbeLabel(c.condition).replace(/\(.*\)/, '').trim(),
-                'Confirmed ASR': c.confirmed_asr,
+                'Adjusted ASR': c.adj_asr,
                 'Raw ASR': c.asr,
               }))}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
@@ -328,7 +331,7 @@ export default function Dashboard() {
                 <YAxis domain={[0, 100]} tick={{ fill: '#9ca3af', fontSize: 12 }} label={{ value: 'ASR %', angle: -90, position: 'insideLeft', fill: '#9ca3af', fontSize: 11 }} />
                 <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px' }} labelStyle={{ color: '#fff' }} />
                 <Bar dataKey="Raw ASR" fill="#6b7280" name="Raw ASR %" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="Confirmed ASR" fill="#f59e0b" name="Confirmed ASR %" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="Adjusted ASR" fill="#f59e0b" name="Adjusted ASR %" radius={[4, 4, 0, 0]} />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
               </BarChart>
             </ResponsiveContainer>
@@ -404,7 +407,7 @@ export default function Dashboard() {
         );
       })()}
 
-      {/* ── RQ3: Detector Sensitivity by Condition (with FP rates from annotations) ── */}
+      {/* ── RQ3: Detector Sensitivity by Condition (with human review accuracy) ── */}
       {summary.detector_by_condition && summary.detector_by_condition.length > 0 && (() => {
         const conditions = [...new Set(summary.detector_by_condition.flatMap((d) => Object.keys(d.by_condition)))];
         return (
@@ -413,7 +416,7 @@ export default function Dashboard() {
               <Radar className="w-5 h-5 text-emerald-400" />
               <div>
                 <h2 className="text-lg font-semibold text-white">RQ3 — Detector Sensitivity by Condition</h2>
-                <p className="text-xs text-gray-500">Fail rates, precision, and false positive rates from human annotations</p>
+                <p className="text-xs text-gray-500">Fail rates and judge accuracy from human annotations (confirmed verdict vs judge error)</p>
               </div>
             </div>
             <div className="overflow-x-auto">
@@ -430,8 +433,8 @@ export default function Dashboard() {
                     {conditions.map((c) => (
                       <Fragment key={c}>
                         <th className="pb-1 pr-1 text-right">Fail Rate</th>
-                        <th className="pb-1 pr-1 text-right">Precision</th>
-                        <th className="pb-1 pr-2 text-right">FP Rate</th>
+                        <th className="pb-1 pr-1 text-right">Accuracy</th>
+                        <th className="pb-1 pr-2 text-right">Error Rate</th>
                       </Fragment>
                     ))}
                   </tr>
@@ -453,10 +456,10 @@ export default function Dashboard() {
                           <Fragment key={c}>
                             <td className="py-2 pr-1 text-right text-amber-400">{s.fail_rate}%</td>
                             <td className="py-2 pr-1 text-right text-green-400">
-                              {s.reviewed_fails > 0 ? `${s.detector_precision}%` : '-'}
+                              {s.reviewed > 0 ? `${s.accuracy}%` : '-'}
                             </td>
                             <td className="py-2 pr-2 text-right text-red-400">
-                              {s.reviewed_fails > 0 ? `${s.detector_fpr}%` : '-'}
+                              {s.reviewed > 0 ? `${s.error_rate}%` : '-'}
                             </td>
                           </Fragment>
                         );
@@ -467,7 +470,7 @@ export default function Dashboard() {
               </table>
             </div>
             <p className="text-[10px] text-gray-600 mt-2">
-              Precision = confirmed vulns / reviewed detector fails. FP Rate = human-confirmed false positives / reviewed detector fails.
+              Accuracy = confirmed verdicts / reviewed findings. Error Rate = judge errors / reviewed findings. Unreviewed findings are not counted.
             </p>
             {/* Sensitivity chart */}
             <div className="mt-4">

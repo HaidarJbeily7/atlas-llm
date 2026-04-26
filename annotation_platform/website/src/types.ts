@@ -14,9 +14,9 @@ export interface ConditionStats {
   passed: number;
   failed: number;
   asr: number;
-  confirmed_total: number;
-  confirmed_failed: number;
-  confirmed_asr: number;
+  adj_total: number;
+  adj_failed: number;
+  adj_asr: number;
   false_positives: number;
   reviewed: number;
   total_cost: number;
@@ -39,11 +39,11 @@ export interface DetectorConditionStats {
   failed: number;
   fail_rate: number;
   avg_score: number;
-  detector_fp: number;
-  detector_tp: number;
-  reviewed_fails: number;
-  detector_fpr: number;
-  detector_precision: number;
+  reviewed: number;
+  confirmed: number;
+  judge_errors: number;
+  accuracy: number;
+  error_rate: number;
 }
 
 export interface DetectorByCondition {
