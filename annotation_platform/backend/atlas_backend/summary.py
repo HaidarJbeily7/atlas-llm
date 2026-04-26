@@ -52,6 +52,13 @@ def _compute(session: Session, experiment_id: str) -> dict | None:
     scans = db.list_scans(session, experiment_id)
     findings = db.findings_index(session, experiment_id)
 
+    # Load review verdicts: finding_id -> settled status (or None)
+    reviews = db.all_review_summaries(session)
+    verdict_map: dict[str, str | None] = {}  # finding_id -> "confirmed_vulnerability" | "false_positive" | ...
+    for r in reviews:
+        if r["settlement"] not in ("open",):
+            verdict_map[r["finding_id"]] = r.get("status")
+
     scan_summaries: list[dict] = []
     for s in scans:
         total_tokens = s["total_target_tokens"] + s["total_attacker_tokens"]
@@ -128,6 +135,7 @@ def _compute(session: Session, experiment_id: str) -> dict | None:
         del da["score_sum"]
 
     # --- RQ1: Condition stats (ASR & cost by condition) ---
+    # Includes both raw counts and confirmed-only counts (excluding false positives)
     cond_agg: dict[str, dict] = {}
     for f in findings:
         probe = f.get("probe", "unknown")
@@ -135,6 +143,7 @@ def _compute(session: Session, experiment_id: str) -> dict | None:
             cond_agg[probe] = {
                 "condition": probe,
                 "total": 0, "passed": 0, "failed": 0,
+                "confirmed_failed": 0, "false_positives": 0, "reviewed": 0,
                 "total_cost": 0.0, "target_tokens": 0, "attacker_tokens": 0,
             }
         ca = cond_agg[probe]
@@ -146,45 +155,82 @@ def _compute(session: Session, experiment_id: str) -> dict | None:
         ca["total_cost"] += f.get("cost_usd", 0)
         ca["target_tokens"] += f.get("target_tokens", 0)
         ca["attacker_tokens"] += f.get("attacker_tokens", 0)
+        # Review-aware counts
+        verdict = verdict_map.get(f["id"])
+        if verdict is not None:
+            ca["reviewed"] += 1
+            if verdict == "confirmed_vulnerability":
+                ca["confirmed_failed"] += 1
+            elif verdict == "false_positive":
+                ca["false_positives"] += 1
     condition_stats = []
     for ca in cond_agg.values():
         total_tok = ca["target_tokens"] + ca["attacker_tokens"]
         attacker_cost = ca["total_cost"] * ca["attacker_tokens"] / max(1, total_tok)
+        # Confirmed-only: total minus false positives
+        confirmed_total = ca["total"] - ca["false_positives"]
+        confirmed_failed = ca["confirmed_failed"]
         condition_stats.append({
             "condition": ca["condition"],
             "total": ca["total"],
             "passed": ca["passed"],
             "failed": ca["failed"],
             "asr": round(ca["failed"] / max(1, ca["total"]) * 100, 2),
+            # Confirmed-only stats (false positives removed)
+            "confirmed_total": confirmed_total,
+            "confirmed_failed": confirmed_failed,
+            "confirmed_asr": round(confirmed_failed / max(1, confirmed_total) * 100, 2),
+            "false_positives": ca["false_positives"],
+            "reviewed": ca["reviewed"],
+            # Costs
             "total_cost": round(ca["total_cost"], 8),
             "target_cost": round(ca["total_cost"] - attacker_cost, 8),
             "attacker_cost": round(attacker_cost, 8),
-            "cost_per_attack": round(ca["total_cost"] / max(1, ca["failed"]), 8),
+            "cost_per_attack": round(ca["total_cost"] / max(1, ca["confirmed_failed"]), 8),
             "target_tokens": ca["target_tokens"],
             "attacker_tokens": ca["attacker_tokens"],
         })
 
     # --- RQ2: Failure-type distribution (which detectors flag failures, by condition) ---
+    # Only counts confirmed vulnerabilities (excludes false positives)
     failure_types: dict[str, dict[str, int]] = {}
+    failure_types_all: dict[str, dict[str, int]] = {}
     for f in findings:
         if f.get("passed"):
             continue  # only look at failed findings
         probe = f.get("probe", "unknown")
+        verdict = verdict_map.get(f["id"])
+        # All failures (raw)
+        if probe not in failure_types_all:
+            failure_types_all[probe] = {}
+        for ds in f.get("detector_summary", []):
+            if not ds["passed"]:
+                name = ds["name"]
+                failure_types_all[probe][name] = failure_types_all[probe].get(name, 0) + 1
+        # Confirmed only (skip false positives)
+        if verdict == "false_positive":
+            continue
         if probe not in failure_types:
             failure_types[probe] = {}
         for ds in f.get("detector_summary", []):
-            if not ds["passed"]:  # detector flagged failure
+            if not ds["passed"]:
                 name = ds["name"]
                 failure_types[probe][name] = failure_types[probe].get(name, 0) + 1
     failure_type_distribution = [
-        {"condition": cond, "detector_failures": failures}
-        for cond, failures in failure_types.items()
+        {
+            "condition": cond,
+            "detector_failures": failure_types.get(cond, {}),
+            "detector_failures_all": failure_types_all.get(cond, {}),
+        }
+        for cond in set(list(failure_types.keys()) + list(failure_types_all.keys()))
     ]
 
     # --- RQ3: Detector sensitivity by condition ---
+    # Includes false positive rate: detector flagged FAIL but human says false_positive
     det_cond_agg: dict[str, dict[str, dict]] = {}  # detector -> condition -> stats
     for f in findings:
         probe = f.get("probe", "unknown")
+        verdict = verdict_map.get(f["id"])
         for ds in f.get("detector_summary", []):
             name = ds["name"]
             if name not in det_cond_agg:
@@ -192,6 +238,10 @@ def _compute(session: Session, experiment_id: str) -> dict | None:
             if probe not in det_cond_agg[name]:
                 det_cond_agg[name][probe] = {
                     "total": 0, "passed": 0, "failed": 0, "score_sum": 0.0,
+                    # Review-aware: detector said FAIL but...
+                    "detector_fp": 0,  # ...human says false_positive
+                    "detector_tp": 0,  # ...human says confirmed_vulnerability
+                    "reviewed_fails": 0,  # total detector FAILs with a human verdict
                 }
             dc = det_cond_agg[name][probe]
             dc["total"] += 1
@@ -199,17 +249,33 @@ def _compute(session: Session, experiment_id: str) -> dict | None:
                 dc["passed"] += 1
             else:
                 dc["failed"] += 1
+                # Cross-reference with human review
+                if verdict == "false_positive":
+                    dc["detector_fp"] += 1
+                    dc["reviewed_fails"] += 1
+                elif verdict == "confirmed_vulnerability":
+                    dc["detector_tp"] += 1
+                    dc["reviewed_fails"] += 1
+                elif verdict is not None:
+                    dc["reviewed_fails"] += 1
             dc["score_sum"] += ds.get("score", 0)
     detector_by_condition = []
     for det_name, conds in det_cond_agg.items():
         by_cond = {}
         for cond, dc in conds.items():
+            reviewed_fails = dc["reviewed_fails"]
             by_cond[cond] = {
                 "total": dc["total"],
                 "passed": dc["passed"],
                 "failed": dc["failed"],
                 "fail_rate": round(dc["failed"] / max(1, dc["total"]) * 100, 2),
                 "avg_score": round(dc["score_sum"] / max(1, dc["total"]), 4),
+                # Detector accuracy from human review
+                "detector_fp": dc["detector_fp"],
+                "detector_tp": dc["detector_tp"],
+                "reviewed_fails": reviewed_fails,
+                "detector_fpr": round(dc["detector_fp"] / max(1, reviewed_fails) * 100, 2),
+                "detector_precision": round(dc["detector_tp"] / max(1, reviewed_fails) * 100, 2),
             }
         detector_by_condition.append({
             "detector": det_name,

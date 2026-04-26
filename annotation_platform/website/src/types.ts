@@ -14,6 +14,11 @@ export interface ConditionStats {
   passed: number;
   failed: number;
   asr: number;
+  confirmed_total: number;
+  confirmed_failed: number;
+  confirmed_asr: number;
+  false_positives: number;
+  reviewed: number;
   total_cost: number;
   target_cost: number;
   attacker_cost: number;
@@ -25,17 +30,25 @@ export interface ConditionStats {
 export interface FailureTypeDistribution {
   condition: string;
   detector_failures: Record<string, number>;
+  detector_failures_all: Record<string, number>;
+}
+
+export interface DetectorConditionStats {
+  total: number;
+  passed: number;
+  failed: number;
+  fail_rate: number;
+  avg_score: number;
+  detector_fp: number;
+  detector_tp: number;
+  reviewed_fails: number;
+  detector_fpr: number;
+  detector_precision: number;
 }
 
 export interface DetectorByCondition {
   detector: string;
-  by_condition: Record<string, {
-    total: number;
-    passed: number;
-    failed: number;
-    fail_rate: number;
-    avg_score: number;
-  }>;
+  by_condition: Record<string, DetectorConditionStats>;
 }
 
 export interface Summary {
