@@ -65,6 +65,14 @@ export async function loadFindingDetail(id: string): Promise<FindingDetail> {
   return data;
 }
 
+export function formatCost(usd: number): string {
+  if (usd === 0) return '$0.00';
+  const abs = Math.abs(usd);
+  if (abs >= 1) return `$${usd.toFixed(2)}`;
+  if (abs >= 0.01) return `$${usd.toFixed(4)}`;
+  return `$${usd.toFixed(6)}`;
+}
+
 export function shortModelName(model: string): string {
   const parts = model.split('/');
   return parts[parts.length - 1];
@@ -86,11 +94,15 @@ export function aggregateByModel(scans: ScanSummary[]): ModelAggregation[] {
     let totalPassed = 0;
     let totalFailed = 0;
     let totalCost = 0;
+    let totalTargetCost = 0;
+    let totalAttackerCost = 0;
     let totalTokens = 0;
     const probes: Record<string, import('../types').ProbeResultSummary> = {};
 
     for (const scan of modelScans) {
       totalCost += scan.total_cost_usd;
+      totalTargetCost += scan.total_target_cost_usd ?? 0;
+      totalAttackerCost += scan.total_attacker_cost_usd ?? 0;
       totalTokens += scan.total_target_tokens + scan.total_attacker_tokens;
 
       for (const [probeName, pr] of Object.entries(scan.probe_results_summary)) {
@@ -112,6 +124,8 @@ export function aggregateByModel(scans: ScanSummary[]): ModelAggregation[] {
       totalPassed,
       totalFailed,
       totalCost,
+      totalTargetCost,
+      totalAttackerCost,
       totalTokens,
       avgLatency: 0, // computed from findings_index if needed
       riskLevel: lastScan.security_score.risk_level,

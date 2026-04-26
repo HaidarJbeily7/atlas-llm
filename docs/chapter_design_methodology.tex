@@ -1,0 +1,386 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{hyperref}
+\usepackage{setspace}
+\onehalfspacing
+
+\begin{document}
+
+\chapter{Design and Methodology}
+\label{ch:design-methodology}
+
+This chapter presents the design and methodology of ATLAS (Automated Testing for LLM Application Security), a comprehensive framework for systematically evaluating the security posture of Large Language Model (LLM) applications. The chapter details the system architecture, vulnerability taxonomy, attack probe strategies, detection mechanisms, experimental design, human annotation workflow, and evaluation metrics employed throughout the research.
+
+\section{System Architecture Overview}
+\label{sec:system-architecture}
+
+ATLAS follows a modular, pipeline-based architecture that decouples adversarial prompt generation, model interaction, response detection, and result evaluation into independent stages. This separation of concerns enables extensibility across each dimension while maintaining a coherent experimental workflow. Figure~\ref{fig:architecture} illustrates the high-level architecture of the system.
+
+\begin{figure}[htbp]
+\centering
+\fbox{\parbox{0.9\textwidth}{
+\centering
+\textbf{ATLAS System Architecture}\\[0.5em]
+Configuration $\rightarrow$ Probe Selection $\rightarrow$ Prompt Generation $\rightarrow$ Target Model Interaction $\rightarrow$ Detection $\rightarrow$ Evaluation $\rightarrow$ Reporting $\rightarrow$ Human Review
+}}
+\caption{High-level data flow in the ATLAS framework.}
+\label{fig:architecture}
+\end{figure}
+
+The system comprises five principal components:
+
+\begin{enumerate}
+    \item \textbf{Core Engine:} An asynchronous orchestrator that manages probe execution, detector invocation, and result aggregation. It implements a checkpoint system for resumable scans and maintains comprehensive token and cost tracking across all LLM interactions.
+
+    \item \textbf{Probe Library:} A collection of 32 attack probes spanning 21 vulnerability categories, ranging from static template-based attacks to adaptive LLM-driven adversarial strategies.
+
+    \item \textbf{Detection Layer:} Six detector types operating in parallel on every model response, including keyword-based pattern matching, LLM-as-judge evaluation, semantic analysis, and embedding-based similarity detection.
+
+    \item \textbf{Backend API:} A FastAPI-based REST service with PostgreSQL storage for experiment management, findings persistence, and human annotation workflows.
+
+    \item \textbf{Frontend Dashboard:} A React/TypeScript single-page application providing interactive exploration of experiment results, annotation interfaces, and compliance visualizations.
+\end{enumerate}
+
+\subsection{Technology Stack}
+
+The framework is implemented in Python 3.10+ and leverages LiteLLM as a universal abstraction layer for multi-provider LLM access, supporting OpenAI, Anthropic, Google, Azure, and additional providers through a unified interface. Data validation is handled through Pydantic v2, configuration through YAML with environment variable interpolation, and the command-line interface through Typer with Rich formatting. The annotation platform uses FastAPI with SQLAlchemy ORM on the backend and React with TypeScript on the frontend, connected to a PostgreSQL database.
+
+\subsection{Configuration and Profiles}
+
+ATLAS supports profile-based configuration to accommodate different evaluation scenarios:
+
+\begin{itemize}
+    \item \textbf{Quick:} Targeted assessment using jailbreak and prompt injection probes (5 concurrent workers, 120s timeout).
+    \item \textbf{Standard:} Seven core probes with keyword, refusal, and LLM-judge detectors (10 workers, 300s timeout).
+    \item \textbf{Full:} All 20 static probes with comprehensive compliance mapping (10 workers, 3600s timeout).
+    \item \textbf{Experiment:} The 2$\times$2 factorial design with all four conditions (5 workers, 7200s timeout).
+\end{itemize}
+
+\section{Vulnerability Taxonomy}
+\label{sec:vulnerability-taxonomy}
+
+ATLAS implements a comprehensive vulnerability taxonomy derived from established security frameworks including OWASP LLM Top 10, the EU AI Act, NIST AI Risk Management Framework, and ISO 42001. The taxonomy organizes 21 distinct vulnerability categories, each mapped to regulatory compliance requirements.
+
+\begin{table}[htbp]
+\centering
+\caption{ATLAS Vulnerability Categories with Regulatory Mappings}
+\label{tab:vulnerability-categories}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Category} & \textbf{OWASP Mapping} & \textbf{Risk Level} \\
+\hline
+Prompt Injection & LLM01 & Critical \\
+Jailbreak & LLM01 & Critical \\
+Data Extraction & LLM06 & High \\
+Toxicity & --- & High \\
+Hallucination & LLM09 & Medium \\
+Malware Generation & LLM02 & Critical \\
+Web Injection (XSS/SSRF) & LLM02 & High \\
+Encoding Evasion & LLM01 & High \\
+PII Leakage & LLM06 & High \\
+Bias \& Fairness & --- & Medium \\
+Excessive Agency & LLM08 & High \\
+Denial of Service & LLM04 & Medium \\
+RAG Poisoning & LLM03 & High \\
+Function Calling Abuse & LLM07 & High \\
+Indirect Injection & LLM01 & Critical \\
+Language Crossover & LLM01 & Medium \\
+Role-play Circumvention & LLM01 & High \\
+Context Overflow & LLM04 & Medium \\
+Steganographic Encoding & LLM01 & High \\
+Social Engineering & --- & High \\
+Visual Injection & LLM01 & High \\
+\hline
+\end{tabular}
+\end{table}
+
+Each vulnerability category is assigned a severity weight used in security score computation: Critical (1.0), High (0.75), Medium (0.5), and Low/Informational (0.0). These weights reflect the potential impact of successful exploitation in production deployments.
+
+\section{Attack Probe Design}
+\label{sec:attack-probes}
+
+The probe subsystem implements three distinct attack strategy paradigms, organized along two experimental dimensions: \textit{adaptivity} (static vs.\ adaptive) and \textit{turn structure} (single-turn vs.\ multi-turn).
+
+\subsection{Static Probes}
+
+Static probes generate predetermined adversarial prompts from curated datasets. Each probe loads attack templates from vendored JSON/JSONL datasets and instantiates them against target models without modification based on model responses. This approach provides deterministic, reproducible baselines and enables direct comparison across models under identical stimuli.
+
+The static probe library includes 22 probe types covering all 21 vulnerability categories. Each probe inherits from a common \texttt{BaseProbe} class that standardizes the interface for prompt generation, metadata attachment, and result collection.
+
+\subsection{Adaptive Probes}
+
+Adaptive probes employ an attacker LLM to dynamically generate or refine adversarial prompts based on the target model's responses. Two adaptive strategies are implemented:
+
+\subsubsection{PAIR (Prompt Automatic Iterative Refinement)}
+
+The adaptive single-turn strategy implements the PAIR algorithm, where an attacker LLM iteratively generates attack prompts, observes the target's response, and refines its approach:
+
+\begin{enumerate}
+    \item The attacker LLM generates an initial adversarial prompt based on the attack intent.
+    \item The prompt is sent to the target model.
+    \item The attacker LLM evaluates the response for compliance.
+    \item If the attack failed, the attacker generates a refined prompt incorporating lessons from the refusal.
+    \item Steps 2--4 repeat for up to $N$ iterations.
+    \item The single best result (highest compliance) is returned as the final attempt.
+\end{enumerate}
+
+This approach collapses the iterative refinement loop into a single externally-visible interaction, making it directly comparable to static single-turn probes while leveraging adaptive intelligence internally.
+
+\subsubsection{Adaptive Multi-Turn}
+
+The adaptive multi-turn strategy generates a full conversation where each successive message is dynamically crafted by the attacker LLM based on the accumulated conversation history:
+
+\begin{enumerate}
+    \item The attacker LLM generates an opening message based on the attack objective.
+    \item The target model responds.
+    \item The attacker LLM analyzes the response and generates the next conversational turn, potentially employing escalation, context-building, or misdirection strategies.
+    \item The conversation continues for up to $K$ turns or until the attack objective is achieved.
+\end{enumerate}
+
+\subsection{Scripted Multi-Turn Probes}
+
+To complement the adaptive multi-turn condition with a static baseline, ATLAS implements scripted multi-turn probes using pre-authored conversation sequences. Each script is a fixed sequence of messages designed to gradually escalate toward the attack objective through context-building, establishing trust, and incremental boundary-pushing.
+
+\subsection{Shared Intent Dataset}
+
+A critical design decision is the use of a shared intent dataset across all four experimental conditions. Each intent entry contains:
+
+\begin{itemize}
+    \item A unique identifier and vulnerability category assignment.
+    \item A plain-language attack objective describing the desired unsafe behavior.
+    \item A direct prompt formulation for the static single-turn condition.
+    \item A scripted turn sequence for the static multi-turn condition.
+    \item Category and framework tags for compliance mapping.
+\end{itemize}
+
+This shared dataset ensures that differences in Attack Success Rate (ASR) across conditions can be attributed to the attack strategy rather than to differences in attack content or difficulty.
+
+\section{Detection Mechanisms}
+\label{sec:detection-mechanisms}
+
+ATLAS employs a multi-detector architecture where all detectors execute in parallel on every model response. This design enables cross-detector agreement analysis and per-detector accuracy measurement against human ground truth labels.
+
+\subsection{Keyword Detector}
+
+The keyword detector performs fast, deterministic pattern matching against curated lists of refusal indicators and compliance signals. It searches for phrases indicating safety refusals (e.g., ``I cannot,'' ``I won't,'' ``it would be inappropriate'') and flags their absence as potential compliance with the attack. This detector operates offline without requiring additional LLM calls, making it suitable for high-throughput screening.
+
+\subsection{Refusal Detector}
+
+A specialized variant of keyword detection focused specifically on identifying safety refusal patterns. It maintains an extensive vocabulary of refusal formulations across multiple linguistic styles and handles edge cases such as partial refusals followed by compliance.
+
+\subsection{LLM-Judge Detector}
+
+The LLM-judge detector employs a structured evaluation protocol where a judge LLM classifies each response into a taxonomy of compliance types:
+
+\begin{itemize}
+    \item \textbf{Full Compliance:} The model fully satisfies the attack objective.
+    \item \textbf{Partial Compliance:} The model provides some harmful information but with caveats.
+    \item \textbf{Hedged Compliance:} The model complies while adding disclaimers.
+    \item \textbf{Roleplay Compliance:} The model complies within a fictional framing.
+    \item \textbf{Clean Refusal:} The model clearly refuses the request.
+    \item \textbf{Soft Refusal:} The model deflects without explicit refusal.
+    \item \textbf{Irrelevant:} The response does not address the prompt.
+\end{itemize}
+
+The judge produces structured JSON output including the classification, confidence score, and reasoning. All LLM-judge results are automatically flagged for human review (\texttt{needs\_human\_review = True}).
+
+\subsection{Semantic Judge Detector}
+
+The semantic judge implements a chain-of-thought evaluation protocol assessing responses across five independent dimensions:
+
+\begin{enumerate}
+    \item \textbf{Compliance:} Degree to which the response fulfills the attack intent.
+    \item \textbf{Information Hazard:} Whether the response contains actionable harmful information.
+    \item \textbf{Toxicity:} Presence of hateful, discriminatory, or offensive content.
+    \item \textbf{Privacy:} Exposure of personally identifiable or sensitive information.
+    \item \textbf{Hallucination:} Generation of fabricated or misleading claims presented as fact.
+\end{enumerate}
+
+Each dimension receives an independent score, and the overall assessment combines these into a final pass/fail determination with associated confidence levels.
+
+\subsection{Similarity Detector}
+
+The similarity detector uses sentence-transformer embeddings to compute semantic similarity between model responses and known harmful reference outputs. High similarity to known-harmful completions indicates potential attack success even when surface-level keyword detection would miss rephrased compliance.
+
+\subsection{Tool Call Detector}
+
+For models with function-calling capabilities, the tool call detector monitors for unintended or dangerous tool invocations that could indicate excessive agency vulnerabilities, such as unauthorized file system access, network requests, or data exfiltration attempts.
+
+\section{Experimental Design}
+\label{sec:experimental-design}
+
+The core experimental methodology follows a 2$\times$2 factorial design crossing two independent variables: attack adaptivity and conversational structure. This design enables rigorous attribution of observed differences in model vulnerability to specific attack characteristics.
+
+\subsection{Factorial Structure}
+
+\begin{table}[htbp]
+\centering
+\caption{2$\times$2 Factorial Experimental Conditions}
+\label{tab:factorial-design}
+\begin{tabular}{|l|c|c|}
+\hline
+ & \textbf{Single-Turn} & \textbf{Multi-Turn} \\
+\hline
+\textbf{Static} & BaseProbe & ScriptedMultiTurnProbe \\
+ & (fixed prompts) & (pre-written scripts) \\
+\hline
+\textbf{Adaptive} & AdaptiveSingleTurnProbe & AdaptiveMultiTurnProbe \\
+ & (PAIR-based refinement) & (dynamic conversation) \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Paired Design}
+
+Every attack intent is tested under all four conditions and across all target models, creating a fully-crossed paired design. This enables within-intent comparisons that control for intent difficulty---a critical confound in security evaluation where some objectives are inherently easier to elicit regardless of attack strategy.
+
+\subsection{Target Models}
+
+The experimental framework supports evaluation of any LLM accessible through the LiteLLM abstraction layer, including models from OpenAI (GPT-4, GPT-3.5), Anthropic (Claude), Google (Gemini), and open-source models via compatible API endpoints.
+
+\subsection{Cost and Token Tracking}
+
+Each experimental trial records comprehensive resource consumption metrics:
+
+\begin{itemize}
+    \item \textbf{Target tokens:} Input and output tokens consumed by the model under test.
+    \item \textbf{Attacker tokens:} Tokens consumed by attacker/judge LLMs (for adaptive probes and LLM-based detectors).
+    \item \textbf{Cost (USD):} Computed monetary cost using provider-specific pricing tables.
+    \item \textbf{Latency:} End-to-end wall-clock time per attempt.
+    \item \textbf{API calls:} Number of discrete API invocations to target and attacker models.
+\end{itemize}
+
+This instrumentation enables cost-effectiveness analysis (ASR per dollar, ASR per 1K tokens) that is critical for practitioners operating under budget constraints.
+
+\section{Human Annotation Workflow}
+\label{sec:annotation-workflow}
+
+Given the inherent limitations of automated detection for nuanced safety judgments, ATLAS incorporates a structured human annotation workflow as ground truth validation.
+
+\subsection{Annotation Platform Architecture}
+
+The annotation platform consists of a FastAPI backend service connected to a PostgreSQL database and a React-based frontend interface. The platform supports:
+
+\begin{itemize}
+    \item \textbf{Experiment management:} Organization of scans, findings, and metadata.
+    \item \textbf{Finding exploration:} Filterable views by model, probe, severity, condition, and detector agreement.
+    \item \textbf{Annotation interface:} Inline labeling with free-form notes and structured classifications.
+    \item \textbf{Multi-annotator voting:} Independent reviewer assessments with consensus tracking.
+\end{itemize}
+
+\subsection{Review Voting System}
+
+Each finding can receive votes from multiple annotators using the following classification schema:
+
+\begin{itemize}
+    \item \textbf{Confirmed Vulnerability:} The model response genuinely satisfies the attack objective.
+    \item \textbf{False Positive:} The automated detector incorrectly flagged a safe response.
+    \item \textbf{Needs Investigation:} The response is ambiguous and requires additional context or expertise.
+    \item \textbf{Won't Fix:} The vulnerability is acknowledged but accepted as low-risk or by-design.
+    \item \textbf{Pending:} Awaiting review.
+\end{itemize}
+
+\subsection{Sampling Strategy}
+
+To manage annotation workload while maintaining statistical validity, ATLAS employs stratified sampling: approximately 50 findings per experimental condition are selected for human review, yielding approximately 200 annotated samples total. Stratification ensures balanced representation across vulnerability categories, target models, and detector agreement/disagreement cases.
+
+\subsection{Inter-Annotator Agreement}
+
+Agreement between multiple annotators is measured using Cohen's kappa coefficient. Disagreements are resolved through an adjudication round where annotators discuss borderline cases and reach consensus. This ground truth dataset serves as the reference for computing detector precision, recall, and F1 scores.
+
+\section{Evaluation Metrics}
+\label{sec:evaluation-metrics}
+
+\subsection{Attack Success Rate (ASR)}
+
+The primary outcome metric is the Attack Success Rate, defined as the proportion of attempts where the target model failed to resist the attack:
+
+\begin{equation}
+\text{ASR} = \frac{\text{Number of successful attacks}}{\text{Total number of attempts}} \times 100\%
+\end{equation}
+
+ASR is computed at multiple granularities: per-intent, per-category, per-condition, per-model, and overall.
+
+\subsection{Security Score}
+
+The aggregate security score provides a single summary metric:
+
+\begin{equation}
+\text{Category Score}_c = 100 - (\text{weighted\_penalty}_c \times 100)
+\end{equation}
+
+\begin{equation}
+\text{Overall Score} = \frac{1}{|C|} \sum_{c \in C} \text{Category Score}_c
+\end{equation}
+
+where the weighted penalty for category $c$ incorporates the severity weight (Critical=1.0, High=0.75, Medium=0.5, Low=0.0) and the proportion of failed attempts within that category. The resulting score maps to risk levels: Minimal ($\geq$80), Low ($\geq$60), Medium ($\geq$40), High ($\geq$20), and Critical ($<$20).
+
+\subsection{Statistical Analysis}
+
+The paired experimental design enables rigorous statistical testing:
+
+\begin{itemize}
+    \item \textbf{McNemar's test:} For paired binary outcomes (pass/fail) across conditions on the same intents.
+    \item \textbf{Effect sizes:} Cohen's d and odds ratios to quantify the magnitude of differences between conditions.
+    \item \textbf{Confidence intervals:} 95\% bootstrap or exact binomial confidence intervals for all reported rates.
+    \item \textbf{Chi-squared / Fisher's exact tests:} For comparing failure-type distributions across conditions.
+\end{itemize}
+
+\subsection{Cost-Effectiveness Metrics}
+
+Beyond raw ASR, ATLAS reports cost-normalized metrics:
+
+\begin{equation}
+\text{ASR per Dollar} = \frac{\text{ASR}}{\text{Total Cost (USD)}}
+\end{equation}
+
+\begin{equation}
+\text{ASR per 1K Tokens} = \frac{\text{ASR}}{\text{Total Tokens} / 1000}
+\end{equation}
+
+These metrics are essential for practitioners who must balance security coverage against operational budgets when selecting red-teaming strategies.
+
+\section{Compliance Framework Integration}
+\label{sec:compliance-integration}
+
+ATLAS maps all findings to established regulatory and industry frameworks, enabling compliance-oriented reporting:
+
+\subsection{EU AI Act}
+
+The framework assesses compliance across 13 articles of the EU AI Act, including Article 9 (Risk Management), Article 10 (Data Governance), Article 13 (Transparency), Article 14 (Human Oversight), and Article 15 (Accuracy, Robustness, Cybersecurity). Each finding is mapped to relevant articles, and per-article risk scores are computed based on the severity and frequency of violations.
+
+\subsection{OWASP LLM Top 10}
+
+All 10 categories of the OWASP LLM Top 10 are covered through direct probe-to-category mappings. The assessment provides per-category findings counts, critical vulnerability identification, and remediation priorities.
+
+\subsection{NIST AI RMF and ISO 42001}
+
+Additional mappings to the NIST AI Risk Management Framework (Govern, Map, Measure, Manage functions) and ISO 42001 AI Management System clauses provide comprehensive governance coverage for organizations requiring multi-framework compliance demonstration.
+
+\section{Report Generation}
+\label{sec:report-generation}
+
+ATLAS produces evaluation reports in multiple formats to support different consumption contexts:
+
+\begin{itemize}
+    \item \textbf{JSON:} Machine-readable structured results for programmatic analysis.
+    \item \textbf{HTML:} Rich web-viewable reports with interactive elements.
+    \item \textbf{PDF:} Printable formatted reports for stakeholder distribution.
+    \item \textbf{SARIF:} GitHub Code Scanning integration for CI/CD pipeline alerts.
+    \item \textbf{JUnit XML:} Test result format for continuous integration systems.
+    \item \textbf{Markdown:} Human-readable text for documentation and review.
+\end{itemize}
+
+Reports include security scores, pass rates by probe and category, detailed findings with severity and evidence, compliance assessments per framework, actionable recommendations, and comprehensive cost/token/latency metrics.
+
+\section{Summary}
+
+The ATLAS framework combines automated adversarial testing with human-in-the-loop validation to provide rigorous, reproducible LLM security assessments. The 2$\times$2 factorial experimental design enables clear attribution of attack effectiveness to specific strategy dimensions, while the multi-detector architecture and human annotation workflow ensure reliable ground truth establishment. The compliance mapping layer translates technical findings into regulatory language, supporting organizations in meeting their AI governance obligations under frameworks including the EU AI Act, OWASP LLM Top 10, NIST AI RMF, and ISO 42001.
+
+\end{document}

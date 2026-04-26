@@ -703,6 +703,84 @@ def review_stats_for_experiment(session: Session, experiment_id: str) -> dict:
     }
 
 
+def delete_data_for_model(session: Session, model_substr: str) -> dict:
+    """Delete all scans, findings (and their annotations/votes), for a model.
+
+    Also updates each affected experiment's models_json and finding_count.
+    Returns a summary of what was deleted.
+    """
+    # 1. Find affected findings and delete their annotations + votes first
+    affected_findings = session.execute(
+        select(Finding.id, Finding.experiment_id).where(
+            Finding.model.ilike(f"%{model_substr}%")
+        )
+    ).all()
+    finding_ids = [r.id for r in affected_findings]
+    affected_experiment_ids = list({r.experiment_id for r in affected_findings})
+
+    annotations_deleted = 0
+    votes_deleted = 0
+    if finding_ids:
+        annotations_deleted = session.execute(
+            delete(Annotation).where(Annotation.finding_id.in_(finding_ids))
+        ).rowcount
+        votes_deleted = session.execute(
+            delete(ReviewVote).where(ReviewVote.finding_id.in_(finding_ids))
+        ).rowcount
+
+    # 2. Collect experiment IDs from scans before deleting
+    scan_exp_ids = [
+        r[0] for r in session.execute(
+            select(func.distinct(Scan.experiment_id)).where(
+                Scan.model.ilike(f"%{model_substr}%")
+            )
+        ).all()
+    ]
+    all_exp_ids = list(set(affected_experiment_ids + scan_exp_ids))
+
+    # 3. Delete findings
+    findings_deleted = session.execute(
+        delete(Finding).where(Finding.model.ilike(f"%{model_substr}%"))
+    ).rowcount
+
+    # 4. Delete scans
+    scans_deleted = session.execute(
+        delete(Scan).where(Scan.model.ilike(f"%{model_substr}%"))
+    ).rowcount
+
+    # 5. Update affected experiments (models_json + finding_count)
+
+    for exp_id in all_exp_ids:
+        remaining_models = [
+            r[0] for r in session.execute(
+                select(func.distinct(Scan.model)).where(Scan.experiment_id == exp_id)
+            ).all()
+        ]
+        remaining_finding_count = session.execute(
+            select(func.count()).select_from(Finding).where(
+                Finding.experiment_id == exp_id
+            )
+        ).scalar_one()
+
+        session.execute(
+            update(Experiment).where(Experiment.id == exp_id).values(
+                models_json=json.dumps(remaining_models),
+                finding_count=remaining_finding_count,
+                updated_at=_utcnow(),
+            )
+        )
+
+    session.flush()
+    return {
+        "model_filter": model_substr,
+        "findings_deleted": findings_deleted,
+        "scans_deleted": scans_deleted,
+        "annotations_deleted": annotations_deleted,
+        "votes_deleted": votes_deleted,
+        "experiments_updated": len(all_exp_ids),
+    }
+
+
 def _empty_review_stats() -> dict:
     return {
         "total": 0,

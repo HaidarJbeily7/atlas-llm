@@ -141,5 +141,70 @@ def adduser_main(argv: list[str] | None = None) -> int:
     return 0
 
 
+def delete_model_data_main(argv: list[str] | None = None) -> int:
+    """``atlas-backend-delete-model`` — remove all data for a given model."""
+    parser = argparse.ArgumentParser(
+        prog="atlas-backend-delete-model",
+        description="Delete all scans, findings, annotations, and votes for a model.",
+    )
+    parser.add_argument(
+        "model",
+        help="Model name substring to match (e.g. 'gpt-4o-mini')",
+    )
+    parser.add_argument(
+        "--yes", "-y",
+        action="store_true",
+        help="Skip confirmation prompt.",
+    )
+    parser.add_argument("--json", action="store_true", help="Output as JSON.")
+    args = parser.parse_args(argv)
+
+    session = SessionLocal()
+    try:
+        # Preview what will be deleted
+        from .models import Finding, Scan
+        from sqlalchemy import func, select
+
+        findings_count = session.execute(
+            select(func.count()).select_from(Finding).where(
+                Finding.model.ilike(f"%{args.model}%")
+            )
+        ).scalar_one()
+        scans_count = session.execute(
+            select(func.count()).select_from(Scan).where(
+                Scan.model.ilike(f"%{args.model}%")
+            )
+        ).scalar_one()
+
+        if findings_count == 0 and scans_count == 0:
+            print(f"No data found matching model '{args.model}'.")
+            return 0
+
+        if not args.yes:
+            print(f"Will delete {findings_count} findings and {scans_count} scans matching '{args.model}'.")
+            answer = input("Continue? [y/N] ").strip().lower()
+            if answer != "y":
+                print("Aborted.")
+                return 1
+
+        result = db.delete_data_for_model(session, args.model)
+        session.commit()
+    except Exception:
+        session.rollback()
+        raise
+    finally:
+        session.close()
+
+    if args.json:
+        print(json.dumps(result, indent=2))
+    else:
+        print(f"Deleted {result['findings_deleted']} findings, "
+              f"{result['scans_deleted']} scans, "
+              f"{result['annotations_deleted']} annotations, "
+              f"{result['votes_deleted']} votes. "
+              f"Updated {result['experiments_updated']} experiment(s).")
+    return 0
+
+
 if __name__ == "__main__":
     raise SystemExit(seed_main())

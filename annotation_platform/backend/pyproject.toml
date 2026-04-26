@@ -19,6 +19,7 @@ atlas-backend = "atlas_backend.app:run"
 atlas-backend-seed = "atlas_backend.cli:seed_main"
 atlas-backend-experiments = "atlas_backend.cli:list_experiments_main"
 atlas-backend-adduser = "atlas_backend.cli:adduser_main"
+atlas-backend-delete-model = "atlas_backend.cli:delete_model_data_main"
 
 [build-system]
 requires = ["hatchling"]

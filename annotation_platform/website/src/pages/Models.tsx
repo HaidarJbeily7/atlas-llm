@@ -4,7 +4,7 @@ import {
 import { useExperimentData } from '../hooks/useExperimentData';
 import ScoreBar from '../components/ScoreBar';
 import LoadingSpinner from '../components/LoadingSpinner';
-import { getProbeLabel, PROBE_COLORS } from '../lib/data';
+import { getProbeLabel, formatCost, PROBE_COLORS } from '../lib/data';
 import clsx from 'clsx';
 
 export default function Models() {
@@ -23,7 +23,8 @@ export default function Models() {
 
   const costData = models.map((m) => ({
     name: m.modelShort,
-    cost: Number(m.totalCost.toFixed(4)),
+    targetCost: m.totalTargetCost,
+    attackerCost: m.totalAttackerCost,
     tokens: m.totalTokens,
   }));
 
@@ -55,7 +56,7 @@ export default function Models() {
               </div>
             </div>
 
-            <div className="grid grid-cols-4 gap-4 mb-4">
+            <div className="grid grid-cols-5 gap-4 mb-4">
               <div>
                 <p className="text-xs text-gray-500">Pass Rate</p>
                 <p className="text-xl font-bold text-white">{m.overallPassRate.toFixed(1)}%</p>
@@ -69,8 +70,12 @@ export default function Models() {
                 <p className="text-xl font-bold text-red-400">{m.totalFailed}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500">Cost</p>
-                <p className="text-xl font-bold text-white">${m.totalCost.toFixed(3)}</p>
+                <p className="text-xs text-gray-500">Target Cost</p>
+                <p className="text-xl font-bold text-white">{formatCost(m.totalTargetCost)}</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500">Attacker Cost</p>
+                <p className="text-xl font-bold text-purple-300">{formatCost(m.totalAttackerCost)}</p>
               </div>
             </div>
 
@@ -107,8 +112,13 @@ export default function Models() {
             <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
             <XAxis type="number" tick={{ fill: '#9ca3af', fontSize: 12 }} />
             <YAxis dataKey="name" type="category" width={120} tick={{ fill: '#9ca3af', fontSize: 12 }} />
-            <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px' }} />
-            <Bar dataKey="cost" fill="#8b5cf6" radius={[0, 4, 4, 0]} />
+            <Tooltip
+              contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px' }}
+              formatter={(value: number) => formatCost(value)}
+            />
+            <Bar dataKey="targetCost" stackId="cost" fill="#6366f1" name="Target Cost" />
+            <Bar dataKey="attackerCost" stackId="cost" fill="#a855f7" name="Attacker Cost" radius={[0, 4, 4, 0]} />
+            <Legend wrapperStyle={{ fontSize: 12 }} />
           </BarChart>
         </ResponsiveContainer>
       </div>

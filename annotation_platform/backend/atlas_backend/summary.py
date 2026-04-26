@@ -54,6 +54,9 @@ def _compute(session: Session, experiment_id: str) -> dict | None:
 
     scan_summaries: list[dict] = []
     for s in scans:
+        total_tokens = s["total_target_tokens"] + s["total_attacker_tokens"]
+        attacker_cost = s["total_cost_usd"] * s["total_attacker_tokens"] / max(1, total_tokens)
+        target_cost = s["total_cost_usd"] - attacker_cost
         scan_summaries.append({
             "model": s["model"],
             "model_short": s["model_short"],
@@ -63,6 +66,8 @@ def _compute(session: Session, experiment_id: str) -> dict | None:
             "completed_at": s["completed_at"],
             "duration_ms": s["duration_ms"],
             "total_cost_usd": s["total_cost_usd"],
+            "total_target_cost_usd": target_cost,
+            "total_attacker_cost_usd": attacker_cost,
             "total_target_tokens": s["total_target_tokens"],
             "total_attacker_tokens": s["total_attacker_tokens"],
             "security_score": s["security_score"],
@@ -104,6 +109,24 @@ def _compute(session: Session, experiment_id: str) -> dict | None:
                 **article,
             })
 
+    # Detector stats aggregation
+    detector_agg: dict[str, dict] = {}
+    for f in findings:
+        for ds in f.get("detector_summary", []):
+            name = ds["name"]
+            if name not in detector_agg:
+                detector_agg[name] = {"name": name, "total": 0, "passed": 0, "failed": 0, "score_sum": 0.0}
+            da = detector_agg[name]
+            da["total"] += 1
+            if ds["passed"]:
+                da["passed"] += 1
+            else:
+                da["failed"] += 1
+            da["score_sum"] += ds.get("score", 0)
+    for da in detector_agg.values():
+        da["avg_score"] = round(da["score_sum"] / max(1, da["total"]), 4)
+        del da["score_sum"]
+
     return {
         "experiment": {
             "id": exp["id"],
@@ -115,4 +138,5 @@ def _compute(session: Session, experiment_id: str) -> dict | None:
         "probes": list(probe_agg.values()),
         "findings_index": findings,
         "compliance": compliance,
+        "detector_stats": list(detector_agg.values()),
     }

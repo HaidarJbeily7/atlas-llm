@@ -24,6 +24,7 @@ _IGNORED_DETECTORS = {"keyword", "refusal"}
 def upgrade() -> None:
     conn = op.get_bind()
 
+    # Step 1: Recompute finding-level passed, ignoring keyword & refusal
     rows = conn.execute(
         sa.text("SELECT id, detector_summary_json, passed FROM findings")
     ).fetchall()
@@ -45,11 +46,51 @@ def upgrade() -> None:
 
     print(f"  -> Updated {updated}/{len(rows)} findings")
 
+    # Step 2: Recompute scan-level probe_results_summary from updated findings
+    scans = conn.execute(
+        sa.text("SELECT scan_id, model, experiment_id, probe_results_summary_json FROM scans")
+    ).fetchall()
+
+    scan_updated = 0
+    for scan_id, model, experiment_id, prs_json in scans:
+        prs = json.loads(prs_json) if prs_json else {}
+        changed = False
+
+        for probe_name, data in prs.items():
+            row = conn.execute(
+                sa.text("""
+                    SELECT COUNT(*) as total,
+                           SUM(CASE WHEN passed THEN 1 ELSE 0 END) as passed,
+                           SUM(CASE WHEN NOT passed THEN 1 ELSE 0 END) as failed
+                    FROM findings
+                    WHERE experiment_id = :exp_id AND probe = :probe AND model = :model
+                """),
+                {"exp_id": experiment_id, "probe": probe_name, "model": model},
+            ).fetchone()
+
+            if row and row[0] > 0:
+                total, new_passed, new_failed = row
+                if data.get("passed") != new_passed or data.get("failed") != new_failed:
+                    data["passed"] = new_passed
+                    data["failed"] = new_failed
+                    data["total_attempts"] = total
+                    data["pass_rate"] = round(new_passed / total * 100, 2) if total else 0
+                    changed = True
+
+        if changed:
+            conn.execute(
+                sa.text("UPDATE scans SET probe_results_summary_json = :prs WHERE scan_id = :sid"),
+                {"prs": json.dumps(prs), "sid": scan_id},
+            )
+            scan_updated += 1
+
+    print(f"  -> Updated {scan_updated}/{len(scans)} scan summaries")
+
 
 def downgrade() -> None:
-    # Recompute using ALL detectors (original logic)
     conn = op.get_bind()
 
+    # Step 1: Recompute findings using ALL detectors (original logic)
     rows = conn.execute(
         sa.text("SELECT id, detector_summary_json FROM findings")
     ).fetchall()
@@ -62,4 +103,36 @@ def downgrade() -> None:
         conn.execute(
             sa.text("UPDATE findings SET passed = :passed WHERE id = :id"),
             {"passed": original_passed, "id": finding_id},
+        )
+
+    # Step 2: Recompute scan-level stats from reverted findings
+    scans = conn.execute(
+        sa.text("SELECT scan_id, model, experiment_id, probe_results_summary_json FROM scans")
+    ).fetchall()
+
+    for scan_id, model, experiment_id, prs_json in scans:
+        prs = json.loads(prs_json) if prs_json else {}
+
+        for probe_name, data in prs.items():
+            row = conn.execute(
+                sa.text("""
+                    SELECT COUNT(*) as total,
+                           SUM(CASE WHEN passed THEN 1 ELSE 0 END) as passed,
+                           SUM(CASE WHEN NOT passed THEN 1 ELSE 0 END) as failed
+                    FROM findings
+                    WHERE experiment_id = :exp_id AND probe = :probe AND model = :model
+                """),
+                {"exp_id": experiment_id, "probe": probe_name, "model": model},
+            ).fetchone()
+
+            if row and row[0] > 0:
+                total, new_passed, new_failed = row
+                data["passed"] = new_passed
+                data["failed"] = new_failed
+                data["total_attempts"] = total
+                data["pass_rate"] = round(new_passed / total * 100, 2) if total else 0
+
+        conn.execute(
+            sa.text("UPDATE scans SET probe_results_summary_json = :prs WHERE scan_id = :sid"),
+            {"prs": json.dumps(prs), "sid": scan_id},
         )

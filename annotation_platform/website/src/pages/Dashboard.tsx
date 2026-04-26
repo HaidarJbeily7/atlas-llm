@@ -3,12 +3,12 @@ import {
   RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
   PieChart, Pie, Cell, Legend,
 } from 'recharts';
-import { Shield, AlertTriangle, DollarSign, Zap, ClipboardCheck } from 'lucide-react';
+import { Shield, AlertTriangle, DollarSign, Zap, ClipboardCheck, Crosshair, Activity } from 'lucide-react';
 import { useExperimentData } from '../hooks/useExperimentData';
 import { useReviewData } from '../hooks/useReviewData';
 import StatCard from '../components/StatCard';
 import LoadingSpinner from '../components/LoadingSpinner';
-import { getProbeLabel, CHART_COLORS } from '../lib/data';
+import { getProbeLabel, formatCost, CHART_COLORS } from '../lib/data';
 
 export default function Dashboard() {
   const { summary, models, loading } = useExperimentData();
@@ -18,7 +18,8 @@ export default function Dashboard() {
 
   const totalAttempts = models.reduce((s, m) => s + m.totalAttempts, 0);
   const totalFailed = models.reduce((s, m) => s + m.totalFailed, 0);
-  const totalCost = models.reduce((s, m) => s + m.totalCost, 0);
+  const totalTargetCost = models.reduce((s, m) => s + m.totalTargetCost, 0);
+  const totalAttackerCost = models.reduce((s, m) => s + m.totalAttackerCost, 0);
   const overallPassRate = totalAttempts > 0 ? ((totalAttempts - totalFailed) / totalAttempts) * 100 : 0;
 
   // Model comparison chart data
@@ -68,7 +69,7 @@ export default function Dashboard() {
         <p className="text-gray-500 mt-1">2x2 Factorial Experiment — {models.length} models, {probeChartData.length} probe types</p>
       </div>
 
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-5 gap-4">
         <StatCard
           label="Overall Pass Rate"
           value={`${overallPassRate.toFixed(1)}%`}
@@ -83,10 +84,16 @@ export default function Dashboard() {
           icon={<AlertTriangle className="w-5 h-5" />}
         />
         <StatCard
-          label="Total Cost"
-          value={`$${totalCost.toFixed(2)}`}
-          sub={`${models.length} models evaluated`}
+          label="Target Cost"
+          value={formatCost(totalTargetCost)}
+          sub="target model spend"
           icon={<DollarSign className="w-5 h-5" />}
+        />
+        <StatCard
+          label="Attacker Cost"
+          value={formatCost(totalAttackerCost)}
+          sub="attacker model spend"
+          icon={<Crosshair className="w-5 h-5" />}
         />
         <StatCard
           label="Models Tested"
@@ -103,7 +110,7 @@ export default function Dashboard() {
             <ClipboardCheck className="w-5 h-5 text-indigo-400" />
             <h2 className="text-lg font-semibold text-white">Review Progress</h2>
           </div>
-          <div className="grid grid-cols-5 gap-4 mb-4">
+          <div className="grid grid-cols-6 gap-4 mb-4">
             <div>
               <p className="text-xs text-gray-500">Reviewed</p>
               <p className="text-xl font-bold text-white">
@@ -120,10 +127,20 @@ export default function Dashboard() {
             <div>
               <p className="text-xs text-gray-500">Confirmed Vulnerabilities</p>
               <p className="text-xl font-bold text-red-400">{reviewStats.confirmed}</p>
+              {reviewStats.reviewed > 0 && (
+                <p className="text-xs text-gray-500">
+                  {((reviewStats.confirmed / reviewStats.reviewed) * 100).toFixed(1)}% of reviewed
+                </p>
+              )}
             </div>
             <div>
               <p className="text-xs text-gray-500">False Positives</p>
               <p className="text-xl font-bold text-green-400">{reviewStats.false_positive}</p>
+              {reviewStats.reviewed > 0 && (
+                <p className="text-xs text-gray-500">
+                  {((reviewStats.false_positive / reviewStats.reviewed) * 100).toFixed(1)}% of reviewed
+                </p>
+              )}
             </div>
             <div>
               <p className="text-xs text-gray-500">Reviewed Pass Rate</p>
@@ -134,12 +151,59 @@ export default function Dashboard() {
                 {reviewStats.reviewed_pass_count} pass / {reviewStats.reviewed_fail_count} fail
               </p>
             </div>
+            <div>
+              <p className="text-xs text-gray-500">Confirmed Vuln Rate</p>
+              <p className="text-xl font-bold text-red-300">
+                {reviewStats.reviewed > 0
+                  ? `${((reviewStats.confirmed / reviewStats.reviewed) * 100).toFixed(1)}%`
+                  : '-'}
+              </p>
+              <p className="text-xs text-gray-500">of reviewed findings</p>
+            </div>
           </div>
           <div className="w-full bg-gray-800 rounded-full h-2 overflow-hidden">
             <div
               className="h-full rounded-full transition-all bg-indigo-500"
               style={{ width: `${reviewStats.total > 0 ? (reviewStats.reviewed / reviewStats.total) * 100 : 0}%` }}
             />
+          </div>
+        </div>
+      )}
+
+      {/* Detector Performance */}
+      {summary.detector_stats && summary.detector_stats.length > 0 && (
+        <div className="card">
+          <div className="flex items-center gap-3 mb-4">
+            <Activity className="w-5 h-5 text-cyan-400" />
+            <h2 className="text-lg font-semibold text-white">Detector Performance</h2>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-xs text-gray-500 border-b border-gray-800">
+                  <th className="pb-2 pr-4">Detector</th>
+                  <th className="pb-2 pr-4 text-right">Evaluated</th>
+                  <th className="pb-2 pr-4 text-right">Passed</th>
+                  <th className="pb-2 pr-4 text-right">Failed</th>
+                  <th className="pb-2 pr-4 text-right">Fail Rate</th>
+                  <th className="pb-2 text-right">Avg Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {summary.detector_stats.map((d) => (
+                  <tr key={d.name} className="border-b border-gray-800/50">
+                    <td className="py-2 pr-4 text-gray-200 font-medium">{d.name}</td>
+                    <td className="py-2 pr-4 text-right text-gray-400">{d.total}</td>
+                    <td className="py-2 pr-4 text-right text-green-400">{d.passed}</td>
+                    <td className="py-2 pr-4 text-right text-red-400">{d.failed}</td>
+                    <td className="py-2 pr-4 text-right text-amber-400">
+                      {d.total > 0 ? ((d.failed / d.total) * 100).toFixed(1) : 0}%
+                    </td>
+                    <td className="py-2 text-right text-gray-300">{d.avg_score.toFixed(3)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       )}

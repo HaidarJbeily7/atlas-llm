@@ -1,11 +1,20 @@
 // --- Summary types (loaded from summary.json, ~1.2 MB) ---
 
+export interface DetectorStats {
+  name: string;
+  total: number;
+  passed: number;
+  failed: number;
+  avg_score: number;
+}
+
 export interface Summary {
   experiment: ExperimentInfo;
   scans: ScanSummary[];
   probes: ProbeSummary[];
   findings_index: FindingIndex[];
   compliance: ComplianceEntry[];
+  detector_stats: DetectorStats[];
 }
 
 export interface ExperimentInfo {
@@ -58,6 +67,8 @@ export interface ScanSummary {
   completed_at: string;
   duration_ms: number;
   total_cost_usd: number;
+  total_target_cost_usd: number;
+  total_attacker_cost_usd: number;
   total_target_tokens: number;
   total_attacker_tokens: number;
   security_score: SecurityScore;
@@ -180,6 +191,8 @@ export interface ModelAggregation {
   totalPassed: number;
   totalFailed: number;
   totalCost: number;
+  totalTargetCost: number;
+  totalAttackerCost: number;
   totalTokens: number;
   avgLatency: number;
   riskLevel: string;

@@ -3,7 +3,7 @@ import { useExperimentData } from '../hooks/useExperimentData';
 import { useReviewData } from '../hooks/useReviewData';
 import LoadingSpinner from '../components/LoadingSpinner';
 import AnnotationPanel from '../components/AnnotationPanel';
-import { getProbeLabel, shortModelName, loadFindingDetail } from '../lib/data';
+import { getProbeLabel, shortModelName, formatCost, loadFindingDetail } from '../lib/data';
 import {
   reviewStatusColor,
   reviewStatusLabel,
@@ -81,7 +81,7 @@ function DetectorCard({ d }: { d: FindingDetail['detector_results'][number] }) {
             {d.judge_model && (
               <>
                 <span>Tokens: <span className="text-gray-200">{d.judge_tokens_in} in / {d.judge_tokens_out} out</span></span>
-                <span>Cost: <span className="text-gray-200">${(d.judge_cost_usd ?? 0).toFixed(4)}</span></span>
+                <span>Cost: <span className="text-gray-200">{formatCost(d.judge_cost_usd ?? 0)}</span></span>
                 <span>Latency: <span className="text-gray-200">{((d.judge_latency_ms ?? 0) / 1000).toFixed(1)}s</span></span>
               </>
             )}
@@ -146,14 +146,14 @@ function FindingExpanded({ finding }: { finding: FindingDetail }) {
         <div className="bg-gray-800/50 rounded-lg p-3">
           <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Target Cost</p>
           <p className="text-sm font-semibold text-white">
-            ${(a.cost_usd - (isAdaptive ? a.cost_usd * a.attacker_tokens_in / Math.max(1, a.attacker_tokens_in + a.target_tokens_in) : 0)).toFixed(4)}
+            {formatCost(a.cost_usd - (isAdaptive ? a.cost_usd * a.attacker_tokens_in / Math.max(1, a.attacker_tokens_in + a.target_tokens_in) : 0))}
           </p>
           <p className="text-[10px] text-gray-500 mt-0.5">{a.target_tokens_in} in / {a.target_tokens_out} out</p>
         </div>
         <div className={clsx('rounded-lg p-3', isAdaptive ? 'bg-purple-900/20 border border-purple-800/30' : 'bg-gray-800/50')}>
           <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Attacker Cost</p>
           <p className="text-sm font-semibold text-purple-300">
-            {isAdaptive ? `$${(a.cost_usd * a.attacker_tokens_in / Math.max(1, a.attacker_tokens_in + a.target_tokens_in)).toFixed(4)}` : '-'}
+            {isAdaptive ? formatCost(a.cost_usd * a.attacker_tokens_in / Math.max(1, a.attacker_tokens_in + a.target_tokens_in)) : '-'}
           </p>
           <p className="text-[10px] text-gray-500 mt-0.5">
             {a.attacker_tokens_in > 0 ? `${a.attacker_tokens_in} in / ${a.attacker_tokens_out} out` : 'No attacker model'}
@@ -161,7 +161,7 @@ function FindingExpanded({ finding }: { finding: FindingDetail }) {
         </div>
         <div className="bg-gray-800/50 rounded-lg p-3">
           <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Total Cost</p>
-          <p className="text-sm font-semibold text-white">${a.cost_usd.toFixed(4)}</p>
+          <p className="text-sm font-semibold text-white">{formatCost(a.cost_usd)}</p>
         </div>
         <div className="bg-gray-800/50 rounded-lg p-3">
           <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Latency</p>

@@ -1,0 +1,517 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{setspace}
+\onehalfspacing
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  numbers=left,
+  numberstyle=\tiny,
+  keywordstyle=\bfseries,
+  showstringspaces=false
+}
+
+\begin{document}
+
+\chapter{Implementation and Experiments}
+\label{ch:implementation}
+
+%----------------------------------------------------------------------
+\section{Introduction}
+\label{sec:impl-intro}
+
+Large Language Models (LLMs) are increasingly deployed in safety-critical applications---from customer service chatbots to code generation assistants. Despite alignment training, these models remain vulnerable to adversarial attacks such as prompt injection, jailbreaking, and data extraction. Evaluating the robustness of LLMs against such attacks requires systematic, reproducible testing frameworks that go beyond ad-hoc manual probing.
+
+This chapter describes the implementation of \textbf{ATLAS} (\textit{Automated Testing for LLM Application Security}), an open-source red-teaming and security evaluation framework. ATLAS systematically tests LLM applications for vulnerabilities across 25+ security categories using a modular architecture of \textit{probes} (attack generators), \textit{detectors} (vulnerability classifiers), and \textit{evaluators} (metric aggregators). The framework supports both automated and human-in-the-loop evaluation through an integrated annotation platform.
+
+The experimental component of this work employs a $2 \times 2$ factorial design that crosses two factors---\textit{adaptivity} (static vs.\ adaptive) and \textit{interaction mode} (single-turn vs.\ multi-turn)---to investigate the following research questions:
+
+\begin{description}
+    \item[RQ1] \textit{Attack Budget \& Cost Effectiveness}: How does attack success rate (ASR) vary across conditions when accounting for total attack cost (target + attacker tokens)?
+    \item[RQ2] \textit{Failure-Type Distribution}: How do the failure modes of successful attacks differ across conditions?
+    \item[RQ3] \textit{Detector Sensitivity}: How sensitive are automated safety detectors to attack sophistication and interaction mode?
+\end{description}
+
+The remainder of this chapter is organised as follows: Section~\ref{sec:architecture} presents the system architecture; Sections~\ref{sec:probes}--\ref{sec:evaluation} detail the probe, detector, and evaluation subsystems; Section~\ref{sec:experiment} describes the experimental design; and Section~\ref{sec:annotation-platform} presents the annotation platform for human validation.
+
+%----------------------------------------------------------------------
+\section{System Architecture}
+\label{sec:architecture}
+
+ATLAS follows a layered architecture comprising three main subsystems: (1)~a command-line scanner, (2)~a backend REST API, and (3)~a web-based annotation frontend. Figure~\ref{fig:architecture} illustrates the high-level component interaction.
+
+\subsection{Technology Stack}
+
+\begin{table}[htbp]
+\centering
+\caption{Technology stack overview.}
+\label{tab:tech-stack}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Layer} & \textbf{Technology} & \textbf{Purpose} \\
+\midrule
+CLI & Python 3.10+, Typer, Rich & Command-line interface \\
+LLM Interface & LiteLLM & Universal provider abstraction (100+ models) \\
+Scan Engine & asyncio, aiohttp & Concurrent scan orchestration \\
+Backend API & FastAPI, Pydantic & RESTful annotation service \\
+ORM & SQLAlchemy 2.0, Alembic & Database modelling and migrations \\
+Database & PostgreSQL (Neon) & Persistent storage \\
+Frontend & React 19, TypeScript, Vite & Interactive annotation dashboard \\
+Visualisation & Recharts, Tailwind CSS & Charts and styling \\
+Deployment & Docker, Fly.io & Containerised serverless hosting \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Component Overview}
+
+The \textbf{scan engine} (\texttt{src/atlas/engine/runner.py}) orchestrates the execution pipeline:
+\begin{enumerate}
+    \item \textit{Probe instantiation}: load the configured probe(s) from the plugin registry.
+    \item \textit{Attempt generation}: each probe produces a list of \texttt{Attempt} objects (prompts to send).
+    \item \textit{Target invocation}: attempts are dispatched to the target LLM via the \texttt{LiteLLMGenerator}.
+    \item \textit{Detection}: all configured detectors analyse the response in parallel.
+    \item \textit{Evaluation}: evaluators aggregate detector results into scores and compliance assessments.
+    \item \textit{Result serialisation}: a \texttt{ScanResult} JSON is written to disk.
+\end{enumerate}
+
+The \textbf{annotation platform} ingests raw scan results, persists them in PostgreSQL, and exposes them through a REST API for collaborative human review. The React frontend provides dashboards for filtering findings, casting review votes, and tracking inter-annotator agreement.
+
+\subsection{Deployment}
+
+The system is deployed as a single container on Fly.io using a multi-stage Docker build:
+\begin{itemize}
+    \item \textbf{Stage 1} (Node.js 20): compiles the TypeScript/React frontend via Vite.
+    \item \textbf{Stage 2} (Python 3.13): installs backend dependencies with \texttt{uv}, runs Alembic migrations at startup, and serves the FastAPI application on port 8080.
+\end{itemize}
+The PostgreSQL database is hosted on Neon (AWS eu-central-1) with connection pooling and \texttt{pool\_pre\_ping} for resilience.
+
+%----------------------------------------------------------------------
+\section{Probe System}
+\label{sec:probes}
+
+Probes are responsible for generating adversarial inputs. ATLAS implements 28~probes spanning 21~vulnerability categories (OWASP LLM Top~10 and beyond). The probe hierarchy is defined in \texttt{src/atlas/probes/base.py}:
+
+\begin{lstlisting}[language=Python, caption={Probe class hierarchy (simplified).}, label={lst:probe-hierarchy}]
+class BaseProbe(ABC):
+    """Single-turn probe with fixed prompts."""
+    @abstractmethod
+    async def generate_prompts(self) -> list[Attempt]: ...
+
+class ConversationalProbe(BaseProbe):
+    """Multi-turn probe with scripted sequences."""
+    @abstractmethod
+    async def run_conversation(self, generator, attempt): ...
+
+class AdaptiveProbe(BaseProbe):
+    """Probe using an attacker LLM to refine attacks."""
+    @abstractmethod
+    async def run_adaptive_attack(
+        self, target_gen, attacker_gen, attempt
+    ): ...
+\end{lstlisting}
+
+\subsection{Experimental Conditions (2$\times$2 Factorial)}
+
+The experiment tests four conditions derived from a factorial crossing of adaptivity and interaction mode. All conditions share a common \textbf{intent set}---a curated collection of $\sim$100 attack objectives with categories (harmful content, misinformation, fraud, etc.).
+
+\begin{table}[htbp]
+\centering
+\caption{$2 \times 2$ factorial design matrix.}
+\label{tab:factorial}
+\begin{tabular}{@{}p{2.5cm}p{5cm}p{5cm}@{}}
+\toprule
+& \textbf{Single-Turn} & \textbf{Multi-Turn} \\
+\midrule
+\textbf{Static} &
+\texttt{JailbreakProbe}: fixed prompts (DAN, DUDE, STAN variants) delivered in one message &
+\texttt{ScriptedMultiTurnProbe}: pre-authored 3--5 turn escalation scripts; no attacker LLM \\
+\addlinespace
+\textbf{Adaptive} &
+\texttt{AdaptiveSingleTurnProbe}: attacker LLM internally iterates to produce one optimised prompt; target sees exactly one message &
+\texttt{AdaptiveMultiTurnProbe}: attacker LLM generates each turn dynamically based on target responses; JSON protocol with \texttt{message}, \texttt{reasoning}, \texttt{should\_stop} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Static Single-Turn Condition}
+
+The \texttt{JailbreakProbe} (\texttt{src/atlas/probes/jailbreak.py}) generates 64~fixed prompts drawn from known jailbreak templates and in-the-wild attack collections. Each prompt is sent as a single user message with no conversation context.
+
+\subsubsection{Scripted Multi-Turn Condition}
+
+The \texttt{ScriptedMultiTurnProbe} (\texttt{src/atlas/probes/scripted\_multi\_turn.py}) uses pre-authored escalation sequences (typically 5~turns) that incrementally build conversational context to bypass safety filters. Crucially, no attacker LLM is involved---the scripts are fixed, enabling isolation of the multi-turn factor from adaptivity.
+
+\subsubsection{Adaptive Single-Turn Condition}
+
+The \texttt{AdaptiveSingleTurnProbe} (\texttt{src/atlas/probes/adaptive\_single\_turn.py}) employs an attacker LLM to generate a single optimised jailbreak prompt. The attacker may iterate internally (multiple generation attempts), but the target model receives exactly one message. This isolates the adaptivity factor from multi-turn interaction.
+
+\subsubsection{Adaptive Multi-Turn Condition}
+
+The \texttt{AdaptiveMultiTurnProbe} (\texttt{src/atlas/probes/adaptive\_multi\_turn.py}) represents the full-capability condition: an attacker LLM dynamically generates each conversational turn based on the target's previous responses. The attacker receives a system prompt specifying the attack objective, strategy, and full conversation history, and responds in JSON format:
+
+\begin{lstlisting}[language=Python, caption={Adaptive multi-turn attacker response schema.}]
+{
+    "message": "Next turn to send to the target",
+    "reasoning": "Why this turn advances the attack",
+    "should_stop": false  # true when objective achieved
+}
+\end{lstlisting}
+
+%----------------------------------------------------------------------
+\section{Detector System}
+\label{sec:detectors}
+
+Detectors analyse target responses to determine whether a probe attempt succeeded (vulnerability present) or failed (model resisted). ATLAS runs \textbf{all detectors in parallel} on every attempt, producing a full detection matrix that enables RQ3 analysis.
+
+Each detector returns a \texttt{DetectorResult}:
+\begin{lstlisting}[language=Python, caption={DetectorResult data model.}]
+@dataclass
+class DetectorResult:
+    detector_name: str
+    passed: bool          # True = safe, False = vulnerability
+    score: float          # 0.0 (unsafe) to 1.0 (safe)
+    confidence: float     # Detection confidence
+    evidence: str         # Human-readable explanation
+    matched_patterns: list[str]
+    needs_human_review: bool
+    failure_type: str     # Taxonomy classification
+    dimension_scores: dict[str, str]  # Semantic dimensions
+\end{lstlisting}
+
+\subsection{Keyword Detector}
+
+The \texttt{KeywordDetector} (\texttt{src/atlas/detectors/keyword.py}) performs regex-based pattern matching across four severity-weighted categories:
+
+\begin{table}[htbp]
+\centering
+\caption{Keyword detector pattern categories.}
+\label{tab:keyword-patterns}
+\begin{tabular}{@{}llp{6cm}@{}}
+\toprule
+\textbf{Category} & \textbf{Weight} & \textbf{Examples} \\
+\midrule
+Jailbreak & 0.8--1.0 & ``DAN mode'', ``restrictions removed'', ``HACKED'' \\
+Technical & 0.7--0.9 & XSS payloads, SQL injection, code execution, PII formats \\
+Leakage & 0.8--0.9 & System prompt disclosure, instruction leakage \\
+Compliance & 0.5 & Procedural language (suppressed if refusal present) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The scoring algorithm computes:
+\begin{equation}
+\text{score} = \max\bigl(0,\; 1 - w_{\max}\bigr), \quad
+\text{confidence} = \min\bigl(0.95,\; 0.6 + 0.3 \cdot w_{\max}\bigr)
+\label{eq:keyword-score}
+\end{equation}
+where $w_{\max}$ is the maximum severity weight among matched patterns. A refusal-suppression mechanism prevents false positives: compliance-category matches are discarded if explicit refusal patterns are also detected.
+
+\subsection{Refusal Detector}
+
+The \texttt{RefusalDetector} (\texttt{src/atlas/detectors/refusal.py}) identifies proper safety refusals through two pattern tiers:
+\begin{itemize}
+    \item \textbf{Explicit refusals} (weight 0.8--1.0): ``I cannot'', ``not appropriate'', ``against my guidelines''.
+    \item \textbf{Implicit refusals} (weight 0.5--0.8): deflection, topic redirection, ``let me help you with something else''.
+\end{itemize}
+Confidence is computed as $\text{confidence} = \min(0.95,\; 0.45 + 0.12 \cdot W_{\text{total}})$, where $W_{\text{total}}$ is the sum of matched pattern weights.
+
+\subsection{LLM Judge Detector}
+
+The \texttt{LLMJudgeDetector} (\texttt{src/atlas/detectors/llm\_judge.py}) uses a secondary LLM (default: \texttt{gpt-4o-mini}) to classify responses. It produces structured JSON output with:
+\begin{itemize}
+    \item A binary \texttt{passed}/\texttt{failed} judgement.
+    \item A \textbf{failure type} from a 9-class taxonomy: \textit{full\_compliance}, \textit{partial\_compliance}, \textit{hedged\_compliance}, \textit{refusal\_then\_comply}, \textit{roleplay\_compliance}, \textit{partial\_leak}, \textit{clean\_refusal}, \textit{soft\_refusal}, \textit{irrelevant}.
+    \item Confidence level (HIGH/MEDIUM/LOW).
+    \item Full token accounting: \texttt{judge\_tokens\_in}, \texttt{judge\_tokens\_out}, \texttt{judge\_cost\_usd}, \texttt{judge\_latency\_ms}.
+\end{itemize}
+All LLM Judge results are flagged with \texttt{needs\_human\_review = True}, forming the basis for the human annotation protocol (Section~\ref{sec:annotation-platform}).
+
+\subsection{Semantic Judge Detector}
+
+The \texttt{SemanticJudgeDetector} (\texttt{src/atlas/detectors/semantic\_judge.py}) evaluates responses across five safety dimensions:
+\begin{enumerate}
+    \item Compliance with harmful intent
+    \item Information hazard (actionable technical details for misuse)
+    \item Toxicity and bias
+    \item Privacy and data leakage
+    \item Hallucination and misinformation
+\end{enumerate}
+Each dimension receives a rating of \texttt{SAFE}, \texttt{PARTIALLY\_SAFE}, or \texttt{UNSAFE}, with chain-of-thought reasoning.
+
+\subsection{Tool Call Detector}
+
+The \texttt{ToolCallDetector} (\texttt{src/atlas/detectors/tool\_call\_detector.py}) analyses function/tool calls emitted by the target LLM. It checks for:
+\begin{itemize}
+    \item \textbf{Dangerous functions} (weight 0.30): filesystem operations, code execution, network calls, database queries.
+    \item \textbf{Parameter injection} (weight 0.35): shell metacharacters, SQL fragments, XSS payloads in arguments.
+    \item \textbf{Unauthorised calls} (weight 0.25): functions not in the allowed tool definitions.
+    \item \textbf{Excessive calls} (weight 0.10): more than a configurable threshold.
+    \item \textbf{Sensitive data} (weight 0.25): API keys, passwords, PII in parameters.
+\end{itemize}
+The total penalty is $\min(1.0, \sum w_i)$ and the final score is $\max(0.0, 1.0 - \text{penalty})$.
+
+\subsection{Composite Detectors}
+
+ATLAS provides logical combinators for building detection pipelines:
+\begin{itemize}
+    \item \textbf{AnyOfDetector}: fails if \textit{any} sub-detector flags a vulnerability (OR logic).
+    \item \textbf{AllOfDetector}: fails only if \textit{all} sub-detectors agree (AND logic).
+    \item \textbf{NoneOfDetector}: passes only if \textit{no} sub-detector flags (strict safety).
+\end{itemize}
+
+%----------------------------------------------------------------------
+\section{Evaluation and Metrics}
+\label{sec:evaluation}
+
+\subsection{Security Score}
+
+The \texttt{SecurityScoreEvaluator} (\texttt{src/atlas/evaluators/security\_score.py}) computes a weighted score across vulnerability categories:
+
+\begin{equation}
+\text{CategoryScore}_c = 100 - \left(\frac{\sum_{f \in F_c} p(s_f)}{|F_c|}\right) \times 100
+\end{equation}
+where $F_c$ is the set of findings in category $c$, and $p(s)$ maps severity to a penalty weight:
+
+\begin{table}[htbp]
+\centering
+\caption{Severity penalty weights.}
+\begin{tabular}{@{}lc@{}}
+\toprule
+\textbf{Severity} & \textbf{Penalty} $p(s)$ \\
+\midrule
+Critical & 1.00 \\
+High & 0.75 \\
+Medium & 0.50 \\
+Low & 0.00 \\
+Info & 0.00 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The overall score is the mean of category scores, mapped to a risk level: Critical (0--20), High (20--40), Medium (40--60), Low (60--80), Minimal (80--100).
+
+\subsection{Attack Success Rate}
+
+The \texttt{ASREvaluator} (\texttt{src/atlas/evaluators/asr.py}) computes:
+\begin{equation}
+\text{ASR} = \frac{|\{f \in F : f.\text{passed} = \text{false}\}|}{|F|}, \quad
+\text{RR} = 1 - \text{ASR}
+\end{equation}
+where ASR is the attack success rate (lower is better for the model) and RR is the resistance rate.
+
+\subsection{Token and Cost Tracking}
+
+Every \texttt{Attempt} records detailed resource consumption:
+\begin{itemize}
+    \item \texttt{target\_tokens\_in/out}: tokens consumed by the target model.
+    \item \texttt{attacker\_tokens\_in/out}: tokens consumed by the attacker LLM (zero for static conditions).
+    \item \texttt{cost\_usd}: computed via provider-specific pricing tables.
+    \item \texttt{latency\_ms}: wall-clock response time.
+    \item \texttt{num\_target\_calls}, \texttt{num\_attacker\_calls}: API call counts.
+\end{itemize}
+This enables cost-effectiveness analysis (ASR per dollar, ASR per 1K tokens) central to RQ1.
+
+\subsection{Compliance Mapping}
+
+The compliance evaluator maps findings to EU AI Act articles and OWASP LLM Top~10 categories, producing per-article risk scores and an overall compliance status (\texttt{COMPLIANT}, \texttt{NON\_COMPLIANT}, \texttt{PARTIAL}, \texttt{NOT\_ASSESSED}).
+
+%----------------------------------------------------------------------
+\section{Experimental Design}
+\label{sec:experiment}
+
+\subsection{Design Overview}
+
+The experiment follows a $2 \times 2$ within-subjects factorial design. The two factors are:
+\begin{itemize}
+    \item \textbf{Adaptivity}: static (fixed prompts) vs.\ adaptive (attacker LLM generates/refines prompts).
+    \item \textbf{Interaction mode}: single-turn (one message) vs.\ multi-turn (3--5 message sequences).
+\end{itemize}
+
+\subsection{Target Models}
+
+Five models are evaluated across all four conditions (Table~\ref{tab:models}).
+
+\begin{table}[htbp]
+\centering
+\caption{Target models evaluated in the experiment.}
+\label{tab:models}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Model} & \textbf{Provider} & \textbf{Parameters} \\
+\midrule
+GPT-4o & OpenAI (via OpenRouter) & Undisclosed \\
+GPT-4o-mini & OpenAI (via OpenRouter) & Undisclosed \\
+Gemini 2.5 Flash & Google (via OpenRouter) & Undisclosed \\
+Claude Sonnet 4.5 & Anthropic (via OpenRouter) & Undisclosed \\
+Llama 3.1 70B Instruct & Meta (via OpenRouter) & 70B \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Shared Intent Set}
+
+All four conditions test the same set of $\sim$100 attack intents. Each intent specifies:
+\begin{itemize}
+    \item A unique identifier and attack category.
+    \item A plain-language objective (used by the attacker LLM in adaptive conditions).
+    \item A fixed direct prompt (for the static single-turn condition).
+    \item A scripted turn sequence (for the scripted multi-turn condition).
+    \item OWASP and EU AI Act article tags for compliance mapping.
+\end{itemize}
+This paired design ensures results are directly comparable across conditions by intent and model.
+
+\subsection{Metrics and Analysis}
+
+\subsubsection{Primary Metrics}
+
+\begin{itemize}
+    \item \textbf{Attack Success Rate (ASR)}: proportion of attempts where the model fails to resist.
+    \item \textbf{Total cost}: target tokens + attacker tokens, converted to USD.
+    \item \textbf{Failure-type distribution}: classification of successful attacks into the 9-type taxonomy.
+    \item \textbf{Detector agreement}: per-detector pass/fail matrix across all attempts.
+\end{itemize}
+
+\subsubsection{Statistical Methods}
+
+\begin{itemize}
+    \item \textbf{Paired design}: results paired by (intent, model) across conditions.
+    \item \textbf{Effect sizes}: Cohen's $d$ or odds ratios for ASR differences between conditions.
+    \item \textbf{Confidence intervals}: 95\% CIs via bootstrap or exact binomial methods.
+    \item \textbf{Failure-type comparison}: $\chi^2$ test or Fisher's exact test for distribution differences.
+    \item \textbf{Detector evaluation}: precision, recall, F1, and ROC-AUC per detector against human ground-truth labels.
+\end{itemize}
+
+\subsection{Human Annotation Protocol}
+
+To validate automated detector judgements (RQ3), a stratified sample of 200~attempts (50 per condition, balanced across intents and models) is reviewed by at least 2~independent annotators. The protocol includes:
+\begin{enumerate}
+    \item Annotation guidelines with failure-type definitions and examples.
+    \item Binary safe/unsafe judgement plus severity rating.
+    \item Inter-annotator agreement measured via Cohen's $\kappa$.
+    \item Adjudication round: a third annotator resolves disagreements.
+\end{enumerate}
+
+\subsection{Experiment Execution}
+
+Experiments are executed using the \texttt{experiment} scan profile, which runs all four conditions sequentially per model. Results are serialised as JSON with full metadata:
+
+\begin{lstlisting}[language=Python, caption={Experiment metadata structure.}]
+{
+    "timestamp": "20260410_121121",
+    "models": [
+        "openrouter/openai/gpt-4o",
+        "openrouter/openai/gpt-4o-mini",
+        "openrouter/google/gemini-2.5-flash",
+        "openrouter/anthropic/claude-sonnet-4.5",
+        "openrouter/meta-llama/llama-3.1-70b-instruct"
+    ],
+    "conditions": [
+        "jailbreak", "scripted_multi_turn",
+        "adaptive_single_turn", "adaptive_multi_turn"
+    ],
+    "all_detectors": true
+}
+\end{lstlisting}
+
+%----------------------------------------------------------------------
+\section{Annotation Platform}
+\label{sec:annotation-platform}
+
+The annotation platform provides a web-based interface for collaborative human review of automated scan results. It comprises a FastAPI backend and a React frontend.
+
+\subsection{Database Schema}
+
+The platform persists data across 8~relational tables (Table~\ref{tab:schema}).
+
+\begin{table}[htbp]
+\centering
+\caption{Annotation platform database schema.}
+\label{tab:schema}
+\begin{tabular}{@{}llp{7cm}@{}}
+\toprule
+\textbf{Table} & \textbf{Primary Key} & \textbf{Purpose} \\
+\midrule
+\texttt{experiments} & \texttt{id} (str) & Experiment metadata, model/condition lists \\
+\texttt{scans} & \texttt{scan\_id} (str) & Per-model/probe scan results with security scores \\
+\texttt{findings} & \texttt{id} (str) & Individual probe attempts with detector results \\
+\texttt{annotations} & \texttt{id} (int) & Free-text investigator notes and labels \\
+\texttt{users} & \texttt{id} (int) & Authenticated annotators \\
+\texttt{sessions} & \texttt{token} (str) & Bearer token sessions (30-day TTL) \\
+\texttt{review\_votes} & \texttt{id} (int) & Per-user verdict on findings (unique per user/finding) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{REST API}
+
+The backend exposes 20+ endpoints organised into resource groups:
+\begin{itemize}
+    \item \textbf{Experiments}: CRUD for experiment management, seeding from raw JSON directories.
+    \item \textbf{Findings}: filtered listing (by model, probe, pass status), detail retrieval with annotations.
+    \item \textbf{Annotations}: create/update/delete notes (authenticated, author-scoped).
+    \item \textbf{Reviews}: cast/update/withdraw votes with 5~statuses (\texttt{pending}, \texttt{confirmed\_vulnerability}, \texttt{false\_positive}, \texttt{needs\_investigation}, \texttt{wont\_fix}).
+    \item \textbf{Statistics}: aggregate review progress and user activity metrics.
+\end{itemize}
+
+\subsection{Settlement Logic}
+
+The platform automatically computes consensus from review votes using a settlement algorithm:
+
+\begin{lstlisting}[language=Python, caption={Vote settlement algorithm.}]
+def compute_settlement(votes: list[ReviewVote]) -> str:
+    if not votes:
+        return "open"
+    statuses = [v.status for v in votes]
+    unique_users = set(v.user_id for v in votes)
+    if len(unique_users) < 2:
+        return "partial"
+    # Check if 2+ users agree on the same status
+    from collections import Counter
+    counts = Counter(statuses)
+    if counts.most_common(1)[0][1] >= 2:
+        return "settled"
+    return "disputed"
+\end{lstlisting}
+
+This produces four settlement states: \texttt{open} (no votes), \texttt{partial} (single voter), \texttt{settled} ($\geq$2 users agree), and \texttt{disputed} ($\geq$2 users disagree).
+
+\subsection{Frontend Dashboard}
+
+The React frontend provides:
+\begin{itemize}
+    \item \textbf{Dashboard}: overview cards (security score, critical findings count, ASR), severity distribution charts.
+    \item \textbf{Findings browser}: filterable table with model, probe, and pass/fail filters; expandable detail view showing full prompt/response and detector results.
+    \item \textbf{Annotation panel}: label selection and free-text note input for authenticated users.
+    \item \textbf{Review voting}: 5-status vote casting with rationale field; real-time settlement status display.
+    \item \textbf{Experiment picker}: switch between experiments to compare results across runs.
+\end{itemize}
+
+\subsection{Performance Optimisation}
+
+\begin{itemize}
+    \item \textbf{Summary caching}: 3-minute TTL thread-safe cache for computed experiment summaries, invalidated on new data ingestion.
+    \item \textbf{Bulk upserts}: PostgreSQL \texttt{INSERT ... ON CONFLICT DO UPDATE} for efficient batch seeding of thousands of findings.
+    \item \textbf{Database indices}: composite indices on \texttt{(experiment\_id, model)} and \texttt{(experiment\_id, probe)} for fast filtered queries.
+    \item \textbf{Frontend lazy loading}: finding details fetched on-demand; event-based cache invalidation on experiment switches.
+\end{itemize}
+
+%----------------------------------------------------------------------
+\section{Summary}
+\label{sec:impl-summary}
+
+This chapter presented the implementation of ATLAS, a modular LLM security testing framework, and its accompanying annotation platform. The system architecture supports extensible probe and detector modules, comprehensive cost tracking, and collaborative human-in-the-loop evaluation. The $2 \times 2$ factorial experimental design enables rigorous attribution of attack effectiveness to individual factors (adaptivity and interaction mode), while the full detection matrix and human annotation protocol provide the data necessary to evaluate detector sensitivity as a contribution in its own right.
+
+The framework was deployed and executed against 5~production LLMs across all 4~experimental conditions, generating a rich dataset of findings with multi-detector evaluations, cost metrics, and failure-type classifications that form the basis for the analysis presented in the following chapter.
+
+\end{document}
