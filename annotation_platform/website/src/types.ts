@@ -51,6 +51,29 @@ export interface DetectorByCondition {
   by_condition: Record<string, DetectorConditionStats>;
 }
 
+export interface CascadeConditionCard {
+  total: number;
+  refusal_rate: number;
+  asr: number;
+  judge_agreement_rate: number;
+  severity_distribution: Record<string, number>;
+  critical_damage_rate: number;
+}
+
+export interface CascadeCard {
+  awcs: number;
+  refusal_rate: number;
+  judge_agreement_rate: number;
+  severity_distribution: Record<string, number>;
+  critical_damage_rate: number;
+  error_count: number;
+  error_rate: number;
+  total_findings: number;
+  per_condition: Record<string, CascadeConditionCard>;
+  per_condition_model: Record<string, Record<string, CascadeConditionCard>>;
+  parameters: { alpha: number; gamma: number; lambda: number };
+}
+
 export interface Summary {
   experiment: ExperimentInfo;
   scans: ScanSummary[];
@@ -61,6 +84,7 @@ export interface Summary {
   condition_stats: ConditionStats[];
   failure_type_distribution: FailureTypeDistribution[];
   detector_by_condition: DetectorByCondition[];
+  cascade_card?: CascadeCard;
 }
 
 export interface ExperimentInfo {

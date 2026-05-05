@@ -68,6 +68,23 @@ export default function Dashboard() {
       <div>
         <h1 className="text-2xl font-bold text-white">Experiment Dashboard</h1>
         <p className="text-gray-500 mt-1">2x2 Factorial Experiment — {models.length} models, {probeChartData.length} probe types</p>
+        <div className="flex flex-wrap gap-3 mt-2 text-xs">
+          <span className="bg-purple-900/30 border border-purple-800/40 text-purple-300 rounded px-2 py-1">
+            Attacker: deepseek-r1-0528
+          </span>
+          <span className="bg-blue-900/30 border border-blue-800/40 text-blue-300 rounded px-2 py-1">
+            Judge 1: openai/gpt-4o-mini
+          </span>
+          <span className="bg-emerald-900/30 border border-emerald-800/40 text-emerald-300 rounded px-2 py-1">
+            Judge 2: google/gemini-2.5-flash
+          </span>
+          <span className="bg-amber-900/30 border border-amber-800/40 text-amber-300 rounded px-2 py-1">
+            Judge 3: anthropic/claude-4.5-haiku
+          </span>
+          <span className="bg-gray-800 border border-gray-700 text-gray-400 rounded px-2 py-1">
+            Voting: majority (2/3)
+          </span>
+        </div>
       </div>
 
       <div className="grid grid-cols-5 gap-4">
@@ -103,6 +120,144 @@ export default function Dashboard() {
           icon={<Zap className="w-5 h-5" />}
         />
       </div>
+
+      {/* Cascade Card */}
+      {summary.cascade_card && (
+        <div className="card">
+          <div className="flex items-center gap-3 mb-4">
+            <Activity className="w-5 h-5 text-purple-400" />
+            <h2 className="text-lg font-semibold text-white">Cascade Card</h2>
+            <span className="text-xs text-gray-500 ml-auto">AWCS adapted from RAHS (arxiv:2603.10807)</span>
+          </div>
+          <div className="grid grid-cols-5 gap-4 mb-6">
+            <div>
+              <p className="text-xs text-gray-500">AWCS Score</p>
+              <p className={`text-2xl font-bold ${summary.cascade_card.awcs >= 0.2 ? 'text-green-400' : summary.cascade_card.awcs >= 0 ? 'text-amber-400' : 'text-red-400'}`}>
+                {summary.cascade_card.awcs.toFixed(3)}
+              </p>
+              <p className="text-xs text-gray-500">range: -0.6 to 0.5</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">Refusal Rate</p>
+              <p className="text-2xl font-bold text-green-400">{summary.cascade_card.refusal_rate}%</p>
+              <p className="text-xs text-gray-500">attacks properly refused</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">Judge Agreement</p>
+              <p className={`text-2xl font-bold ${summary.cascade_card.judge_agreement_rate >= 80 ? 'text-green-400' : 'text-amber-400'}`}>
+                {summary.cascade_card.judge_agreement_rate}%
+              </p>
+              <p className="text-xs text-gray-500">3/3 judges agree</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">Critical Damage</p>
+              <p className={`text-2xl font-bold ${summary.cascade_card.critical_damage_rate > 5 ? 'text-red-400' : 'text-amber-400'}`}>
+                {summary.cascade_card.critical_damage_rate}%
+              </p>
+              <p className="text-xs text-gray-500">critical severity failures</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">Severity</p>
+              <div className="flex gap-1 mt-1">
+                {Object.entries(summary.cascade_card.severity_distribution || {}).map(([sev, count]) => (
+                  <span
+                    key={sev}
+                    className={`text-xs px-1.5 py-0.5 rounded ${
+                      sev === 'critical' ? 'bg-red-900/50 text-red-300' :
+                      sev === 'high' ? 'bg-orange-900/50 text-orange-300' :
+                      sev === 'medium' ? 'bg-amber-900/50 text-amber-300' :
+                      'bg-green-900/50 text-green-300'
+                    }`}
+                  >
+                    {sev}: {count as number}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+          {/* Per-condition breakdown */}
+          {summary.cascade_card.per_condition && Object.keys(summary.cascade_card.per_condition).length > 0 && (
+            <div className="overflow-x-auto mb-6">
+              <h3 className="text-sm font-medium text-gray-400 mb-2">By Condition (aggregated)</h3>
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-left text-xs text-gray-500 border-b border-gray-800">
+                    <th className="pb-2 pr-4">Condition</th>
+                    <th className="pb-2 pr-4 text-right">ASR</th>
+                    <th className="pb-2 pr-4 text-right">Refusal</th>
+                    <th className="pb-2 pr-4 text-right">Agreement</th>
+                    <th className="pb-2 pr-4 text-right">Critical</th>
+                    <th className="pb-2 text-right">N</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.entries(summary.cascade_card.per_condition).map(([cond, stats]: [string, any]) => (
+                    <tr key={cond} className="border-b border-gray-800/50">
+                      <td className="py-2 pr-4 text-gray-200 font-medium">{cond}</td>
+                      <td className="py-2 pr-4 text-right text-red-400">{stats.asr}%</td>
+                      <td className="py-2 pr-4 text-right text-green-400">{stats.refusal_rate}%</td>
+                      <td className="py-2 pr-4 text-right text-gray-300">{stats.judge_agreement_rate}%</td>
+                      <td className="py-2 pr-4 text-right text-red-300">{stats.critical_damage_rate}%</td>
+                      <td className="py-2 text-right text-gray-400">{stats.total}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+          {/* Per-condition × per-model heatmap */}
+          {summary.cascade_card.per_condition_model && Object.keys(summary.cascade_card.per_condition_model).length > 0 && (() => {
+            const pcm = summary.cascade_card!.per_condition_model;
+            const conditions = Object.keys(pcm);
+            const allModels = new Set<string>();
+            for (const cond of conditions) {
+              for (const m of Object.keys(pcm[cond])) allModels.add(m);
+            }
+            const modelList = Array.from(allModels).sort();
+
+            return (
+              <div className="overflow-x-auto">
+                <h3 className="text-sm font-medium text-gray-400 mb-2">ASR Heatmap — Condition × Model</h3>
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="text-left text-xs text-gray-500 border-b border-gray-800">
+                      <th className="pb-2 pr-3">Condition</th>
+                      {modelList.map((m) => (
+                        <th key={m} className="pb-2 px-2 text-center">{m}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {conditions.map((cond) => (
+                      <tr key={cond} className="border-b border-gray-800/50">
+                        <td className="py-2 pr-3 text-gray-200 font-medium text-xs">{cond}</td>
+                        {modelList.map((m) => {
+                          const stats = pcm[cond]?.[m];
+                          if (!stats) return <td key={m} className="py-2 px-2 text-center text-gray-600">-</td>;
+                          const asr = stats.asr;
+                          const bg = asr >= 80 ? 'bg-red-900/60' :
+                                     asr >= 50 ? 'bg-orange-900/50' :
+                                     asr >= 20 ? 'bg-amber-900/40' :
+                                     'bg-green-900/40';
+                          const text = asr >= 80 ? 'text-red-200' :
+                                       asr >= 50 ? 'text-orange-200' :
+                                       asr >= 20 ? 'text-amber-200' :
+                                       'text-green-200';
+                          return (
+                            <td key={m} className={`py-2 px-2 text-center text-xs font-mono rounded ${bg} ${text}`}>
+                              {asr}%
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            );
+          })()}
+        </div>
+      )}
 
       {/* Review progress & reviewed-only stats */}
       {backendOk && reviewStats && (
