@@ -490,43 +490,45 @@ export default function Findings() {
             <div key={f.id} className="card !p-0 overflow-hidden">
               <button
                 onClick={() => handleExpand(f)}
-                className="w-full text-left px-4 py-3 flex items-center gap-4 hover:bg-gray-800/50 transition-colors"
+                className="w-full text-left px-4 py-3 flex items-center gap-2 hover:bg-gray-800/50 transition-colors min-w-0 overflow-hidden"
               >
                 <span className={clsx('w-2 h-2 rounded-full flex-shrink-0', f.passed ? 'bg-green-500' : 'bg-red-500')} />
-                <span className="text-sm font-medium text-white flex-1 truncate">
+                <span className="text-sm font-medium text-white flex-1 min-w-0 truncate">
                   {f.prompt_preview}...
                 </span>
-                {annCount > 0 && (
-                  <span className="text-[10px] text-indigo-300 bg-indigo-900/30 border border-indigo-800/40 rounded px-1.5 py-0.5">
-                    {annCount} note{annCount === 1 ? '' : 's'}
+                <span className="flex items-center gap-1.5 flex-shrink-0 flex-wrap justify-end">
+                  {annCount > 0 && (
+                    <span className="text-[10px] text-indigo-300 bg-indigo-900/30 border border-indigo-800/40 rounded px-1.5 py-0.5 whitespace-nowrap">
+                      {annCount} note{annCount === 1 ? '' : 's'}
+                    </span>
+                  )}
+                  {backendOk && settlement === 'open' && (
+                    <span className="text-[10px] font-medium rounded px-1.5 py-0.5 bg-amber-900/40 text-amber-300 border border-amber-700/50 animate-pulse whitespace-nowrap">
+                      Review
+                    </span>
+                  )}
+                  {backendOk && settlement !== 'open' && (
+                    <span className={clsx('text-[10px] font-medium rounded px-1.5 py-0.5 whitespace-nowrap', settlementColor(settlement))}>
+                      {settlementLabel(settlement)}
+                      {rev && rev.distinct_voter_count > 1 ? ` · ${rev.distinct_voter_count}` : ''}
+                    </span>
+                  )}
+                  {backendOk && settlement === 'settled' && settledStatus && (
+                    <span className={clsx('text-[10px] font-medium rounded px-1.5 py-0.5 whitespace-nowrap', reviewStatusColor(settledStatus))}>
+                      {reviewStatusLabel(settledStatus)}
+                    </span>
+                  )}
+                  {f.num_messages > 0 && (
+                    <span className="badge badge-warning text-[10px] whitespace-nowrap">{Math.ceil(f.num_messages / 2)}T</span>
+                  )}
+                  {f.num_attacker_calls > 0 && (
+                    <span className="text-[10px] text-purple-400 font-medium whitespace-nowrap">ADT</span>
+                  )}
+                  <span className="badge badge-info text-[10px] whitespace-nowrap">{f.model_short}</span>
+                  <span className="text-[10px] text-gray-500 whitespace-nowrap">{getProbeLabel(f.probe)}</span>
+                  <span className={clsx('badge whitespace-nowrap', f.passed ? 'badge-success' : 'badge-danger')}>
+                    {f.passed ? 'PASS' : 'FAIL'}
                   </span>
-                )}
-                {backendOk && settlement === 'open' && (
-                  <span className="text-[10px] font-medium rounded px-1.5 py-0.5 bg-amber-900/40 text-amber-300 border border-amber-700/50 animate-pulse">
-                    Needs Review
-                  </span>
-                )}
-                {backendOk && settlement !== 'open' && (
-                  <span className={clsx('text-[10px] font-medium rounded px-1.5 py-0.5', settlementColor(settlement))}>
-                    {settlementLabel(settlement)}
-                    {rev && rev.distinct_voter_count > 1 ? ` · ${rev.distinct_voter_count}` : ''}
-                  </span>
-                )}
-                {backendOk && settlement === 'settled' && settledStatus && (
-                  <span className={clsx('text-[10px] font-medium rounded px-1.5 py-0.5', reviewStatusColor(settledStatus))}>
-                    {reviewStatusLabel(settledStatus)}
-                  </span>
-                )}
-                {f.num_messages > 0 && (
-                  <span className="badge badge-warning text-[10px]">{Math.ceil(f.num_messages / 2)} turns</span>
-                )}
-                {f.num_attacker_calls > 0 && (
-                  <span className="text-[10px] text-purple-400 font-medium">ADAPTIVE</span>
-                )}
-                <span className="badge badge-info text-xs">{f.model_short}</span>
-                <span className="text-xs text-gray-500">{getProbeLabel(f.probe)}</span>
-                <span className={clsx('badge', f.passed ? 'badge-success' : 'badge-danger')}>
-                  {f.passed ? 'PASS' : 'FAIL'}
                 </span>
               </button>
 
