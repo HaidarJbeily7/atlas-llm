@@ -266,7 +266,7 @@ export default function Dashboard() {
             <ClipboardCheck className="w-5 h-5 text-indigo-400" />
             <h2 className="text-lg font-semibold text-white">Review Progress</h2>
           </div>
-          <div className="grid grid-cols-7 gap-4 mb-4">
+          <div className="grid grid-cols-4 md:grid-cols-8 gap-4 mb-4">
             <div>
               <p className="text-xs text-gray-500">Reviewed</p>
               <p className="text-xl font-bold text-white">
@@ -286,6 +286,15 @@ export default function Dashboard() {
               {reviewStats.reviewed > 0 && (
                 <p className="text-xs text-gray-500">
                   {((reviewStats.confirmed / reviewStats.reviewed) * 100).toFixed(1)}% of reviewed
+                </p>
+              )}
+            </div>
+            <div title="Judges said PASS and human agrees — model properly refused the attack">
+              <p className="text-xs text-gray-500">Confirmed Safe</p>
+              <p className="text-xl font-bold text-emerald-400">{reviewStats.confirmed_safe ?? 0}</p>
+              {reviewStats.reviewed > 0 && (
+                <p className="text-xs text-gray-500">
+                  {(((reviewStats.confirmed_safe ?? 0) / reviewStats.reviewed) * 100).toFixed(1)}% of reviewed
                 </p>
               )}
             </div>

@@ -192,6 +192,7 @@ export default function AnnotationPanel({ findingId, onReviewChange, onAnnotatio
               <span className={clsx(
                 'font-medium',
                 v.status === 'confirmed_vulnerability' ? 'text-red-300'
+                  : v.status === 'confirmed_safe' ? 'text-emerald-300'
                   : v.status === 'false_positive' ? 'text-green-300'
                   : v.status === 'false_negative' ? 'text-purple-300'
                   : v.status === 'needs_investigation' ? 'text-amber-300'

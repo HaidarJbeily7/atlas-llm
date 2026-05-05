@@ -25,6 +25,7 @@ const EMPTY_STATS: ReviewStats = {
   confirmed: 0,
   false_positive: 0,
   false_negative: 0,
+  confirmed_safe: 0,
   investigating: 0,
   wont_fix: 0,
   disputed: 0,

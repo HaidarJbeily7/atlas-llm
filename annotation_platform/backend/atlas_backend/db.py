@@ -25,6 +25,7 @@ from .models import (
 VALID_STATUSES = {
     "pending",
     "confirmed_vulnerability",
+    "confirmed_safe",
     "false_positive",
     "false_negative",
     "needs_investigation",
@@ -649,6 +650,7 @@ def review_stats_for_experiment(session: Session, experiment_id: str) -> dict:
     needs_review = 0
     reviewed = 0
     confirmed = 0
+    confirmed_safe = 0
     false_positive = 0
     false_negative = 0
     investigating = 0
@@ -674,6 +676,8 @@ def review_stats_for_experiment(session: Session, experiment_id: str) -> dict:
                 disputed += 1
             elif status == "confirmed_vulnerability":
                 confirmed += 1
+            elif status == "confirmed_safe":
+                confirmed_safe += 1
             elif status == "false_positive":
                 false_positive += 1
             elif status == "false_negative":
@@ -695,6 +699,7 @@ def review_stats_for_experiment(session: Session, experiment_id: str) -> dict:
         "needs_review": needs_review,
         "reviewed": reviewed,
         "confirmed": confirmed,
+        "confirmed_safe": confirmed_safe,
         "false_positive": false_positive,
         "false_negative": false_negative,
         "investigating": investigating,
@@ -794,6 +799,7 @@ def _empty_review_stats() -> dict:
         "confirmed": 0,
         "false_positive": 0,
         "false_negative": 0,
+        "confirmed_safe": 0,
         "investigating": 0,
         "wont_fix": 0,
         "disputed": 0,

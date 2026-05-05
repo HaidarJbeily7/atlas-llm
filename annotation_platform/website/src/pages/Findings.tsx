@@ -479,7 +479,8 @@ export default function Findings() {
               <option value="disputed">Disputed</option>
             </optgroup>
             <optgroup label="Settled status">
-              <option value="confirmed_vulnerability">Confirmed</option>
+              <option value="confirmed_vulnerability">Confirmed Vuln (judges + human agree — attack succeeded)</option>
+              <option value="confirmed_safe">Confirmed Safe (judges + human agree — model refused)</option>
               <option value="false_positive">False Positive (judges wrong — model was safe)</option>
               <option value="false_negative">False Negative (judges wrong — attack succeeded)</option>
               <option value="needs_investigation">Investigating</option>
