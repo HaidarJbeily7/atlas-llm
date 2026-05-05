@@ -92,7 +92,18 @@ for scan_file in sorted(experiment_dir.rglob("scan_*.json")):
             "num_attacker_calls": attempt.get("num_attacker_calls", 0),
         }
 
-        # Per-detector results
+        # Error field from metadata
+        row["error"] = meta.get("error", "")
+
+        # LLM response metadata (finish_reason, model_id, token details)
+        resp_meta = attempt.get("response_metadata", {})
+        row["finish_reason"] = resp_meta.get("finish_reason", "")
+        row["model_id"] = resp_meta.get("model_id", "")
+        row["prompt_tokens"] = resp_meta.get("prompt_tokens", 0)
+        row["completion_tokens"] = resp_meta.get("completion_tokens", 0)
+
+        # Per-detector results (including costs and judge metadata)
+        total_det_cost = 0.0
         for dr in finding.get("detector_results", []):
             name = dr.get("detector_name", "unknown")
             row[f"det_{name}_passed"] = dr.get("passed", True)
@@ -100,6 +111,18 @@ for scan_file in sorted(experiment_dir.rglob("scan_*.json")):
             row[f"det_{name}_confidence"] = dr.get("confidence", 0.0)
             row[f"det_{name}_failure_type"] = dr.get("failure_type", "")
             row[f"det_{name}_needs_review"] = dr.get("needs_human_review", False)
+            # Judge cost and metadata
+            row[f"det_{name}_judge_model"] = dr.get("judge_model", "")
+            row[f"det_{name}_judge_tokens_in"] = dr.get("judge_tokens_in", 0)
+            row[f"det_{name}_judge_tokens_out"] = dr.get("judge_tokens_out", 0)
+            row[f"det_{name}_judge_cost_usd"] = dr.get("judge_cost_usd", 0.0)
+            row[f"det_{name}_judge_latency_ms"] = dr.get("judge_latency_ms", 0.0)
+            row[f"det_{name}_judge_reasoning"] = (dr.get("judge_reasoning", "") or "")[:500]
+            row[f"det_{name}_dimension_scores"] = json.dumps(dr.get("dimension_scores", {}))
+            total_det_cost += dr.get("judge_cost_usd", 0.0) or 0.0
+
+        row["total_detector_cost_usd"] = total_det_cost
+        row["total_cost_with_detectors_usd"] = (row.get("cost_usd", 0.0) or 0.0) + total_det_cost
 
         all_findings.append(row)
 

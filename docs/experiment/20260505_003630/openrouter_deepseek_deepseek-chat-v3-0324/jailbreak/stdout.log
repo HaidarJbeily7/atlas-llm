@@ -1,0 +1,213 @@
+[ATLAS] Starting scan: model=openrouter/deepseek/deepseek-chat-v3-0324 profile=experiment
+[2m2026-05-05T00:11:37.036722Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.054994Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.059956Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.060311Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.060621Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.060998Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.061297Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.061564Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.061842Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.062128Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.062532Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.062808Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.062896Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.062959Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.063002Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.063042Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.063157Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.063213Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.063267Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.063311Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.063353Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.063387Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.063419Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.063450Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.063480Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.063510Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.063544Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.063577Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.063606Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.063636Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.063995Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.064049Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.064195Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.064399Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.064523Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.064616Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.064702Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.065385Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.065456Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.065520Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.065559Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.065605Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.065649Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.065690Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.065743Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.065793Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.065843Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.067952Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.068109Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.068445Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.069005Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.069527Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.069794Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.069953Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.069991Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.070121Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.070347Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.070548Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.070800Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.070847Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.070887Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.070924Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.070960Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.070992Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[2m2026-05-05T00:11:37.071023Z[0m [[32m[1minfo     [0m] [1mgenerator_initialized         [0m [[0m[1m[34matlas.generators.litellm[0m][0m [36mmax_retries[0m=[35m3[0m [36mmodel[0m=[35mopenrouter/deepseek/deepseek-chat-v3-0324[0m [36msession_id[0m=[35m56d1be46[0m [36mtimeout[0m=[35m30[0m
+[1mUse pytorch device_name: mps  [0m
+[1mLoad pretrained SentenceTransformer: all-MiniLM-L6-v2[0m
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[1mWarning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.[0m
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 6738.10it/s]
+[1mBertModel LOAD REPORT[0m from: sentence-transformers/all-MiniLM-L6-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  2.58it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  2.58it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 12.22it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 29.28it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 98.66it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 28.05it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 104.02it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 21.22it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 101.87it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 26.92it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 88.13it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 33.62it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 92.97it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 31.39it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 102.29it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 33.42it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 89.33it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 33.35it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 93.02it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  3.71it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  3.71it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 105.65it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 12.71it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 85.54it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 19.07it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 91.16it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 57.24it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 73.14it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 62.25it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 71.96it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 18.49it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 99.20it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 28.46it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 95.26it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 30.37it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 69.98it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 15.18it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 99.20it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 16.73it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 83.36it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  8.26it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  8.25it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 102.04it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 10.39it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 105.39it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 19.69it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 103.71it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 52.85it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 73.48it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 15.40it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 85.40it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 21.79it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 98.56it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 16.11it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 95.50it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 29.21it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 87.21it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 10.63it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 101.63it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 14.48it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 83.31it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 18.16it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 85.12it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 31.38it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 103.47it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 15.93it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 83.40it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 18.11it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 100.21it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 23.60it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 80.62it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 16.29it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 78.47it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 20.00it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 95.06it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 10.60it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 95.61it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 17.45it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 98.77it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  8.78it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  8.77it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 94.17it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 17.37it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 92.88it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 24.31it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 86.98it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 18.20it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 96.30it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 15.41it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 84.30it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 11.10it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 97.88it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 15.38it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 75.56it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 15.63it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 98.98it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 15.87it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 75.06it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 43.39it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 72.81it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 18.75it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 93.87it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 17.96it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 80.39it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 16.18it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 79.65it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 84.61it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 100.21it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 17.77it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 92.11it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 39.83it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 66.38it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 14.03it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 88.35it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 14.53it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 89.63it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 15.61it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 94.20it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 10.53it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 78.37it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 12.78it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 91.89it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 12.28it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 102.06it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 60.27it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 65.02it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 12.67it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 101.67it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 15.20it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 80.23it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  5.01it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  5.01it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 80.76it/s]
+[ATLAS] Scan complete: openrouter/deepseek/deepseek-chat-v3-0324
+[ATLAS] Security score: 50.0/100
+[ATLAS] Overall pass rate: 50.0% (threshold: 80.0%)
+[ATLAS] Risk level: MEDIUM
+[ATLAS] Vulnerabilities: 32 critical, 0 high, 0 medium, 0 low
+[ATLAS]   FAIL jailbreak: 50.0% (32/64)
+[ATLAS] Result: FAIL

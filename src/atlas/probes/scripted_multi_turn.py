@@ -105,8 +105,8 @@ class ScriptedMultiTurnProbe(ConversationalProbe):
             self._add_message(attempt, "user", user_message)
 
             try:
-                response = await generator.generate_conversation(
-                    messages=messages
+                response = await self._retry_target_call(
+                    generator, messages, max_retries=2
                 )
             except Exception as exc:
                 logger.warning(
@@ -116,6 +116,7 @@ class ScriptedMultiTurnProbe(ConversationalProbe):
                     error=str(exc),
                 )
                 response = f"[Error: {exc}]"
+                attempt.metadata["error"] = "target_error"
 
             messages.append(Message(role="assistant", content=response))
             self._add_message(attempt, "assistant", response)

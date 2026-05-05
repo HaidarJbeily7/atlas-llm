@@ -1,0 +1,21 @@
+{
+  "timestamp": "20260505_003630",
+  "models": [
+  "openrouter/openai/gpt-4o-mini",
+  "openrouter/openai/gpt-4o",
+  "openrouter/anthropic/claude-sonnet-4",
+  "openrouter/google/gemini-2.5-flash",
+  "openrouter/meta-llama/llama-3.3-70b-instruct",
+  "openrouter/deepseek/deepseek-chat-v3-0324",
+  "openrouter/qwen/qwen-2.5-72b-instruct",
+  "openrouter/mistralai/mistral-large-2411"
+],
+  "conditions": [
+  "jailbreak",
+  "scripted_multi_turn",
+  "adaptive_single_turn",
+  "adaptive_multi_turn"
+],
+  "attacker_model": "openrouter/deepseek/deepseek-r1-0528",
+  "all_detectors": true
+}

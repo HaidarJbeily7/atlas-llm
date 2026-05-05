@@ -43,7 +43,7 @@ class AdaptiveSingleTurnProbe(AdaptiveProbe):
         "experiment",
     ]
     recommended_detector = "keyword"
-    max_iterations = 10
+    max_iterations = 5
     is_adaptive = True
     attacker_model = ""  # Defaults to target model if empty
 

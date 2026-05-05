@@ -19,9 +19,18 @@ set -uo pipefail
 
 # Target models to evaluate (override with --models "model1,model2")
 DEFAULT_MODELS=(
-    "openai/gpt-4o"
-    "openai/gpt-4o-mini"
+    "openrouter/openai/gpt-4o-mini"
+    "openrouter/openai/gpt-4o"
+    "openrouter/anthropic/claude-sonnet-4"
+    "openrouter/google/gemini-2.5-flash"
+    "openrouter/meta-llama/llama-3.3-70b-instruct"
+    "openrouter/deepseek/deepseek-chat-v3-0324"
+    "openrouter/qwen/qwen-2.5-72b-instruct"
+    "openrouter/mistralai/mistral-large-2411"
 )
+
+# Attacker model for adaptive probes (stronger than targets, per PAIR/TAP literature)
+ATTACKER_MODEL="openrouter/deepseek/deepseek-r1-0528"
 
 # The four experimental conditions (probes)
 CONDITIONS=(
@@ -34,9 +43,11 @@ CONDITIONS=(
 RESULTS_DIR="./results/experiment"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 EXPERIMENT_DIR="${RESULTS_DIR}/${TIMESTAMP}"
+RESUME_DIR=""
 ATLAS=".venv/bin/atlas"
 DRY_RUN=false
 MODELS=()
+ATTACKER_OVERRIDE=""
 
 # ---------------------------------------------------------------------------
 # Argument parsing
@@ -46,6 +57,14 @@ while [[ $# -gt 0 ]]; do
     case "$1" in
         --models)
             IFS=',' read -ra MODELS <<< "$2"
+            shift 2
+            ;;
+        --attacker-model)
+            ATTACKER_OVERRIDE="$2"
+            shift 2
+            ;;
+        --resume)
+            RESUME_DIR="$2"
             shift 2
             ;;
         --results-dir)
@@ -60,9 +79,11 @@ while [[ $# -gt 0 ]]; do
             echo "Usage: $0 [--models model1,model2] [--results-dir DIR] [--dry-run]"
             echo ""
             echo "Options:"
-            echo "  --models      Comma-separated LiteLLM model strings (default: gpt-4o, gpt-4o-mini)"
-            echo "  --results-dir Base output directory (default: ./results/experiment)"
-            echo "  --dry-run     Print commands without executing"
+            echo "  --models         Comma-separated LiteLLM model strings"
+            echo "  --attacker-model Attacker LLM for adaptive probes (default: deepseek-r1)"
+            echo "  --resume DIR     Resume a previous experiment run (skip completed scans)"
+            echo "  --results-dir    Base output directory (default: ./results/experiment)"
+            echo "  --dry-run        Print commands without executing"
             exit 0
             ;;
         *)
@@ -75,6 +96,21 @@ done
 # Use defaults if no models specified
 if [[ ${#MODELS[@]} -eq 0 ]]; then
     MODELS=("${DEFAULT_MODELS[@]}")
+fi
+
+# Resume mode: reuse existing experiment directory
+if [[ -n "$RESUME_DIR" ]]; then
+    if [[ ! -d "$RESUME_DIR" ]]; then
+        echo "ERROR: Resume directory not found: $RESUME_DIR" >&2
+        exit 1
+    fi
+    EXPERIMENT_DIR="$RESUME_DIR"
+    echo "RESUMING experiment in: ${EXPERIMENT_DIR}"
+fi
+
+# Resolve attacker model
+if [[ -z "$ATTACKER_OVERRIDE" ]]; then
+    ATTACKER_OVERRIDE="$ATTACKER_MODEL"
 fi
 
 # ---------------------------------------------------------------------------
@@ -90,11 +126,12 @@ fi
 echo "=============================================="
 echo "  ATLAS 2x2 Factorial Experiment"
 echo "=============================================="
-echo "  Timestamp:  ${TIMESTAMP}"
-echo "  Models:     ${MODELS[*]}"
-echo "  Conditions: ${CONDITIONS[*]}"
-echo "  Output:     ${EXPERIMENT_DIR}"
-echo "  All detectors: yes"
+echo "  Timestamp:      ${TIMESTAMP}"
+echo "  Models:         ${MODELS[*]}"
+echo "  Attacker:       ${ATTACKER_OVERRIDE}"
+echo "  Conditions:     ${CONDITIONS[*]}"
+echo "  Output:         ${EXPERIMENT_DIR}"
+echo "  All detectors:  yes"
 echo "=============================================="
 echo ""
 
@@ -106,6 +143,7 @@ cat > "${EXPERIMENT_DIR}/experiment_meta.json" <<METAEOF
   "timestamp": "${TIMESTAMP}",
   "models": $(printf '%s\n' "${MODELS[@]}" | jq -R . | jq -s .),
   "conditions": $(printf '%s\n' "${CONDITIONS[@]}" | jq -R . | jq -s .),
+  "attacker_model": "${ATTACKER_OVERRIDE}",
   "all_detectors": true
 }
 METAEOF
@@ -134,9 +172,16 @@ for model in "${MODELS[@]}"; do
 
         echo "[${RUN_NUM}/${TOTAL_RUNS}] ${model} / ${condition}"
 
+        # Resume: skip if scan result already exists
+        if ls "${run_dir}"/scan_*.json 1>/dev/null 2>&1; then
+            echo "  SKIP (already completed)"
+            continue
+        fi
+
         CMD=(
             "$ATLAS" scan run
             --model "$model"
+            --attacker-model "$ATTACKER_OVERRIDE"
             --profile experiment
             --probes "$condition"
             --detectors keyword,refusal

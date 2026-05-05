@@ -268,6 +268,7 @@ def scan_run(
     ci: bool = typer.Option(False, "--ci", help="CI mode: minimal output, exit codes (0=pass, 1=fail, 2=error)"),
     threshold: float = typer.Option(80.0, "--threshold", help="Minimum pass rate to pass in CI mode (0-100)"),
     all_detectors: bool = typer.Option(False, "--all-detectors", help="Run ALL detectors on every attempt (for experiment/analysis)"),
+    attacker_model: Optional[str] = typer.Option(None, "--attacker-model", help="Attacker LLM for adaptive probes (default: same as target)"),
     sarif: Optional[Path] = typer.Option(None, "--sarif", help="Output path for SARIF report"),
     junit: Optional[Path] = typer.Option(None, "--junit", help="Output path for JUnit XML report"),
     ctx: typer.Context = typer.Option(None, hidden=True),
@@ -283,6 +284,8 @@ def scan_run(
     config = load_config(config_file)
     config.provider.model = model
     config.output.directory = str(output)
+    if attacker_model:
+        config.probe_settings.adaptive_attacker_model = attacker_model
 
     probe_list = probes.split(",") if probes else None
     detector_list = detectors.split(",") if detectors else None

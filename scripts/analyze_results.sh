@@ -45,10 +45,31 @@ if not findings:
     sys.exit(0)
 
 # ===================================================================
+# Error Summary — exclude errored findings from metrics
+# ===================================================================
+
+errored = [f for f in findings if f.get("error")]
+valid_findings = [f for f in findings if not f.get("error")]
+
+print("=" * 60)
+print("  Error Summary")
+print("=" * 60)
+print(f"\n  Total findings:  {len(findings)}")
+print(f"  Valid findings:  {len(valid_findings)}")
+print(f"  Errored:         {len(errored)}")
+if errored:
+    error_types = Counter(f.get("error", "unknown") for f in errored)
+    for et, count in error_types.most_common():
+        print(f"    {et}: {count}")
+
+# Use valid findings for all subsequent analysis
+findings = valid_findings
+
+# ===================================================================
 # RQ1: Attack Success Rate (ASR) by condition & model
 # ===================================================================
 
-print("=" * 60)
+print("\n" + "=" * 60)
 print("  RQ1: Attack Success Rate & Cost Analysis")
 print("=" * 60)
 
@@ -170,11 +191,77 @@ print(f"\n--- Human Review ---")
 print(f"  Findings flagged for review: {needs_review}/{len(findings)} ({needs_review/len(findings)*100:.1f}%)")
 
 # ===================================================================
+# Cost Breakdown
+# ===================================================================
+
+print("\n" + "=" * 60)
+print("  Cost Breakdown by Condition")
+print("=" * 60)
+
+print(f"\n{'Condition':<30s} {'Attack$':>10s} {'Detect$':>10s} {'Total$':>10s} {'$/attempt':>10s}")
+print("-" * 75)
+for cond in sorted(condition_agg.keys()):
+    cond_findings = [f for f in findings if f.get("condition") == cond]
+    n = len(cond_findings)
+    attack_cost = sum(f.get("cost_usd", 0) or 0 for f in cond_findings)
+    detect_cost = sum(f.get("total_detector_cost_usd", 0) or 0 for f in cond_findings)
+    total_cost = attack_cost + detect_cost
+    per_att = total_cost / n if n else 0
+    print(f"{cond:<30s} ${attack_cost:9.4f} ${detect_cost:9.4f} ${total_cost:9.4f} ${per_att:9.6f}")
+
+# ===================================================================
+# Cascade Card Summary
+# ===================================================================
+
+print("\n" + "=" * 60)
+print("  Cascade Card Summary")
+print("=" * 60)
+
+# Judge agreement
+judge_keys = [k for k in det_names if k in ("llm_judge", "semantic_judge", "safety_judge")]
+for cond in sorted(condition_agg.keys()):
+    cond_findings = [f for f in findings if f.get("condition") == cond]
+    n = len(cond_findings)
+    failed = sum(1 for f in cond_findings if not f["passed"])
+    asr = (failed / n * 100) if n else 0
+
+    # Refusal rate (all judges pass)
+    refusals = 0
+    agreements = 0
+    for f in cond_findings:
+        judge_verdicts = [f.get(f"det_{j}_passed") for j in judge_keys if f"det_{j}_passed" in f]
+        judge_verdicts = [v for v in judge_verdicts if v is not None and v != ""]
+        if judge_verdicts:
+            if all(judge_verdicts):
+                refusals += 1
+            if len(set(judge_verdicts)) == 1:
+                agreements += 1
+
+    refusal_rate = refusals / n * 100 if n else 0
+    agree_rate = agreements / n * 100 if n else 0
+
+    # Severity distribution
+    sevs = Counter(f.get("severity", "") for f in cond_findings if not f["passed"])
+    sev_str = ", ".join(f"{k}={v}" for k, v in sevs.most_common())
+
+    crit_count = sevs.get("critical", 0)
+    crit_rate = crit_count / n * 100 if n else 0
+
+    print(f"\n  [{cond}]")
+    print(f"    Attempts:      {n}")
+    print(f"    ASR:           {asr:.1f}%")
+    print(f"    Refusal Rate:  {refusal_rate:.1f}%")
+    print(f"    Judge Agree:   {agree_rate:.1f}%")
+    print(f"    Severity:      {sev_str or 'none'}")
+    print(f"    Critical Rate: {crit_rate:.1f}%")
+
+# ===================================================================
 # Save analysis
 # ===================================================================
 
 analysis = {
     "total_findings": len(findings),
+    "total_errored": len(errored),
     "conditions": {
         cond: {
             "total": agg["total"],

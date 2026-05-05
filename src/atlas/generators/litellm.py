@@ -53,6 +53,7 @@ class LiteLLMGenerator:
         self.max_tokens = max_tokens
         self.extra = extra or {}
         self.accumulator: TokenAccumulator | None = None
+        self.last_response_metadata: dict[str, Any] = {}
 
         logger.info(
             "generator_initialized",
@@ -86,6 +87,43 @@ class LiteLLMGenerator:
         completion_tokens = getattr(usage, "completion_tokens", 0) or 0
         cost = CostCalculator.cost_from_response(response, model=self.model_name)
         self.accumulator.record(prompt_tokens, completion_tokens, cost)
+
+    @staticmethod
+    def extract_response_metadata(response: Any) -> dict[str, Any]:
+        """Extract all useful metadata from a litellm response.
+
+        Captures finish_reason, model ID, system_fingerprint, and
+        token usage details for downstream analysis.
+        """
+        meta: dict[str, Any] = {}
+        try:
+            choice = response.choices[0] if response.choices else None
+            if choice:
+                meta["finish_reason"] = getattr(choice, "finish_reason", None)
+                # logprobs (if returned by the provider)
+                logprobs = getattr(choice, "logprobs", None)
+                if logprobs is not None:
+                    meta["has_logprobs"] = True
+
+            # Model actually used (may differ from requested, e.g. routing)
+            meta["model_id"] = getattr(response, "model", None)
+            meta["system_fingerprint"] = getattr(response, "system_fingerprint", None)
+
+            # Full usage breakdown
+            usage = getattr(response, "usage", None)
+            if usage:
+                meta["prompt_tokens"] = getattr(usage, "prompt_tokens", 0) or 0
+                meta["completion_tokens"] = getattr(usage, "completion_tokens", 0) or 0
+                meta["total_tokens"] = getattr(usage, "total_tokens", 0) or 0
+                # Some providers return extra fields
+                for extra_field in ("prompt_tokens_details", "completion_tokens_details",
+                                    "cache_read_input_tokens", "cache_creation_input_tokens"):
+                    val = getattr(usage, extra_field, None)
+                    if val is not None:
+                        meta[extra_field] = val
+        except Exception:
+            pass
+        return meta
 
     def _build_kwargs(self, **overrides: Any) -> dict[str, Any]:
         """Build keyword arguments for litellm.acompletion."""
@@ -127,6 +165,7 @@ class LiteLLMGenerator:
         try:
             response = await litellm.acompletion(messages=messages, **call_kwargs)
             self._record_usage(response)
+            self.last_response_metadata = self.extract_response_metadata(response)
             content = response.choices[0].message.content or ""
             logger.debug(
                 "generation_complete",
@@ -181,6 +220,7 @@ class LiteLLMGenerator:
         try:
             response = await litellm.acompletion(messages=msg_dicts, **call_kwargs)
             self._record_usage(response)
+            self.last_response_metadata = self.extract_response_metadata(response)
             content = response.choices[0].message.content or ""
             logger.debug(
                 "conversation_generation_complete",
@@ -331,6 +371,7 @@ class LiteLLMGenerator:
                 response = await litellm.acompletion(messages=messages_list, **call_kwargs)
                 self._record_usage(response)
                 attempt.response = response.choices[0].message.content or ""
+                attempt.response_metadata = self.extract_response_metadata(response)
             except Exception as e:
                 logger.warning("multimodal_generation_error", error=str(e))
                 attempt.response = f"[Error: {e}]"

@@ -56,9 +56,9 @@ class LoggingConfig(BaseModel):
 
 class ProbeSettings(BaseModel):
     """Advanced probe settings."""
-    adaptive_attacker_model: str | None = None
+    adaptive_attacker_model: str | None = "openrouter/deepseek/deepseek-r1-0528"
     max_conversation_turns: int = Field(default=5, ge=1, le=20)
-    max_adaptive_iterations: int = Field(default=10, ge=1, le=50)
+    max_adaptive_iterations: int = Field(default=5, ge=1, le=50)
 
 
 class TargetConfig(BaseModel):

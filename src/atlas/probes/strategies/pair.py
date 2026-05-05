@@ -13,6 +13,7 @@ This module is intended for authorized security research and testing only.
 
 from __future__ import annotations
 
+import asyncio
 import json
 from typing import Any
 
@@ -291,8 +292,8 @@ class PAIRStrategy:
 
             # ---- Step 2: Query the target model ----------------------------
             try:
-                target_response = await target.generate(
-                    adversarial_prompt, **kwargs,
+                target_response = await _retry_target_generate(
+                    target, adversarial_prompt, max_retries=2, **kwargs,
                 )
             except Exception as exc:
                 logger.warning(
@@ -445,6 +446,24 @@ class PAIRStrategy:
 # ---------------------------------------------------------------------------
 # Utility
 # ---------------------------------------------------------------------------
+
+
+async def _retry_target_generate(
+    target: Any,
+    prompt: str,
+    max_retries: int = 2,
+    **kwargs: Any,
+) -> str:
+    """Call target.generate with retry + backoff."""
+    last_exc: Exception | None = None
+    for attempt_num in range(max_retries + 1):
+        try:
+            return await target.generate(prompt, **kwargs)
+        except Exception as exc:
+            last_exc = exc
+            if attempt_num < max_retries:
+                await asyncio.sleep(1.0 * (attempt_num + 1))
+    raise last_exc  # type: ignore[misc]
 
 
 def _extract_json(text: str) -> Any:

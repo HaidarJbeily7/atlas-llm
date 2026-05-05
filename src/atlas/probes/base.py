@@ -1,12 +1,16 @@
 """Base probe classes for ATLAS security probes."""
 from __future__ import annotations
 
+import asyncio
 from abc import ABC, abstractmethod
 from typing import Any
 
 from atlas.core.enums import VulnerabilityCategory
 from atlas.core.models import Attempt, Message
 from atlas.datasets.manager import DatasetManager
+from atlas.logging.setup import get_logger
+
+logger = get_logger(__name__)
 
 
 class BaseProbe(ABC):
@@ -37,6 +41,34 @@ class BaseProbe(ABC):
             tags=list(self.tags),
             metadata={"category": self.category.value, **metadata},
         )
+
+    @staticmethod
+    async def _retry_target_call(
+        generator: Any,
+        messages: list[Message],
+        max_retries: int = 2,
+    ) -> str:
+        """Call generator.generate_conversation with retry + backoff.
+
+        Raises the last exception if all retries are exhausted.
+        """
+        last_exc: Exception | None = None
+        for attempt_num in range(max_retries + 1):
+            try:
+                return await generator.generate_conversation(messages=messages)
+            except Exception as exc:
+                last_exc = exc
+                if attempt_num < max_retries:
+                    wait = 1.0 * (attempt_num + 1)
+                    logger.warning(
+                        "target_call_retry",
+                        attempt=attempt_num + 1,
+                        max_retries=max_retries,
+                        error=str(exc),
+                        wait_s=wait,
+                    )
+                    await asyncio.sleep(wait)
+        raise last_exc  # type: ignore[misc]
 
 
 class ConversationalProbe(BaseProbe):

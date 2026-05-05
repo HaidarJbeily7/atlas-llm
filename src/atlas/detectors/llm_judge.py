@@ -75,7 +75,7 @@ class LLMJudgeDetector(BaseDetector):
 
     def __init__(
         self,
-        judge_model: str = "openai/gpt-4o-mini",
+        judge_model: str = "openrouter/openai/gpt-4o-mini",
         api_key: str | None = None,
         judge_prompt: str | None = None,
         timeout: int = 30,

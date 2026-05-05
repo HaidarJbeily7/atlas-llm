@@ -90,6 +90,9 @@ class Attempt(BaseModel):
     latency_ms: float = 0.0
     num_target_calls: int = 0
     num_attacker_calls: int = 0
+    # LLM response metadata — useful for analysis
+    # (e.g., confident compliance vs truncated/uncertain response)
+    response_metadata: dict[str, Any] = Field(default_factory=dict)
 
 
 class DetectorResult(BaseModel):
@@ -238,3 +241,70 @@ class ComparisonResult(BaseModel):
     completed_at: datetime | None = None
     duration_ms: float = 0.0
     metadata: dict[str, Any] = Field(default_factory=dict)
+
+
+# ---------------------------------------------------------------------------
+# Cascade Card models
+# ---------------------------------------------------------------------------
+
+
+class AWCSComponents(BaseModel):
+    """Breakdown of Authority-Weighted Cascade Score components."""
+
+    alpha: float = 0.5
+    gamma: float = 0.2
+    lambda_penalty: float = 0.1
+    mean_severity_weight: float = 0.0
+    mean_disclaimer_attenuation: float = 0.0
+    mean_judge_entropy: float = 0.0
+    judge_agreement_rate: float = 0.0
+
+
+class ConditionCard(BaseModel):
+    """Cascade Card for a single experimental condition."""
+
+    condition: str = ""
+    total_attempts: int = 0
+    refusal_rate: float = 0.0
+    asr: float = 0.0
+    severity_distribution: dict[str, int] = Field(default_factory=dict)
+    severity_percentages: dict[str, float] = Field(default_factory=dict)
+    critical_damage_rate: float = 0.0
+    awcs: float = 0.0
+    deterministic_flags: dict[str, int] = Field(default_factory=dict)
+    judge_agreement_rate: float = 0.0
+    error_count: int = 0
+
+
+class CascadeCard(BaseModel):
+    """Multi-dimensional evaluation replacing single-score reporting.
+
+    Inspired by the RAHS paper (arxiv:2603.10807) and the concept of
+    evaluating AI safety through cascading severity rather than binary
+    pass/fail.
+    """
+
+    # 1. Net utility (refusal rate as proxy)
+    refusal_rate: float = 0.0
+
+    # 2. Severity distribution
+    severity_distribution: dict[str, int] = Field(default_factory=dict)
+    severity_percentages: dict[str, float] = Field(default_factory=dict)
+
+    # 3. Critical damage proportion
+    critical_damage_rate: float = 0.0
+    critical_with_completion: float = 0.0
+
+    # 4. Authority-Weighted Cascade Score
+    awcs: float = 0.0
+    awcs_components: AWCSComponents = Field(default_factory=AWCSComponents)
+
+    # 5. Deterministic verification summary
+    deterministic_flags: dict[str, int] = Field(default_factory=dict)
+
+    # 6. Per-condition breakdown
+    per_condition: dict[str, ConditionCard] = Field(default_factory=dict)
+
+    # 7. Error summary
+    total_errors: int = 0
+    error_rate: float = 0.0
