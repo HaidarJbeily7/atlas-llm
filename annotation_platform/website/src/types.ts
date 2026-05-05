@@ -56,6 +56,7 @@ export interface CascadeConditionCard {
   refusal_rate: number;
   asr: number;
   judge_agreement_rate: number;
+  awcs: number;
   severity_distribution: Record<string, number>;
   critical_damage_rate: number;
 }
@@ -69,8 +70,10 @@ export interface CascadeCard {
   error_count: number;
   error_rate: number;
   total_findings: number;
+  unreviewed: number;
   per_condition: Record<string, CascadeConditionCard>;
   per_condition_model: Record<string, Record<string, CascadeConditionCard>>;
+  per_model: Record<string, CascadeConditionCard>;
   parameters: { alpha: number; gamma: number; lambda: number };
 }
 

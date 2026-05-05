@@ -11,13 +11,21 @@ export default function Probes() {
 
   if (loading || !summary) return <LoadingSpinner />;
 
+  const cc = summary.cascade_card;
   const probeList = summary.probes.map((p) => {
-    const total = p.passed + p.failed;
+    // Use review-corrected stats from cascade_card when available
+    const reviewed = cc?.per_condition?.[p.probe_name];
+    const total = reviewed ? reviewed.total : p.passed + p.failed;
+    const asr = reviewed ? reviewed.asr : (total > 0 ? (p.failed / total) * 100 : 0);
+    const passRate = reviewed ? reviewed.refusal_rate : (total > 0 ? (p.passed / total) * 100 : 0);
     return {
       ...p,
+      total_attempts: total,
       label: getProbeLabel(p.probe_name),
-      asr: total > 0 ? (p.failed / total) * 100 : 0,
-      passRate: total > 0 ? (p.passed / total) * 100 : 0,
+      asr,
+      passRate,
+      awcs: reviewed?.awcs ?? null,
+      judge_agreement_rate: reviewed?.judge_agreement_rate ?? null,
     };
   });
 
@@ -54,7 +62,7 @@ export default function Probes() {
             key={p.probe_name}
             label={p.label}
             value={`${p.asr.toFixed(1)}% ASR`}
-            sub={`${p.failed}/${p.total_attempts} attacks succeeded`}
+            sub={p.awcs !== null ? `AWCS: ${p.awcs.toFixed(3)}` : `${p.total_attempts} attempts`}
             trend={p.asr > 30 ? 'down' : 'up'}
           />
         ))}
@@ -82,11 +90,11 @@ export default function Probes() {
           <thead>
             <tr className="border-b border-gray-800">
               <th className="text-left py-3 px-4 text-gray-400 font-medium">Probe</th>
-              <th className="text-right py-3 px-4 text-gray-400 font-medium">Attempts</th>
-              <th className="text-right py-3 px-4 text-gray-400 font-medium">Passed</th>
-              <th className="text-right py-3 px-4 text-gray-400 font-medium">Failed</th>
-              <th className="text-right py-3 px-4 text-gray-400 font-medium">Pass Rate</th>
+              <th className="text-right py-3 px-4 text-gray-400 font-medium">AWCS</th>
+              <th className="text-right py-3 px-4 text-gray-400 font-medium">Reviewed</th>
+              <th className="text-right py-3 px-4 text-gray-400 font-medium">Refusal</th>
               <th className="text-right py-3 px-4 text-gray-400 font-medium">ASR</th>
+              <th className="text-right py-3 px-4 text-gray-400 font-medium">Agreement</th>
               <th className="text-right py-3 px-4 text-gray-400 font-medium">Avg Latency</th>
             </tr>
           </thead>
@@ -96,11 +104,13 @@ export default function Probes() {
               return (
                 <tr key={p.probe_name} className="border-b border-gray-800/50 hover:bg-gray-800/30">
                   <td className="py-3 px-4 text-white font-medium">{p.label}</td>
+                  <td className={`py-3 px-4 text-right font-mono ${(p.awcs ?? 0) >= 0.2 ? 'text-green-400' : (p.awcs ?? 0) >= 0 ? 'text-amber-400' : 'text-red-400'}`}>
+                    {p.awcs !== null ? p.awcs.toFixed(3) : '-'}
+                  </td>
                   <td className="py-3 px-4 text-right text-gray-300">{p.total_attempts}</td>
-                  <td className="py-3 px-4 text-right text-green-400">{p.passed}</td>
-                  <td className="py-3 px-4 text-right text-red-400">{p.failed}</td>
-                  <td className="py-3 px-4 text-right text-white font-medium">{p.passRate.toFixed(1)}%</td>
-                  <td className="py-3 px-4 text-right text-amber-400 font-medium">{p.asr.toFixed(1)}%</td>
+                  <td className="py-3 px-4 text-right text-green-400">{p.passRate.toFixed(1)}%</td>
+                  <td className="py-3 px-4 text-right text-red-400 font-medium">{p.asr.toFixed(1)}%</td>
+                  <td className="py-3 px-4 text-right text-gray-300">{p.judge_agreement_rate !== null ? `${p.judge_agreement_rate}%` : '-'}</td>
                   <td className="py-3 px-4 text-right text-gray-300">
                     {lat && lat.count > 0 ? `${(lat.total / lat.count / 1000).toFixed(1)}s` : '-'}
                   </td>

@@ -127,6 +127,11 @@ export default function Dashboard() {
           <div className="flex items-center gap-3 mb-4">
             <Activity className="w-5 h-5 text-purple-400" />
             <h2 className="text-lg font-semibold text-white">Cascade Card</h2>
+            {summary.cascade_card.unreviewed > 0 && (
+              <span className="text-xs text-amber-400 ml-2">
+                {summary.cascade_card.unreviewed} unreviewed excluded
+              </span>
+            )}
             <span className="text-xs text-gray-500 ml-auto">AWCS adapted from RAHS (arxiv:2603.10807)</span>
           </div>
           <div className="grid grid-cols-5 gap-4 mb-6">
@@ -183,6 +188,7 @@ export default function Dashboard() {
                 <thead>
                   <tr className="text-left text-xs text-gray-500 border-b border-gray-800">
                     <th className="pb-2 pr-4">Condition</th>
+                    <th className="pb-2 pr-4 text-right">AWCS</th>
                     <th className="pb-2 pr-4 text-right">ASR</th>
                     <th className="pb-2 pr-4 text-right">Refusal</th>
                     <th className="pb-2 pr-4 text-right">Agreement</th>
@@ -194,6 +200,7 @@ export default function Dashboard() {
                   {Object.entries(summary.cascade_card.per_condition).map(([cond, stats]: [string, any]) => (
                     <tr key={cond} className="border-b border-gray-800/50">
                       <td className="py-2 pr-4 text-gray-200 font-medium">{cond}</td>
+                      <td className={`py-2 pr-4 text-right font-mono ${stats.awcs >= 0.2 ? 'text-green-400' : stats.awcs >= 0 ? 'text-amber-400' : 'text-red-400'}`}>{stats.awcs?.toFixed(3) ?? '-'}</td>
                       <td className="py-2 pr-4 text-right text-red-400">{stats.asr}%</td>
                       <td className="py-2 pr-4 text-right text-green-400">{stats.refusal_rate}%</td>
                       <td className="py-2 pr-4 text-right text-gray-300">{stats.judge_agreement_rate}%</td>
@@ -256,6 +263,42 @@ export default function Dashboard() {
               </div>
             );
           })()}
+          {/* Per-model AWCS */}
+          {summary.cascade_card.per_model && Object.keys(summary.cascade_card.per_model).length > 0 && (
+            <div className="overflow-x-auto mt-6">
+              <h3 className="text-sm font-medium text-gray-400 mb-2">AWCS by Model</h3>
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-left text-xs text-gray-500 border-b border-gray-800">
+                    <th className="pb-2 pr-4">Model</th>
+                    <th className="pb-2 pr-4 text-right">AWCS</th>
+                    <th className="pb-2 pr-4 text-right">ASR</th>
+                    <th className="pb-2 pr-4 text-right">Refusal</th>
+                    <th className="pb-2 pr-4 text-right">Agreement</th>
+                    <th className="pb-2 pr-4 text-right">Critical</th>
+                    <th className="pb-2 text-right">N</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.entries(summary.cascade_card.per_model)
+                    .sort(([,a]: [string, any], [,b]: [string, any]) => b.awcs - a.awcs)
+                    .map(([model, stats]: [string, any]) => (
+                    <tr key={model} className="border-b border-gray-800/50">
+                      <td className="py-2 pr-4 text-gray-200 font-medium">{model}</td>
+                      <td className={`py-2 pr-4 text-right font-mono ${stats.awcs >= 0.2 ? 'text-green-400' : stats.awcs >= 0 ? 'text-amber-400' : 'text-red-400'}`}>
+                        {stats.awcs.toFixed(3)}
+                      </td>
+                      <td className="py-2 pr-4 text-right text-red-400">{stats.asr}%</td>
+                      <td className="py-2 pr-4 text-right text-green-400">{stats.refusal_rate}%</td>
+                      <td className="py-2 pr-4 text-right text-gray-300">{stats.judge_agreement_rate}%</td>
+                      <td className="py-2 pr-4 text-right text-red-300">{stats.critical_damage_rate}%</td>
+                      <td className="py-2 text-right text-gray-400">{stats.total}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       )}
 

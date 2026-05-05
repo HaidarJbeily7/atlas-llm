@@ -56,19 +56,45 @@ export default function Models() {
               </div>
             </div>
 
-            <div className="grid grid-cols-5 gap-4 mb-4">
-              <div>
-                <p className="text-xs text-gray-500">Pass Rate</p>
-                <p className="text-xl font-bold text-white">{m.overallPassRate.toFixed(1)}%</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-500">Attempts</p>
-                <p className="text-xl font-bold text-white">{m.totalAttempts}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-500">Failed</p>
-                <p className="text-xl font-bold text-red-400">{m.totalFailed}</p>
-              </div>
+            <div className="grid grid-cols-7 gap-4 mb-4">
+              {(() => {
+                const cc = summary.cascade_card?.per_model?.[m.modelShort];
+                return cc ? (
+                  <>
+                    <div>
+                      <p className="text-xs text-gray-500">AWCS</p>
+                      <p className={`text-xl font-bold ${cc.awcs >= 0.2 ? 'text-green-400' : cc.awcs >= 0 ? 'text-amber-400' : 'text-red-400'}`}>{cc.awcs.toFixed(3)}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500">ASR (reviewed)</p>
+                      <p className="text-xl font-bold text-red-400">{cc.asr}%</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500">Refusal Rate</p>
+                      <p className="text-xl font-bold text-green-400">{cc.refusal_rate}%</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500">Reviewed</p>
+                      <p className="text-xl font-bold text-white">{cc.total}</p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div>
+                      <p className="text-xs text-gray-500">Pass Rate</p>
+                      <p className="text-xl font-bold text-white">{m.overallPassRate.toFixed(1)}%</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500">Attempts</p>
+                      <p className="text-xl font-bold text-white">{m.totalAttempts}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500">Failed</p>
+                      <p className="text-xl font-bold text-red-400">{m.totalFailed}</p>
+                    </div>
+                  </>
+                );
+              })()}
               <div>
                 <p className="text-xs text-gray-500">Target Cost</p>
                 <p className="text-xl font-bold text-white">{formatCost(m.totalTargetCost)}</p>
