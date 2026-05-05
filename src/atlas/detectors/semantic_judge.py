@@ -121,10 +121,22 @@ class SemanticJudgeDetector(BaseDetector):
                 judge_model=self.judge_model,
             )
 
-        prompt_text = self.judge_prompt.format(
-            prompt=attempt.prompt[:2000],
-            response=attempt.response[:4000],
-        )
+        # For multi-turn conversations, show the full exchange to the judge
+        if len(attempt.messages) > 2:
+            conv_parts = []
+            for msg in attempt.messages:
+                role_label = "User" if msg.role == "user" else "AI"
+                conv_parts.append(f"[{role_label}]: {msg.content}")
+            full_conversation = "\n\n".join(conv_parts)
+            prompt_text = self.judge_prompt.format(
+                prompt=full_conversation[:4000],
+                response=attempt.response[:2000],
+            )
+        else:
+            prompt_text = self.judge_prompt.format(
+                prompt=attempt.prompt[:2000],
+                response=attempt.response[:4000],
+            )
 
         kwargs: dict[str, Any] = {
             "model": self.judge_model,
