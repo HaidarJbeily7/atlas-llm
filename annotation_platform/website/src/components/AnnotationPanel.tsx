@@ -10,6 +10,7 @@ import {
   deleteAnnotation,
   getReview,
   listAnnotations,
+  reviewStatusDefinition,
   reviewStatusColor,
   reviewStatusLabel,
   settlementColor,
@@ -165,7 +166,7 @@ export default function AnnotationPanel({ findingId, onReviewChange, onAnnotatio
                       ? reviewStatusColor(s)
                       : 'bg-gray-800/60 text-gray-500 hover:text-gray-300 border border-transparent'
                   )}
-                  title={s === myStatus ? 'Click again to withdraw your vote' : `Vote: ${reviewStatusLabel(s)}`}
+                  title={s === myStatus ? 'Click again to withdraw your vote' : `${reviewStatusLabel(s)}: ${reviewStatusDefinition(s)}`}
                 >
                   {reviewStatusLabel(s)}
                 </button>
@@ -192,6 +193,7 @@ export default function AnnotationPanel({ findingId, onReviewChange, onAnnotatio
                 'font-medium',
                 v.status === 'confirmed_vulnerability' ? 'text-red-300'
                   : v.status === 'false_positive' ? 'text-green-300'
+                  : v.status === 'false_negative' ? 'text-purple-300'
                   : v.status === 'needs_investigation' ? 'text-amber-300'
                   : 'text-gray-300'
               )}>

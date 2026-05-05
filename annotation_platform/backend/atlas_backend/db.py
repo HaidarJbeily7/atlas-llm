@@ -26,6 +26,7 @@ VALID_STATUSES = {
     "pending",
     "confirmed_vulnerability",
     "false_positive",
+    "false_negative",
     "needs_investigation",
     "wont_fix",
 }
@@ -649,6 +650,7 @@ def review_stats_for_experiment(session: Session, experiment_id: str) -> dict:
     reviewed = 0
     confirmed = 0
     false_positive = 0
+    false_negative = 0
     investigating = 0
     wont_fix = 0
     disputed = 0
@@ -674,6 +676,8 @@ def review_stats_for_experiment(session: Session, experiment_id: str) -> dict:
                 confirmed += 1
             elif status == "false_positive":
                 false_positive += 1
+            elif status == "false_negative":
+                false_negative += 1
             elif status == "needs_investigation":
                 investigating += 1
             elif status == "wont_fix":
@@ -692,6 +696,7 @@ def review_stats_for_experiment(session: Session, experiment_id: str) -> dict:
         "reviewed": reviewed,
         "confirmed": confirmed,
         "false_positive": false_positive,
+        "false_negative": false_negative,
         "investigating": investigating,
         "wont_fix": wont_fix,
         "disputed": disputed,
@@ -788,6 +793,7 @@ def _empty_review_stats() -> dict:
         "reviewed": 0,
         "confirmed": 0,
         "false_positive": 0,
+        "false_negative": 0,
         "investigating": 0,
         "wont_fix": 0,
         "disputed": 0,

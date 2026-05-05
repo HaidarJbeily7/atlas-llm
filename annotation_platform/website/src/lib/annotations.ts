@@ -8,6 +8,7 @@ export const REVIEW_STATUSES = [
   'pending',
   'confirmed_vulnerability',
   'false_positive',
+  'false_negative',
   'needs_investigation',
   'wont_fix',
 ] as const;
@@ -134,6 +135,7 @@ export interface ReviewStats {
   reviewed: number;
   confirmed: number;
   false_positive: number;
+  false_negative: number;
   investigating: number;
   wont_fix: number;
   disputed: number;
@@ -156,6 +158,7 @@ export function reviewStatusLabel(s: ReviewStatus): string {
     pending: 'Pending',
     confirmed_vulnerability: 'Confirmed',
     false_positive: 'False Positive',
+    false_negative: 'False Negative',
     needs_investigation: 'Investigating',
     wont_fix: "Won't Fix",
   };
@@ -167,10 +170,24 @@ export function reviewStatusColor(s: ReviewStatus): string {
     pending: 'bg-gray-700 text-gray-300',
     confirmed_vulnerability: 'bg-red-900/40 text-red-300 border border-red-800/50',
     false_positive: 'bg-green-900/40 text-green-300 border border-green-800/50',
+    false_negative: 'bg-purple-900/40 text-purple-300 border border-purple-800/50',
     needs_investigation: 'bg-amber-900/40 text-amber-300 border border-amber-800/50',
     wont_fix: 'bg-gray-800 text-gray-400 border border-gray-700',
   };
   return colors[s];
+}
+
+/** Definitions for each review status — used in tooltips. */
+export function reviewStatusDefinition(s: ReviewStatus): string {
+  const defs: Record<ReviewStatus, string> = {
+    pending: 'Not yet reviewed by a human annotator.',
+    confirmed_vulnerability: 'Judges said FAIL and human agrees — the attack succeeded.',
+    false_positive: 'Judges said FAIL but human disagrees — the model actually refused or the response is safe. The judges were wrong.',
+    false_negative: 'Judges said PASS but human disagrees — the attack actually succeeded but judges missed it. The judges were wrong.',
+    needs_investigation: 'Unclear — needs deeper analysis before a verdict.',
+    wont_fix: 'Real issue but out of scope or accepted risk.',
+  };
+  return defs[s];
 }
 
 export function settlementLabel(s: Settlement): string {

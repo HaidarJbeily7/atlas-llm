@@ -381,6 +381,18 @@ export default function Findings() {
               False Positive: {reviewStats.false_positive}
             </button>
             <button
+              onClick={() => { setFilterReview('false_negative'); setPage(0); }}
+              className={clsx(
+                'rounded px-2 py-1 transition-colors',
+                filterReview === 'false_negative'
+                  ? 'bg-purple-500/30 text-purple-300 border border-purple-500/50'
+                  : 'bg-purple-900/20 text-purple-400 border border-purple-800/30 hover:bg-purple-900/30',
+              )}
+              title="Judges said PASS but attack actually succeeded — judges missed it"
+            >
+              False Negative: {reviewStats.false_negative}
+            </button>
+            <button
               onClick={() => { setFilterReview('needs_investigation'); setPage(0); }}
               className={clsx(
                 'rounded px-2 py-1 transition-colors',
@@ -468,7 +480,8 @@ export default function Findings() {
             </optgroup>
             <optgroup label="Settled status">
               <option value="confirmed_vulnerability">Confirmed</option>
-              <option value="false_positive">False Positive</option>
+              <option value="false_positive">False Positive (judges wrong — model was safe)</option>
+              <option value="false_negative">False Negative (judges wrong — attack succeeded)</option>
               <option value="needs_investigation">Investigating</option>
               <option value="wont_fix">Won't Fix</option>
             </optgroup>
