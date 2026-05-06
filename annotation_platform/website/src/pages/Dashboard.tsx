@@ -333,16 +333,16 @@ export default function Dashboard() {
                 </tr>
               </thead>
               <tbody className="text-gray-300">
-                {[
-                  { model: 'GPT-3.5 Turbo', lit: 60, ours: null, src: 'Chao 2023' },
-                  { model: 'GPT-4 Turbo', lit: 33, ours: null, src: 'HarmBench' },
-                  { model: 'GPT-4o', lit: null, ours: summary.cascade_card?.per_condition_model?.['adaptive_single_turn']?.['gpt-4o']?.asr ?? null, src: '' },
-                  { model: 'GPT-4o-mini', lit: null, ours: summary.cascade_card?.per_condition_model?.['adaptive_single_turn']?.['gpt-4o-mini']?.asr ?? null, src: '' },
-                  { model: 'Claude 2.0', lit: 4, ours: null, src: 'Chao 2023' },
-                  { model: 'Claude Sonnet 4', lit: null, ours: summary.cascade_card?.per_condition_model?.['adaptive_single_turn']?.['claude-sonnet-4']?.asr ?? null, src: '' },
-                  { model: 'Llama-2 70B', lit: 15, ours: null, src: 'HarmBench' },
-                  { model: 'Llama 3.3 70B', lit: null, ours: summary.cascade_card?.per_condition_model?.['adaptive_single_turn']?.['llama-3.3-70b-instruct']?.asr ?? null, src: '' },
-                ].map((row, i) => (
+                {([
+                  { model: 'GPT-3.5 Turbo', lit: 60 as number | null, ours: null as number | null },
+                  { model: 'GPT-4 Turbo', lit: 33, ours: null },
+                  { model: 'GPT-4o', lit: null, ours: summary.cascade_card?.per_condition_model?.['adaptive_single_turn']?.['gpt-4o']?.asr ?? null },
+                  { model: 'GPT-4o-mini', lit: null, ours: summary.cascade_card?.per_condition_model?.['adaptive_single_turn']?.['gpt-4o-mini']?.asr ?? null },
+                  { model: 'Claude 2.0', lit: 4, ours: null },
+                  { model: 'Claude Sonnet 4', lit: null, ours: summary.cascade_card?.per_condition_model?.['adaptive_single_turn']?.['claude-sonnet-4']?.asr ?? null },
+                  { model: 'Llama-2 70B', lit: 15, ours: null },
+                  { model: 'Llama 3.3 70B', lit: null, ours: summary.cascade_card?.per_condition_model?.['adaptive_single_turn']?.['llama-3.3-70b-instruct']?.asr ?? null },
+                ]).map((row, i) => (
                   <tr key={i} className="border-b border-gray-800/30">
                     <td className="py-1 text-gray-200">{row.model}</td>
                     <td className="py-1 text-right">{row.lit !== null ? `${row.lit}%` : <span className="text-gray-600">—</span>}</td>
