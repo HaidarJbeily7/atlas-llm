@@ -20,7 +20,6 @@ export default function Compliance() {
     }>();
 
     for (const entry of summary.compliance) {
-      const dedup_key = `${entry.article_id}::${entry.model_short}`;
       const existing = seen.get(entry.article_id) ?? {
         article_id: entry.article_id,
         title: entry.title,

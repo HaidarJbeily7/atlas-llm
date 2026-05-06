@@ -10,6 +10,7 @@ import { useReviewData } from '../hooks/useReviewData';
 import StatCard from '../components/StatCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { getProbeLabel, formatCost, CHART_COLORS } from '../lib/data';
+import type { CascadeConditionCard } from '../types';
 
 export default function Dashboard() {
   const { summary, models, loading } = useExperimentData();
@@ -202,7 +203,7 @@ export default function Dashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {Object.entries(summary.cascade_card.per_condition).map(([cond, stats]: [string, any]) => (
+                  {Object.entries(summary.cascade_card.per_condition).map(([cond, stats]: [string, CascadeConditionCard]) => (
                     <tr key={cond} className="border-b border-gray-800/50">
                       <td className="py-2 pr-4 text-gray-200 font-medium">{cond}</td>
                       <td className={`py-2 pr-4 text-right font-mono ${stats.awcs >= 0.2 ? 'text-green-400' : stats.awcs >= 0 ? 'text-amber-400' : 'text-red-400'}`}>{stats.awcs?.toFixed(3) ?? '-'}</td>
@@ -286,8 +287,8 @@ export default function Dashboard() {
                 </thead>
                 <tbody>
                   {Object.entries(summary.cascade_card.per_model)
-                    .sort(([,a]: [string, any], [,b]: [string, any]) => b.awcs - a.awcs)
-                    .map(([model, stats]: [string, any]) => (
+                    .sort(([,a]: [string, CascadeConditionCard], [,b]: [string, CascadeConditionCard]) => b.awcs - a.awcs)
+                    .map(([model, stats]: [string, CascadeConditionCard]) => (
                     <tr key={model} className="border-b border-gray-800/50">
                       <td className="py-2 pr-4 text-gray-200 font-medium">{model}</td>
                       <td className={`py-2 pr-4 text-right font-mono ${stats.awcs >= 0.2 ? 'text-green-400' : stats.awcs >= 0 ? 'text-amber-400' : 'text-red-400'}`}>
@@ -306,6 +307,120 @@ export default function Dashboard() {
           )}
         </div>
       )}
+
+      {/* SOTA Baselines Comparison */}
+      <div className="card">
+        <div className="flex items-center gap-3 mb-4">
+          <Radar className="w-5 h-5 text-cyan-400" />
+          <h2 className="text-lg font-semibold text-white">SOTA Baselines Comparison</h2>
+          <span className="text-xs text-gray-500 ml-auto">Literature ASR numbers for context</span>
+        </div>
+        <div className="grid grid-cols-2 gap-6">
+          {/* PAIR baselines */}
+          <div>
+            <h3 className="text-sm font-medium text-gray-400 mb-2">
+              PAIR — Single-Turn Adaptive
+              <a href="https://arxiv.org/abs/2310.08419" target="_blank" rel="noopener" className="text-cyan-500 hover:text-cyan-400 ml-1">[Chao 2023]</a>
+              <a href="https://arxiv.org/abs/2404.02151" target="_blank" rel="noopener" className="text-cyan-500 hover:text-cyan-400 ml-1">[ICLR 2025]</a>
+            </h3>
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="text-gray-500 border-b border-gray-800">
+                  <th className="pb-1.5 text-left">Model</th>
+                  <th className="pb-1.5 text-right">Lit. ASR</th>
+                  <th className="pb-1.5 text-right">Our ASR</th>
+                  <th className="pb-1.5 text-right">Delta</th>
+                </tr>
+              </thead>
+              <tbody className="text-gray-300">
+                {[
+                  { model: 'GPT-3.5 Turbo', lit: 60, ours: null, src: 'Chao 2023' },
+                  { model: 'GPT-4 Turbo', lit: 33, ours: null, src: 'HarmBench' },
+                  { model: 'GPT-4o', lit: null, ours: summary.cascade_card?.per_condition_model?.['adaptive_single_turn']?.['gpt-4o']?.asr ?? null, src: '' },
+                  { model: 'GPT-4o-mini', lit: null, ours: summary.cascade_card?.per_condition_model?.['adaptive_single_turn']?.['gpt-4o-mini']?.asr ?? null, src: '' },
+                  { model: 'Claude 2.0', lit: 4, ours: null, src: 'Chao 2023' },
+                  { model: 'Claude Sonnet 4', lit: null, ours: summary.cascade_card?.per_condition_model?.['adaptive_single_turn']?.['claude-sonnet-4']?.asr ?? null, src: '' },
+                  { model: 'Llama-2 70B', lit: 15, ours: null, src: 'HarmBench' },
+                  { model: 'Llama 3.3 70B', lit: null, ours: summary.cascade_card?.per_condition_model?.['adaptive_single_turn']?.['llama-3.3-70b-instruct']?.asr ?? null, src: '' },
+                ].map((row, i) => (
+                  <tr key={i} className="border-b border-gray-800/30">
+                    <td className="py-1 text-gray-200">{row.model}</td>
+                    <td className="py-1 text-right">{row.lit !== null ? `${row.lit}%` : <span className="text-gray-600">—</span>}</td>
+                    <td className="py-1 text-right">{row.ours !== null ? <span className="text-amber-400">{row.ours}%</span> : <span className="text-gray-600">—</span>}</td>
+                    <td className="py-1 text-right">
+                      {row.lit !== null && row.ours !== null
+                        ? <span className={row.ours > row.lit ? 'text-red-400' : 'text-green-400'}>{row.ours > row.lit ? '+' : ''}{(row.ours - row.lit).toFixed(0)}%</span>
+                        : <span className="text-gray-600">—</span>}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <p className="text-[10px] text-gray-600 mt-2">Our attacker: DeepSeek-R1 (reasoning model) vs GPT-4 in original PAIR</p>
+          </div>
+
+          {/* Multi-turn & Autonomous baselines */}
+          <div>
+            <h3 className="text-sm font-medium text-gray-400 mb-2">
+              Autonomous Attackers
+              <a href="https://www.nature.com/articles/s41467-026-69010-1" target="_blank" rel="noopener" className="text-cyan-500 hover:text-cyan-400 ml-1">[Nature 2026]</a>
+              <a href="https://arxiv.org/abs/2404.01833" target="_blank" rel="noopener" className="text-cyan-500 hover:text-cyan-400 ml-1">[USENIX 2025]</a>
+            </h3>
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="text-gray-500 border-b border-gray-800">
+                  <th className="pb-1.5 text-left">Model</th>
+                  <th className="pb-1.5 text-right">Nature 2026</th>
+                  <th className="pb-1.5 text-right">Our Multi-T</th>
+                  <th className="pb-1.5 text-right">Our Single-T</th>
+                </tr>
+              </thead>
+              <tbody className="text-gray-300">
+                {[
+                  { model: 'Claude Sonnet 4', nature: 2.86, ourKey: 'claude-sonnet-4' },
+                  { model: 'GPT-4o', nature: 61.43, ourKey: 'gpt-4o' },
+                  { model: 'GPT-4o-mini', nature: 34.29, ourKey: 'gpt-4o-mini' },
+                  { model: 'Llama 3.x 70B', nature: 32.86, ourKey: 'llama-3.3-70b-instruct' },
+                  { model: 'Gemini Flash', nature: 71.43, ourKey: 'gemini-2.5-flash' },
+                  { model: 'DeepSeek V3', nature: 90.0, ourKey: 'deepseek-chat-v3-0324' },
+                  { model: 'Qwen 72B', nature: 71.43, ourKey: 'qwen-2.5-72b-instruct' },
+                ].map((row, i) => {
+                  const mt = summary.cascade_card?.per_condition_model?.['adaptive_multi_turn']?.[row.ourKey]?.asr ?? null;
+                  const st = summary.cascade_card?.per_condition_model?.['adaptive_single_turn']?.[row.ourKey]?.asr ?? null;
+                  return (
+                    <tr key={i} className="border-b border-gray-800/30">
+                      <td className="py-1 text-gray-200">{row.model}</td>
+                      <td className="py-1 text-right">{row.nature}%</td>
+                      <td className="py-1 text-right">{mt !== null ? <span className="text-amber-400">{mt}%</span> : <span className="text-gray-600">—</span>}</td>
+                      <td className="py-1 text-right">{st !== null ? <span className="text-red-400">{st}%</span> : <span className="text-gray-600">—</span>}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+            <p className="text-[10px] text-gray-600 mt-2">Nature 2026: max harm score % with reasoning model attackers (97.14% overall)</p>
+          </div>
+        </div>
+
+        {/* Key references */}
+        <div className="flex flex-wrap gap-2 mt-4 pt-3 border-t border-gray-800">
+          {[
+            { label: 'PAIR', url: 'https://arxiv.org/abs/2310.08419', tag: 'Chao 2023' },
+            { label: 'TAP', url: 'https://arxiv.org/abs/2312.02119', tag: 'Mehrotra 2023' },
+            { label: 'HarmBench', url: 'https://arxiv.org/abs/2402.04249', tag: 'ICLR 2025' },
+            { label: 'Adaptive Attacks', url: 'https://arxiv.org/abs/2404.02151', tag: 'ICLR 2025' },
+            { label: 'JailbreakBench', url: 'https://arxiv.org/abs/2404.01318', tag: 'NeurIPS 2024' },
+            { label: 'Crescendo', url: 'https://arxiv.org/abs/2404.01833', tag: 'USENIX 2025' },
+            { label: 'Autonomous Jailbreak', url: 'https://www.nature.com/articles/s41467-026-69010-1', tag: 'Nature 2026' },
+            { label: 'RAHS / AWCS', url: 'https://arxiv.org/abs/2603.10807', tag: 'arxiv 2026' },
+          ].map((ref) => (
+            <a key={ref.label} href={ref.url} target="_blank" rel="noopener"
+              className="text-[10px] bg-gray-800 border border-gray-700 rounded px-2 py-1 text-gray-400 hover:text-cyan-400 hover:border-cyan-800 transition-colors">
+              {ref.label} <span className="text-gray-600">({ref.tag})</span>
+            </a>
+          ))}
+        </div>
+      </div>
 
       {/* Review progress & reviewed-only stats */}
       {backendOk && reviewStats && (
