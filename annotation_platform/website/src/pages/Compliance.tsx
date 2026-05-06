@@ -12,47 +12,58 @@ export default function Compliance() {
 
   const articleMap = useMemo(() => {
     if (!summary) return [];
-    const map = new Map<string, {
+    // Deduplicate: use (article_id, model_short) as key, keep worst status
+    const seen = new Map<string, {
       article_id: string;
       title: string;
       models: Record<string, { status: string; findings: number; critical: number }>;
     }>();
 
     for (const entry of summary.compliance) {
-      const existing = map.get(entry.article_id) ?? {
+      const dedup_key = `${entry.article_id}::${entry.model_short}`;
+      const existing = seen.get(entry.article_id) ?? {
         article_id: entry.article_id,
         title: entry.title,
         models: {},
       };
-      existing.models[entry.model_short] = {
-        status: entry.status,
-        findings: (existing.models[entry.model_short]?.findings ?? 0) + entry.findings_count,
-        critical: (existing.models[entry.model_short]?.critical ?? 0) + entry.critical_findings,
-      };
-      map.set(entry.article_id, existing);
+      const prev = existing.models[entry.model_short];
+      if (!prev) {
+        existing.models[entry.model_short] = {
+          status: entry.status,
+          findings: entry.findings_count,
+          critical: entry.critical_findings,
+        };
+      } else {
+        // Keep worst status (non-compliant > partial > compliant)
+        if (entry.status === 'non-compliant' || (entry.status === 'partial' && prev.status === 'compliant')) {
+          prev.status = entry.status;
+        }
+        // Don't double-count — take max instead of sum
+        prev.findings = Math.max(prev.findings, entry.findings_count);
+        prev.critical = Math.max(prev.critical, entry.critical_findings);
+      }
+      seen.set(entry.article_id, existing);
     }
-    return Array.from(map.values());
+    return Array.from(seen.values());
   }, [summary]);
 
   if (loading || !summary) return <LoadingSpinner />;
 
+  // Deduplicate: count unique articles per model, not sum across scans
   const complianceData = models.map((m) => {
-    const modelScans = summary.scans.filter((s) => s.model === m.model);
-    const totalArticles = modelScans.reduce((s, sc) => s + sc.compliance_assessment.articles_assessed, 0);
-    const passedArticles = modelScans.reduce((s, sc) => s + sc.compliance_assessment.articles_passed, 0);
-    return {
-      model: m.modelShort,
-      passed: passedArticles,
-      failed: totalArticles - passedArticles,
-    };
+    const modelArticles = articleMap.flatMap((a) => {
+      const data = a.models[m.modelShort];
+      return data ? [data] : [];
+    });
+    const passed = modelArticles.filter((a) => a.status === 'compliant').length;
+    const failed = modelArticles.length - passed;
+    return { model: m.modelShort, passed, failed };
   });
 
+  // Use cascade_card adjusted data if available, fallback to raw
   const criticalData = models.map((m) => {
-    const modelScans = summary.scans.filter((s) => s.model === m.model);
-    let critical = 0;
-    for (const scan of modelScans) {
-      critical += scan.security_score.vulnerabilities_by_severity.critical ?? 0;
-    }
+    const cc = summary.cascade_card?.per_model?.[m.modelShort];
+    const critical = cc?.severity_distribution?.critical ?? 0;
     return { model: m.modelShort, critical };
   });
 
@@ -135,17 +146,28 @@ export default function Compliance() {
       <div className="card">
         <h2 className="text-lg font-semibold text-white mb-4">Recommendations</h2>
         <div className="space-y-3">
-          {summary.scans.slice(0, 5).flatMap((scan) =>
-            scan.recommendations.map((rec, i) => (
-              <div key={`${scan.scan_id}-${i}`} className="flex gap-3 text-sm">
+          {(() => {
+            // Deduplicate recommendations
+            const seen = new Set<string>();
+            const unique: { model: string; rec: string; key: string }[] = [];
+            for (const scan of summary.scans) {
+              for (const rec of scan.recommendations) {
+                if (!seen.has(rec)) {
+                  seen.add(rec);
+                  unique.push({ model: scan.model_short, rec, key: `${scan.scan_id}-${rec.slice(0, 30)}` });
+                }
+              }
+            }
+            return unique.slice(0, 10).map((item) => (
+              <div key={item.key} className="flex gap-3 text-sm">
                 <span className="text-amber-500 flex-shrink-0">!</span>
                 <div>
-                  <span className="text-gray-400 font-mono text-xs">{scan.model_short}</span>
-                  <p className="text-gray-300 mt-0.5">{rec}</p>
+                  <span className="text-gray-400 font-mono text-xs">{item.model}</span>
+                  <p className="text-gray-300 mt-0.5">{item.rec}</p>
                 </div>
               </div>
-            ))
-          )}
+            ));
+          })()}
         </div>
       </div>
     </div>

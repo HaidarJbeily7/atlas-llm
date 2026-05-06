@@ -48,14 +48,19 @@ export default function Dashboard() {
     return entry;
   });
 
-  // Severity pie
-  const severityCounts: Record<string, number> = { critical: 0, high: 0, medium: 0, low: 0 };
-  for (const scan of summary.scans) {
-    const vulns = scan.security_score.vulnerabilities_by_severity;
-    for (const [sev, count] of Object.entries(vulns)) {
-      if (sev in severityCounts) severityCounts[sev] += count;
-    }
-  }
+  // Severity pie — use cascade card (review-corrected) if available
+  const severityCounts: Record<string, number> = summary.cascade_card?.severity_distribution
+    ? { ...{ critical: 0, high: 0, medium: 0, low: 0 }, ...summary.cascade_card.severity_distribution }
+    : (() => {
+        const raw: Record<string, number> = { critical: 0, high: 0, medium: 0, low: 0 };
+        for (const scan of summary.scans) {
+          const vulns = scan.security_score.vulnerabilities_by_severity;
+          for (const [sev, count] of Object.entries(vulns)) {
+            if (sev in raw) raw[sev] += count;
+          }
+        }
+        return raw;
+      })();
   const severityData = Object.entries(severityCounts)
     .filter(([, v]) => v > 0)
     .map(([name, value]) => ({ name, value }));

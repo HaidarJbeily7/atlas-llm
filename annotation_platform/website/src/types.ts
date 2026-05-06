@@ -15,9 +15,11 @@ export interface ConditionStats {
   failed: number;
   asr: number;
   adj_total: number;
+  adj_passed: number;
   adj_failed: number;
   adj_asr: number;
   false_positives: number;
+  false_negatives: number;
   reviewed: number;
   total_cost: number;
   target_cost: number;
