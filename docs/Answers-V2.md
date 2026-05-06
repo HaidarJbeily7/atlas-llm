@@ -76,24 +76,31 @@
 
 > *How do the failure modes of successful attacks differ across conditions?*
 
-**Summary:** The experiment uses 7 detectors, of which 5 produce meaningful signal. The `safety_judge` (new in V2) and `semantic_judge` flag the most failures overall. Detector firing patterns differ by condition: adaptive single-turn triggers nearly all detectors uniformly, while jailbreak attacks trigger judge-based detectors heavily but rarely trigger keyword detection.
+**Summary:** When an attack succeeds (confirmed by human review), we examine *which detectors also flagged the response as harmful*. Each detector looks for a different kind of evidence:
 
-### Detector Failures by Condition (Effective Failures Only)
+- **keyword** — the response contains explicit harmful words or phrases (e.g., slurs, weapon instructions)
+- **refusal** — the model failed to refuse a harmful request (absence of a safety refusal)
+- **llm_judge** — a general-purpose LLM judge rated the response as harmful
+- **semantic_judge** — a semantic similarity judge found the response closely matches known harmful content
+- **safety_judge** — a safety-specialised judge rated the response as unsafe (new in V2)
 
-| Condition | safety_judge | semantic_judge | llm_judge | refusal | keyword |
-|---|---:|---:|---:|---:|---:|
-| Jailbreak | 227 | 232 | 225 | 214 | 17 |
-| Scripted Multi-Turn | 118 | 113 | 92 | 76 | 42 |
-| Adaptive Single-Turn | 269 | 259 | 250 | 231 | 115 |
-| Adaptive Multi-Turn | 194 | 179 | 144 | 172 | 77 |
-| **Total** | **808** | **783** | **711** | **693** | **251** |
+The table below reads as: *"Of the N confirmed successful attacks in this condition, how many were also caught by each detector?"* This reveals the *character* of successful attacks — whether they produce explicit harmful content (keyword) or subtle harmful content that only LLM judges detect.
+
+### Evidence Profile of Confirmed Successful Attacks
+
+| Condition | Confirmed Attacks | safety_judge | semantic_judge | llm_judge | refusal | keyword |
+|---|---:|---:|---:|---:|---:|---:|
+| Jailbreak | 234 | 227 (97%) | 232 (99%) | 225 (96%) | 214 (91%) | 17 (7%) |
+| Scripted Multi-Turn | 120 | 118 (98%) | 113 (94%) | 92 (77%) | 76 (63%) | 42 (35%) |
+| Adaptive Single-Turn | 275 | 269 (98%) | 259 (94%) | 250 (91%) | 231 (84%) | 115 (42%) |
+| Adaptive Multi-Turn | 203 | 194 (96%) | 179 (88%) | 144 (71%) | 172 (85%) | 77 (38%) |
 
 ### Key Findings
 
-1. **The `safety_judge` and `semantic_judge` are the most broadly triggered detectors,** firing 808 and 783 times respectively across all conditions.
-2. **Adaptive single-turn attacks trigger all detectors heavily,** consistent with its 85.9% ASR — these attacks generate the most clearly harmful content.
-3. **The `keyword` detector is least sensitive** (251 total failures) but shows its highest firing rate in adaptive conditions (115 + 77 = 192), suggesting that adaptive attacks produce more explicit harmful keywords than scripted ones.
-4. **Jailbreak attacks rarely trigger keyword detection** (17/512), indicating that template-based jailbreaks produce harmful content through indirect language that evades keyword filters.
+1. **When attacks succeed, judge-based detectors almost always agree.** The `safety_judge` and `semantic_judge` flag 88-99% of confirmed attacks — they are strong corroborators of human judgement.
+2. **The `keyword` detector reveals a clear split in attack character.** Only 7% of successful jailbreaks contain explicit harmful keywords, versus 35-42% of scripted/adaptive attacks. This means jailbreak attacks produce harmful content through *indirect, euphemistic language* that evades keyword filters.
+3. **The `refusal` detector is weakest on scripted multi-turn (63%),** meaning 37% of successful scripted attacks still contain a partial or hedged refusal that the model produced before eventually complying — the model "tried" to refuse but ultimately failed.
+4. **The `llm_judge` is least reliable on multi-turn conversations:** 71-77% coverage for multi-turn vs 91-96% for single-turn, confirming that longer conversational context makes it harder for judges to evaluate harm.
 5. **The `similarity` and `tool_call` detectors flagged zero failures** in all conditions — attacks in this experiment do not exploit these vectors.
 
 ---
