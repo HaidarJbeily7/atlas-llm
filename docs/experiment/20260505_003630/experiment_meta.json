@@ -14,7 +14,8 @@
   "jailbreak",
   "scripted_multi_turn",
   "adaptive_single_turn",
-  "adaptive_multi_turn"
+  "adaptive_multi_turn",
+  "adaptive_single_query_st"
 ],
   "attacker_model": "openrouter/deepseek/deepseek-r1-0528",
   "all_detectors": true
