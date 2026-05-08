@@ -36,6 +36,7 @@ PROBE_MODULES = {
     "visual_injection": "atlas.probes.visual_injection",
     # Experiment probes (2x2 factorial)
     "scripted_multi_turn": "atlas.probes.scripted_multi_turn",
+    "adaptive_single_query_st": "atlas.probes.adaptive_single_query_single_turn",
     "adaptive_single_turn": "atlas.probes.adaptive_single_turn",
     "adaptive_multi_turn": "atlas.probes.adaptive_multi_turn",
 }
@@ -67,6 +68,7 @@ DEFAULT_PROBE_DETECTORS = {
     "social_engineering": ["refusal"],
     "visual_injection": ["keyword", "refusal"],
     "scripted_multi_turn": ["keyword", "refusal"],
+    "adaptive_single_query_st": ["keyword", "refusal"],
     "adaptive_single_turn": ["keyword", "refusal"],
     "adaptive_multi_turn": ["keyword", "refusal"],
 }

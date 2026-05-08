@@ -64,6 +64,11 @@ repl = [
 images = [
     "pillow>=10.0",
 ]
+analysis = [
+    "scipy>=1.10",
+    "statsmodels>=0.14",
+    "numpy>=1.24",
+]
 all = [
     "weasyprint>=68.0",
     "sentence-transformers>=2.0",

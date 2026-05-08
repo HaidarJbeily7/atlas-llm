@@ -32,12 +32,13 @@ DEFAULT_MODELS=(
 # Attacker model for adaptive probes (stronger than targets, per PAIR/TAP literature)
 ATTACKER_MODEL="openrouter/deepseek/deepseek-r1-0528"
 
-# The four experimental conditions (probes)
+# The six experimental conditions (probes)
 CONDITIONS=(
-    "jailbreak"               # static single-turn
-    "scripted_multi_turn"     # static multi-turn
-    "adaptive_single_turn"    # adaptive single-turn
-    "adaptive_multi_turn"     # adaptive multi-turn
+    "jailbreak"                 # static single-turn (DAN/DUDE/STAN templates)
+    "scripted_multi_turn"       # static multi-turn
+    "adaptive_single_query_st"  # adaptive single-query single-turn (PAIR 1 iter, no refinement)
+    "adaptive_single_turn"      # adaptive multi-query single-turn (PAIR up to 5 iterations)
+    "adaptive_multi_turn"       # adaptive multi-turn
 )
 
 RESULTS_DIR="./results/experiment"
@@ -48,6 +49,7 @@ ATLAS=".venv/bin/atlas"
 DRY_RUN=false
 MODELS=()
 ATTACKER_OVERRIDE=""
+CONDITIONS_OVERRIDE=()
 
 # ---------------------------------------------------------------------------
 # Argument parsing
@@ -61,6 +63,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --attacker-model)
             ATTACKER_OVERRIDE="$2"
+            shift 2
+            ;;
+        --conditions)
+            IFS=',' read -ra CONDITIONS_OVERRIDE <<< "$2"
             shift 2
             ;;
         --resume)
@@ -80,6 +86,7 @@ while [[ $# -gt 0 ]]; do
             echo ""
             echo "Options:"
             echo "  --models         Comma-separated LiteLLM model strings"
+            echo "  --conditions     Comma-separated condition names (default: all)"
             echo "  --attacker-model Attacker LLM for adaptive probes (default: deepseek-r1)"
             echo "  --resume DIR     Resume a previous experiment run (skip completed scans)"
             echo "  --results-dir    Base output directory (default: ./results/experiment)"
@@ -96,6 +103,11 @@ done
 # Use defaults if no models specified
 if [[ ${#MODELS[@]} -eq 0 ]]; then
     MODELS=("${DEFAULT_MODELS[@]}")
+fi
+
+# Override conditions if specified
+if [[ ${#CONDITIONS_OVERRIDE[@]} -gt 0 ]]; then
+    CONDITIONS=("${CONDITIONS_OVERRIDE[@]}")
 fi
 
 # Resume mode: reuse existing experiment directory
