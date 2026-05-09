@@ -14,10 +14,12 @@ export interface ConditionStats {
   passed: number;
   failed: number;
   asr: number;
+  asr_ci: [number, number];
   adj_total: number;
   adj_passed: number;
   adj_failed: number;
   adj_asr: number;
+  adj_asr_ci: [number, number];
   false_positives: number;
   false_negatives: number;
   reviewed: number;
@@ -79,6 +81,37 @@ export interface CascadeCard {
   parameters: { alpha: number; gamma: number; lambda: number };
 }
 
+export interface RefinementAblation {
+  n_pairs: number;
+  sq_asr: number;
+  sq_asr_ci: [number, number];
+  mq_asr: number;
+  mq_asr_ci: [number, number];
+  gain_pp: number;
+  mcnemar_p: number;
+  discordant_b: number;
+  discordant_c: number;
+  per_model: Array<{
+    model: string;
+    n: number;
+    sq_asr: number;
+    mq_asr: number;
+    gain_pp: number;
+    p_value: number;
+  }>;
+}
+
+export interface PairedComparison {
+  condition_a: string;
+  condition_b: string;
+  asr_a: number;
+  asr_b: number;
+  diff_pp: number;
+  p_value: number;
+  n_pairs: number;
+  significant: boolean;
+}
+
 export interface Summary {
   experiment: ExperimentInfo;
   scans: ScanSummary[];
@@ -87,6 +120,8 @@ export interface Summary {
   compliance: ComplianceEntry[];
   detector_stats: DetectorStats[];
   condition_stats: ConditionStats[];
+  refinement_ablation?: RefinementAblation;
+  paired_comparisons?: PairedComparison[];
   failure_type_distribution: FailureTypeDistribution[];
   detector_by_condition: DetectorByCondition[];
   cascade_card?: CascadeCard;

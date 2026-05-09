@@ -62,15 +62,33 @@ class CostCalculator:
     """
 
     # Fallback pricing: model prefix -> (input $/1K tokens, output $/1K tokens)
+    # Used when litellm's built-in pricing lookup fails (e.g. newer models
+    # or provider-prefixed names not yet in litellm's cost map).
     PRICING: dict[str, tuple[float, float]] = {
-        "openai/gpt-4o": (0.0025, 0.01),
+        # OpenAI
         "openai/gpt-4o-mini": (0.00015, 0.0006),
+        "openai/gpt-4o": (0.0025, 0.01),
         "openai/gpt-4-turbo": (0.01, 0.03),
+        # Anthropic
+        "anthropic/claude-sonnet-4": (0.003, 0.015),
+        "anthropic/claude-4-sonnet": (0.003, 0.015),
         "anthropic/claude-3-5-sonnet": (0.003, 0.015),
         "anthropic/claude-3-opus": (0.015, 0.075),
         "anthropic/claude-3-haiku": (0.00025, 0.00125),
+        # Google
+        "google/gemini-2.5-flash": (0.0003, 0.0025),
         "google/gemini-pro": (0.000125, 0.000375),
         "google/gemini-1.5-pro": (0.00125, 0.005),
+        # Meta Llama
+        "meta-llama/llama-3.3-70b-instruct": (0.00023, 0.0004),
+        "meta-llama/llama-3.1-70b-instruct": (0.00023, 0.0004),
+        # Mistral
+        "mistralai/mistral-large": (0.002, 0.006),
+        # Qwen
+        "qwen/qwen-2.5-72b-instruct": (0.00035, 0.0004),
+        # DeepSeek
+        "deepseek/deepseek-chat": (0.00014, 0.00028),
+        "deepseek/deepseek-r1": (0.00055, 0.00219),
     }
 
     @classmethod

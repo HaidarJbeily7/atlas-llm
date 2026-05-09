@@ -205,7 +205,7 @@ export default function Dashboard() {
                 <tbody>
                   {Object.entries(summary.cascade_card.per_condition).map(([cond, stats]: [string, CascadeConditionCard]) => (
                     <tr key={cond} className="border-b border-gray-800/50">
-                      <td className="py-2 pr-4 text-gray-200 font-medium">{cond}</td>
+                      <td className="py-2 pr-4 text-gray-200 font-medium">{getProbeLabel(cond)}</td>
                       <td className={`py-2 pr-4 text-right font-mono ${stats.awcs >= 0.2 ? 'text-green-400' : stats.awcs >= 0 ? 'text-amber-400' : 'text-red-400'}`}>{stats.awcs?.toFixed(3) ?? '-'}</td>
                       <td className="py-2 pr-4 text-right text-red-400">{stats.asr}%</td>
                       <td className="py-2 pr-4 text-right text-green-400">{stats.refusal_rate}%</td>
@@ -243,7 +243,7 @@ export default function Dashboard() {
                   <tbody>
                     {conditions.map((cond) => (
                       <tr key={cond} className="border-b border-gray-800/50">
-                        <td className="py-2 pr-3 text-gray-200 font-medium text-xs">{cond}</td>
+                        <td className="py-2 pr-3 text-gray-200 font-medium text-xs">{getProbeLabel(cond)}</td>
                         {modelList.map((m) => {
                           const stats = pcm[cond]?.[m];
                           if (!stats) return <td key={m} className="py-2 px-2 text-center text-gray-600">-</td>;
@@ -645,7 +645,10 @@ export default function Dashboard() {
                     <td className="py-2 pr-4 text-right text-gray-400">{c.adj_total}</td>
                     <td className="py-2 pr-4 text-right text-red-400">{c.adj_failed}</td>
                     <td className="py-2 pr-4 text-right text-green-400">{c.false_positives}</td>
-                    <td className="py-2 pr-4 text-right font-semibold text-amber-400">{c.adj_asr}%</td>
+                    <td className="py-2 pr-4 text-right font-semibold text-amber-400">
+                      {c.adj_asr}%
+                      {c.adj_asr_ci && <span className="text-[10px] text-gray-500 ml-1">[{c.adj_asr_ci[0]}-{c.adj_asr_ci[1]}]</span>}
+                    </td>
                     <td className="py-2 pr-4 text-right text-gray-500">{c.asr}%</td>
                     <td className="py-2 pr-4 text-right text-gray-300">{formatCost(c.target_cost)}</td>
                     <td className="py-2 pr-4 text-right text-purple-300">{formatCost(c.attacker_cost)}</td>
@@ -678,7 +681,118 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* ── RQ2: Failure-Type Distribution (confirmed only) ── */}
+      {/* ── RQ2: Refinement Ablation ── */}
+      {summary.refinement_ablation && (
+        <div className="card">
+          <div className="flex items-center gap-3 mb-4">
+            <FlaskConical className="w-5 h-5 text-blue-400" />
+            <div>
+              <h2 className="text-lg font-semibold text-white">RQ2 — Refinement Ablation: Single-Query vs Multi-Query PAIR</h2>
+              <p className="text-xs text-gray-500">Paired comparison on {summary.refinement_ablation.n_pairs} matched intent×model pairs</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-4 gap-4 mb-6">
+            <div>
+              <p className="text-xs text-gray-500">Single-Query ASR</p>
+              <p className="text-2xl font-bold text-blue-400">{summary.refinement_ablation.sq_asr}%</p>
+              <p className="text-xs text-gray-500">[{summary.refinement_ablation.sq_asr_ci[0]}-{summary.refinement_ablation.sq_asr_ci[1]}%]</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">Multi-Query ASR</p>
+              <p className="text-2xl font-bold text-amber-400">{summary.refinement_ablation.mq_asr}%</p>
+              <p className="text-xs text-gray-500">[{summary.refinement_ablation.mq_asr_ci[0]}-{summary.refinement_ablation.mq_asr_ci[1]}%]</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">Refinement Gain</p>
+              <p className="text-2xl font-bold text-green-400">+{summary.refinement_ablation.gain_pp}pp</p>
+              <p className="text-xs text-gray-500">from iterative refinement</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">McNemar p-value</p>
+              <p className="text-2xl font-bold text-red-400">{summary.refinement_ablation.mcnemar_p < 0.001 ? summary.refinement_ablation.mcnemar_p.toExponential(1) : summary.refinement_ablation.mcnemar_p.toFixed(4)}</p>
+              <p className="text-xs text-gray-500">discordant: {summary.refinement_ablation.discordant_b}:{summary.refinement_ablation.discordant_c}</p>
+            </div>
+          </div>
+          <div className="overflow-x-auto">
+            <h3 className="text-sm font-medium text-gray-400 mb-2">Per-Model Refinement Gain</h3>
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-xs text-gray-500 border-b border-gray-800">
+                  <th className="pb-2 pr-4">Model</th>
+                  <th className="pb-2 pr-4 text-right">Single-Query ASR</th>
+                  <th className="pb-2 pr-4 text-right">Multi-Query ASR</th>
+                  <th className="pb-2 pr-4 text-right">Gain</th>
+                  <th className="pb-2 text-right">p-value</th>
+                </tr>
+              </thead>
+              <tbody>
+                {summary.refinement_ablation.per_model.sort((a, b) => b.gain_pp - a.gain_pp).map((m) => (
+                  <tr key={m.model} className="border-b border-gray-800/50">
+                    <td className="py-2 pr-4 text-gray-200 font-medium">{m.model}</td>
+                    <td className="py-2 pr-4 text-right text-blue-400">{m.sq_asr}%</td>
+                    <td className="py-2 pr-4 text-right text-amber-400">{m.mq_asr}%</td>
+                    <td className={`py-2 pr-4 text-right font-semibold ${m.gain_pp >= 20 ? 'text-green-400' : m.gain_pp >= 10 ? 'text-amber-400' : 'text-gray-400'}`}>+{m.gain_pp}pp</td>
+                    <td className={`py-2 text-right ${m.p_value < 0.05 / 8 ? 'text-red-400 font-semibold' : 'text-gray-500'}`}>
+                      {m.p_value < 0.001 ? m.p_value.toExponential(1) : m.p_value.toFixed(4)}
+                      {m.p_value < 0.05 / 8 && ' *'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <p className="text-[10px] text-gray-600 mt-2">* significant after Bonferroni correction (p {'<'} 0.00625). McNemar exact test on paired intent×model outcomes.</p>
+          </div>
+        </div>
+      )}
+
+      {/* ── RQ6: Paired Statistical Comparisons ── */}
+      {summary.paired_comparisons && summary.paired_comparisons.length > 0 && (
+        <div className="card">
+          <div className="flex items-center gap-3 mb-4">
+            <Activity className="w-5 h-5 text-indigo-400" />
+            <div>
+              <h2 className="text-lg font-semibold text-white">Paired ASR Comparisons (McNemar)</h2>
+              <p className="text-xs text-gray-500">All tests paired on the same 40 intents × 8 models. Bonferroni-corrected for {summary.paired_comparisons.length} comparisons.</p>
+            </div>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-xs text-gray-500 border-b border-gray-800">
+                  <th className="pb-2 pr-4">Condition A</th>
+                  <th className="pb-2 pr-4">Condition B</th>
+                  <th className="pb-2 pr-4 text-right">ASR A</th>
+                  <th className="pb-2 pr-4 text-right">ASR B</th>
+                  <th className="pb-2 pr-4 text-right">Difference</th>
+                  <th className="pb-2 pr-4 text-right">p-value</th>
+                  <th className="pb-2 text-right">Significant?</th>
+                </tr>
+              </thead>
+              <tbody>
+                {summary.paired_comparisons.map((pc, i) => (
+                  <tr key={i} className="border-b border-gray-800/50">
+                    <td className="py-2 pr-4 text-gray-200">{getProbeLabel(pc.condition_a)}</td>
+                    <td className="py-2 pr-4 text-gray-200">{getProbeLabel(pc.condition_b)}</td>
+                    <td className="py-2 pr-4 text-right text-gray-300">{pc.asr_a}%</td>
+                    <td className="py-2 pr-4 text-right text-gray-300">{pc.asr_b}%</td>
+                    <td className={`py-2 pr-4 text-right font-semibold ${pc.diff_pp > 0 ? 'text-red-400' : pc.diff_pp < 0 ? 'text-green-400' : 'text-gray-400'}`}>
+                      {pc.diff_pp > 0 ? '+' : ''}{pc.diff_pp}pp
+                    </td>
+                    <td className="py-2 pr-4 text-right text-gray-400 font-mono text-xs">
+                      {pc.p_value < 0.001 ? pc.p_value.toExponential(1) : pc.p_value.toFixed(4)}
+                    </td>
+                    <td className={`py-2 text-right font-semibold ${pc.significant ? 'text-green-400' : 'text-gray-600'}`}>
+                      {pc.significant ? 'Yes' : 'No'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* ── RQ3: Failure-Type Distribution (confirmed only) ── */}
       {summary.failure_type_distribution && summary.failure_type_distribution.length > 0 && (() => {
         const allDetectors = [...new Set(summary.failure_type_distribution.flatMap((f) =>
           [...Object.keys(f.detector_failures), ...Object.keys(f.detector_failures_all)]
