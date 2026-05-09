@@ -35,6 +35,7 @@ PROBE_MODULES = {
     # Multimodal probes
     "visual_injection": "atlas.probes.visual_injection",
     # Experiment probes (2x2 factorial)
+    "direct_single_turn": "atlas.probes.direct_single_turn",
     "scripted_multi_turn": "atlas.probes.scripted_multi_turn",
     "adaptive_single_query_st": "atlas.probes.adaptive_single_query_single_turn",
     "adaptive_single_turn": "atlas.probes.adaptive_single_turn",
