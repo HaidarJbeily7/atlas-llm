@@ -371,8 +371,9 @@ export default function Dashboard() {
                 <tr className="text-gray-500 border-b border-gray-800">
                   <th className="pb-1.5 text-left">Model</th>
                   <th className="pb-1.5 text-right">Nature 2026</th>
-                  <th className="pb-1.5 text-right">Our Multi-T</th>
-                  <th className="pb-1.5 text-right">Our Single-T</th>
+                  <th className="pb-1.5 text-right">Multi-Turn</th>
+                  <th className="pb-1.5 text-right">Multi-Query ST</th>
+                  <th className="pb-1.5 text-right">Single-Query ST</th>
                 </tr>
               </thead>
               <tbody className="text-gray-300">
@@ -386,13 +387,15 @@ export default function Dashboard() {
                   { model: 'Qwen 72B', nature: 71.43, ourKey: 'qwen-2.5-72b-instruct' },
                 ].map((row, i) => {
                   const mt = summary.cascade_card?.per_condition_model?.['adaptive_multi_turn']?.[row.ourKey]?.asr ?? null;
-                  const st = summary.cascade_card?.per_condition_model?.['adaptive_single_turn']?.[row.ourKey]?.asr ?? null;
+                  const mq = summary.cascade_card?.per_condition_model?.['adaptive_single_turn']?.[row.ourKey]?.asr ?? null;
+                  const sq = summary.cascade_card?.per_condition_model?.['adaptive_single_query_st']?.[row.ourKey]?.asr ?? null;
                   return (
                     <tr key={i} className="border-b border-gray-800/30">
                       <td className="py-1 text-gray-200">{row.model}</td>
                       <td className="py-1 text-right">{row.nature}%</td>
                       <td className="py-1 text-right">{mt !== null ? <span className="text-amber-400">{mt}%</span> : <span className="text-gray-600">—</span>}</td>
-                      <td className="py-1 text-right">{st !== null ? <span className="text-red-400">{st}%</span> : <span className="text-gray-600">—</span>}</td>
+                      <td className="py-1 text-right">{mq !== null ? <span className="text-red-400">{mq}%</span> : <span className="text-gray-600">—</span>}</td>
+                      <td className="py-1 text-right">{sq !== null ? <span className="text-blue-400">{sq}%</span> : <span className="text-gray-600">—</span>}</td>
                     </tr>
                   );
                 })}

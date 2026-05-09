@@ -221,10 +221,19 @@ function FindingExpanded({ finding }: { finding: FindingDetail }) {
 
       {/* Adaptive metadata */}
       {meta.adaptivity === 'adaptive' && (
-        <div className="flex gap-4 text-xs bg-purple-900/10 border border-purple-800/20 rounded-lg px-4 py-2">
+        <div className={clsx('flex gap-4 text-xs rounded-lg px-4 py-2', {
+          'bg-blue-900/10 border border-blue-800/20': meta.condition === 'adaptive_single_query_st',
+          'bg-amber-900/10 border border-amber-800/20': meta.condition === 'adaptive_single_turn',
+          'bg-purple-900/10 border border-purple-800/20': meta.condition === 'adaptive_multi_turn',
+        })}>
+          <span className="text-gray-500">Strategy: <span className="text-white font-medium">
+            {meta.condition === 'adaptive_single_query_st' ? 'PAIR Single-Query (1 iter)' :
+             meta.condition === 'adaptive_single_turn' ? 'PAIR Multi-Query (up to 5 iter)' :
+             meta.condition === 'adaptive_multi_turn' ? 'LLM-driven Multi-Turn' : String(meta.condition ?? '-')}
+          </span></span>
           <span className="text-gray-500">PAIR Score: <span className="text-purple-300 font-medium">{String(meta.pair_score ?? '-')}</span></span>
-          <span className="text-gray-500">Attack Successful: <span className={clsx('font-medium', meta.attack_successful ? 'text-red-400' : 'text-green-400')}>{String(meta.attack_successful ?? '-')}</span></span>
-          <span className="text-gray-500">Turns: <span className="text-purple-300 font-medium">{String(meta.turns_completed ?? '-')}</span></span>
+          <span className="text-gray-500">Iteration: <span className="text-purple-300 font-medium">{String(meta.pair_iteration ?? meta.turns_completed ?? '-')}</span></span>
+          <span className="text-gray-500">Attack Successful: <span className={clsx('font-medium', meta.attack_successful || meta.pair_successful ? 'text-red-400' : 'text-green-400')}>{String(meta.attack_successful ?? meta.pair_successful ?? '-')}</span></span>
           <span className="text-gray-500">Best Score: <span className="text-purple-300 font-medium">{String(meta.best_score ?? '-')}</span></span>
         </div>
       )}
@@ -535,8 +544,17 @@ export default function Findings() {
                   {f.num_messages > 0 && (
                     <span className="badge badge-warning text-[10px] whitespace-nowrap">{Math.ceil(f.num_messages / 2)}T</span>
                   )}
-                  {f.num_attacker_calls > 0 && (
-                    <span className="text-[10px] text-purple-400 font-medium whitespace-nowrap">ADT</span>
+                  {f.condition && (
+                    <span className={clsx('text-[10px] font-medium whitespace-nowrap', {
+                      'text-gray-500': !f.condition || f.condition === 'jailbreak' || f.condition === 'static_multi_turn',
+                      'text-blue-400': f.condition === 'adaptive_single_query_st',
+                      'text-amber-400': f.condition === 'adaptive_single_turn',
+                      'text-purple-400': f.condition === 'adaptive_multi_turn',
+                    })}>
+                      {f.condition === 'adaptive_single_query_st' ? '1Q' :
+                       f.condition === 'adaptive_single_turn' ? 'MQ' :
+                       f.condition === 'adaptive_multi_turn' ? 'MT' : null}
+                    </span>
                   )}
                   <span className="badge badge-info text-[10px] whitespace-nowrap">{f.model_short}</span>
                   <span className="text-[10px] text-gray-500 whitespace-nowrap">{getProbeLabel(f.probe)}</span>
