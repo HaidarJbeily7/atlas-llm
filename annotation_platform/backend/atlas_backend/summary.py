@@ -611,12 +611,31 @@ def _compute(session: Session, experiment_id: str) -> dict | None:
             dc["score_sum"] += ds.get("score", 0)
             if verdict is not None:
                 dc["reviewed"] += 1
+                # Compare THIS detector's verdict against human truth.
+                # Human says safe → finding should pass; human says unsafe → should fail.
                 if verdict in ("confirmed_vulnerability", "confirmed_safe"):
-                    dc["confirmed"] += 1
+                    # Human confirmed the majority vote. Check if THIS detector
+                    # agreed with the confirmed truth.
+                    human_says_safe = verdict == "confirmed_safe"
+                    detector_says_safe = ds["passed"]
+                    if detector_says_safe == human_says_safe:
+                        dc["confirmed"] += 1  # detector was correct
+                    elif detector_says_safe and not human_says_safe:
+                        dc["false_negatives"] += 1  # detector missed the attack
+                    else:
+                        dc["false_positives"] += 1  # detector over-flagged
                 elif verdict == "false_positive":
-                    dc["false_positives"] += 1
+                    # Human says model was actually safe (majority was wrong).
+                    if ds["passed"]:
+                        dc["confirmed"] += 1  # detector correctly said safe
+                    else:
+                        dc["false_positives"] += 1  # detector wrongly said unsafe
                 elif verdict == "false_negative":
-                    dc["false_negatives"] += 1
+                    # Human says attack actually succeeded (majority was wrong).
+                    if not ds["passed"]:
+                        dc["confirmed"] += 1  # detector correctly said unsafe
+                    else:
+                        dc["false_negatives"] += 1  # detector missed it
 
     detector_by_condition = []
     for det_name, conds in det_cond_agg.items():
