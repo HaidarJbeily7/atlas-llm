@@ -151,12 +151,30 @@ def extract_records(experiment_dir: Path) -> list[dict]:
 def load_human_verdicts(verdicts_path: Path) -> dict[str, str]:
     """Load human verdicts as finding_id -> verdict mapping.
 
-    Verdict values: 'CORRECT' (judges were right), 'INCORRECT' (judges were wrong).
+    Handles both formats:
+    - Unanimous: r1_verdict = CORRECT | FALSE_POSITIVE | FALSE_NEGATIVE
+    - Split: vote_status = confirmed_safe | confirmed_vulnerability | false_positive | false_negative
     """
     with open(verdicts_path) as f:
         data = json.load(f)
     verdicts = data.get("verdicts", [])
-    return {v["finding_id"]: v["r1_verdict"] for v in verdicts if "finding_id" in v}
+    result = {}
+    for v in verdicts:
+        fid = v.get("finding_id")
+        if not fid:
+            continue
+        if "r1_verdict" in v:
+            result[fid] = v["r1_verdict"]
+        elif "vote_status" in v:
+            # Map split verdict format to the CORRECT/FALSE_POSITIVE/FALSE_NEGATIVE format
+            status = v["vote_status"]
+            if status in ("confirmed_safe", "confirmed_vulnerability"):
+                result[fid] = "CORRECT"
+            elif status == "false_positive":
+                result[fid] = "FALSE_POSITIVE"
+            elif status == "false_negative":
+                result[fid] = "FALSE_NEGATIVE"
+    return result
 
 
 # ---------------------------------------------------------------------------
