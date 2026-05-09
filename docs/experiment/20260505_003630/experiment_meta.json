@@ -1,5 +1,5 @@
 {
-  "timestamp": "20260505_003630",
+  "timestamp": "20260509_173141",
   "models": [
   "openrouter/openai/gpt-4o-mini",
   "openrouter/openai/gpt-4o",
@@ -11,11 +11,7 @@
   "openrouter/mistralai/mistral-large-2411"
 ],
   "conditions": [
-  "jailbreak",
-  "scripted_multi_turn",
-  "adaptive_single_turn",
-  "adaptive_multi_turn",
-  "adaptive_single_query_st"
+  "direct_single_turn"
 ],
   "attacker_model": "openrouter/deepseek/deepseek-r1-0528",
   "all_detectors": true

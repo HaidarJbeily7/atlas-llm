@@ -139,7 +139,7 @@ export function aggregateByModel(scans: ScanSummary[]): ModelAggregation[] {
 
 export function getProbeLabel(probe: string): string {
   const labels: Record<string, string> = {
-    jailbreak: 'Jailbreak (Static)',
+    direct_single_turn: 'Static Single-Turn',
     scripted_multi_turn: 'Scripted Multi-Turn',
     adaptive_single_query_st: 'Adaptive Single-Query ST',
     adaptive_single_turn: 'Adaptive Multi-Query ST',
@@ -164,6 +164,7 @@ export const CHART_COLORS = [
 ];
 
 export const PROBE_COLORS: Record<string, string> = {
+  direct_single_turn: '#9ca3af',
   jailbreak: '#6366f1',
   scripted_multi_turn: '#8b5cf6',
   adaptive_single_query_st: '#3b82f6',

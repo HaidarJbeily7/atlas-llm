@@ -352,11 +352,12 @@ def _compute(session: Session, experiment_id: str) -> dict | None:
 
     # Sort conditions in logical order: static → scripted → single-query → multi-query → multi-turn
     _CONDITION_ORDER = {
-        "jailbreak": 0,
-        "scripted_multi_turn": 1,
-        "adaptive_single_query_st": 2,
-        "adaptive_single_turn": 3,
-        "adaptive_multi_turn": 4,
+        "direct_single_turn": 0,
+        "jailbreak": 1,
+        "scripted_multi_turn": 2,
+        "adaptive_single_query_st": 3,
+        "adaptive_single_turn": 4,
+        "adaptive_multi_turn": 5,
     }
     condition_stats = []
     for ca in sorted(cond_agg.values(), key=lambda c: _CONDITION_ORDER.get(c["condition"], 99)):
