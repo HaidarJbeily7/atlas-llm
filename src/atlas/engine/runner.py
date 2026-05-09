@@ -417,7 +417,17 @@ class ScanRunner:
                 attacker_acc.apply_to(attempt)
             else:
                 async with semaphore:
-                    attempt = await local_gen.generate_for_attempt(attempt)
+                    try:
+                        attempt = await local_gen.generate_for_attempt(attempt)
+                    except Exception as gen_exc:
+                        # Record provider-level errors (e.g. PROHIBITED_CONTENT)
+                        # as the response so detection can still run.
+                        attempt.response = f"[Error querying target: {gen_exc}]"
+                        logger.warning(
+                            "attempt_generation_error",
+                            probe=probe_name,
+                            error=str(gen_exc)[:200],
+                        )
 
             # Apply target token counts and latency
             target_acc.apply_to(attempt)

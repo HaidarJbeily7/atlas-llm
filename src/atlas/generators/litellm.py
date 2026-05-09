@@ -38,7 +38,7 @@ class LiteLLMGenerator:
         model_name: str,
         api_key: str | None = None,
         api_base: str | None = None,
-        timeout: int = 30,
+        timeout: int = 120,
         max_retries: int = 3,
         temperature: float = 0.0,
         max_tokens: int | None = None,
