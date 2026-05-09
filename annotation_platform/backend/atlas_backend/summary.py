@@ -154,10 +154,10 @@ def _compute_cascade_card(
     # Overall stats
     overall = _compute_group_stats(reviewed)
 
-    # Per-condition
+    # Per-condition — use probe field for consistent grouping with condition_stats
     cond_groups: dict[str, list[dict]] = {}
     for f in reviewed:
-        cond = f.get("condition") or f.get("probe", "unknown")
+        cond = f.get("probe", "unknown")
         cond_groups.setdefault(cond, []).append(f)
     per_condition = {cond: _compute_group_stats(g) for cond, g in cond_groups.items()}
 
@@ -168,10 +168,10 @@ def _compute_cascade_card(
         model_groups.setdefault(ms, []).append(f)
     per_model = {m: _compute_group_stats(g) for m, g in model_groups.items()}
 
-    # Per-condition-per-model
+    # Per-condition-per-model — use probe field for consistency
     cond_model_groups: dict[tuple[str, str], list[dict]] = {}
     for f in reviewed:
-        cond = f.get("condition") or f.get("probe", "unknown")
+        cond = f.get("probe", "unknown")
         ms = f.get("model_short") or f.get("model", "unknown").split("/")[-1]
         cond_model_groups.setdefault((cond, ms), []).append(f)
     per_condition_model: dict[str, dict[str, dict]] = {}
@@ -350,8 +350,16 @@ def _compute(session: Session, experiment_id: str) -> dict | None:
         else:
             ca["adj_failed"] += 1
 
+    # Sort conditions in logical order: static → scripted → single-query → multi-query → multi-turn
+    _CONDITION_ORDER = {
+        "jailbreak": 0,
+        "scripted_multi_turn": 1,
+        "adaptive_single_query_st": 2,
+        "adaptive_single_turn": 3,
+        "adaptive_multi_turn": 4,
+    }
     condition_stats = []
-    for ca in cond_agg.values():
+    for ca in sorted(cond_agg.values(), key=lambda c: _CONDITION_ORDER.get(c["condition"], 99)):
         total_tok = ca["target_tokens"] + ca["attacker_tokens"]
         attacker_cost = ca["total_cost"] * ca["attacker_tokens"] / max(1, total_tok)
         condition_stats.append({
