@@ -436,7 +436,73 @@ def main() -> None:
                 pooled[test_key]["n_comparisons_bonferroni"] = n_comparisons
 
     # -----------------------------------------------------------------------
-    # 4. Write outputs
+    # 4. Pairing audit — prove (model, intent_id) alignment
+    # -----------------------------------------------------------------------
+    print("Building pairing audit ...")
+
+    # Collect intent_ids per (model, condition)
+    intent_sets: dict[tuple[str, str], list[str]] = defaultdict(list)
+    for r in records:
+        intent_sets[(r["model"], r["condition"])].append(r["intent_id"])
+
+    # Build per-model audit: verify all conditions share same intent_ids in same order
+    per_model_audit = []
+    all_aligned = True
+    for model in models:
+        model_short = model.split("/")[-1] if "/" in model else model
+        model_entry: dict = {"model": model_short, "conditions": {}}
+        ref_intents: list[str] | None = None
+        for cond in conditions:
+            intents = intent_sets.get((model, cond), [])
+            model_entry["conditions"][cond] = {
+                "n_intents": len(intents),
+                "n_unique": len(set(intents)),
+                "first_3": intents[:3],
+                "last_3": intents[-3:] if len(intents) >= 3 else intents,
+            }
+            if ref_intents is None:
+                ref_intents = intents
+            elif intents != ref_intents:
+                all_aligned = False
+                model_entry["aligned"] = False
+        if "aligned" not in model_entry:
+            model_entry["aligned"] = True
+        per_model_audit.append(model_entry)
+
+    # Build per-comparison audit: show matched pair counts
+    per_comparison_audit = []
+    for c1, c2 in condition_pairs:
+        pair_key = f"{c1}_vs_{c2}"
+        index_a = {(r["model"], r["intent_id"]): r for r in by_condition[c1]}
+        index_b = {(r["model"], r["intent_id"]): r for r in by_condition[c2]}
+        common = sorted(set(index_a.keys()) & set(index_b.keys()))
+        only_a = set(index_a.keys()) - set(index_b.keys())
+        only_b = set(index_b.keys()) - set(index_a.keys())
+        per_comparison_audit.append({
+            "comparison": pair_key,
+            "matched_pairs": len(common),
+            "unmatched_a_only": len(only_a),
+            "unmatched_b_only": len(only_b),
+            "join_key": "(model, intent_id)",
+        })
+
+    # Unique intent list
+    unique_intents = sorted(set(r["intent_id"] for r in records))
+
+    pairing_audit = {
+        "join_key": "(model, intent_id)",
+        "total_records": len(records),
+        "n_models": len(models),
+        "n_conditions": len(conditions),
+        "n_unique_intents": len(unique_intents),
+        "intent_list": unique_intents,
+        "all_models_aligned": all_aligned,
+        "per_model": per_model_audit,
+        "per_comparison": per_comparison_audit,
+    }
+
+    # -----------------------------------------------------------------------
+    # 5. Write outputs
     # -----------------------------------------------------------------------
     print(f"\nWriting outputs to {output_dir} ...")
 
@@ -449,6 +515,7 @@ def main() -> None:
         "condition_metrics": condition_metrics,
         "cell_metrics": cell_metrics,
         "paired_tests": paired_tests,
+        "pairing_audit": pairing_audit,
     }
     metrics_json_path = output_dir / "metrics_with_ci.json"
     with open(metrics_json_path, "w") as f:
@@ -459,6 +526,11 @@ def main() -> None:
     with open(paired_json_path, "w") as f:
         json.dump(paired_tests, f, indent=2, default=str)
     print(f"  {paired_json_path}")
+
+    audit_json_path = output_dir / "pairing_audit.json"
+    with open(audit_json_path, "w") as f:
+        json.dump(pairing_audit, f, indent=2, default=str)
+    print(f"  {audit_json_path}")
 
     # Markdown tables
     md_path = output_dir / "metrics_with_ci.md"

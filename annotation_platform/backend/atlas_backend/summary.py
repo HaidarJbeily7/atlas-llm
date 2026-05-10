@@ -643,6 +643,13 @@ def _compute(session: Session, experiment_id: str) -> dict | None:
         for cond, dc in conds.items():
             reviewed = dc["reviewed"]
             judge_errors = dc["false_positives"] + dc["false_negatives"]
+            tp = dc["confirmed"]
+            fp = dc["false_positives"]
+            fn = dc["false_negatives"]
+            precision = round(tp / max(1, tp + fp) * 100, 2)
+            recall = round(tp / max(1, tp + fn) * 100, 2)
+            f1 = round(2 * precision * recall / max(0.01, precision + recall), 2)
+
             by_cond[cond] = {
                 "total": dc["total"],
                 "passed": dc["passed"],
@@ -656,6 +663,9 @@ def _compute(session: Session, experiment_id: str) -> dict | None:
                 "judge_errors": judge_errors,
                 "accuracy": round(dc["confirmed"] / max(1, reviewed) * 100, 2),
                 "error_rate": round(judge_errors / max(1, reviewed) * 100, 2),
+                "precision": precision,
+                "recall": recall,
+                "f1": f1,
             }
         detector_by_condition.append({
             "detector": det_name,

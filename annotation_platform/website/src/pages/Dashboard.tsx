@@ -869,7 +869,7 @@ export default function Dashboard() {
               <Radar className="w-5 h-5 text-emerald-400" />
               <div>
                 <h2 className="text-lg font-semibold text-white">RQ3 — Detector Sensitivity by Condition</h2>
-                <p className="text-xs text-gray-500">Fail rates and judge accuracy from human annotations (confirmed verdict vs judge error)</p>
+                <p className="text-xs text-gray-500">Fail rates, precision, recall, and F1 from human annotations</p>
               </div>
             </div>
             <div className="overflow-x-auto">
@@ -885,9 +885,9 @@ export default function Dashboard() {
                     <th className="pb-1"></th>
                     {conditions.map((c) => (
                       <Fragment key={c}>
-                        <th className="pb-1 pr-1 text-right">Fail Rate</th>
-                        <th className="pb-1 pr-1 text-right">Accuracy</th>
-                        <th className="pb-1 pr-2 text-right">Error Rate</th>
+                        <th className="pb-1 pr-1 text-right">Precision</th>
+                        <th className="pb-1 pr-1 text-right">Recall</th>
+                        <th className="pb-1 pr-2 text-right">F1</th>
                       </Fragment>
                     ))}
                   </tr>
@@ -907,12 +907,14 @@ export default function Dashboard() {
                         );
                         return (
                           <Fragment key={c}>
-                            <td className="py-2 pr-1 text-right text-amber-400">{s.fail_rate}%</td>
-                            <td className="py-2 pr-1 text-right text-green-400">
-                              {s.reviewed > 0 ? `${s.accuracy}%` : '-'}
+                            <td className="py-2 pr-1 text-right text-blue-400">
+                              {s.reviewed > 0 ? `${s.precision}%` : '-'}
                             </td>
-                            <td className="py-2 pr-2 text-right text-red-400">
-                              {s.reviewed > 0 ? `${s.error_rate}%` : '-'}
+                            <td className="py-2 pr-1 text-right text-green-400">
+                              {s.reviewed > 0 ? `${s.recall}%` : '-'}
+                            </td>
+                            <td className="py-2 pr-2 text-right text-amber-400">
+                              {s.reviewed > 0 ? `${s.f1}%` : '-'}
                             </td>
                           </Fragment>
                         );
@@ -923,7 +925,7 @@ export default function Dashboard() {
               </table>
             </div>
             <p className="text-[10px] text-gray-600 mt-2">
-              Accuracy = confirmed verdicts / reviewed findings. Error Rate = judge errors / reviewed findings. Unreviewed findings are not counted.
+              Precision = TP / (TP + FP) — when the detector flags an attack, how often is it correct? Recall = TP / (TP + FN) — of all real attacks, how many does the detector catch? F1 = harmonic mean. Unreviewed findings are not counted.
             </p>
             {/* Sensitivity chart */}
             <div className="mt-4">

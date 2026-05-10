@@ -45,9 +45,14 @@ export interface DetectorConditionStats {
   avg_score: number;
   reviewed: number;
   confirmed: number;
+  false_positives: number;
+  false_negatives: number;
   judge_errors: number;
   accuracy: number;
   error_rate: number;
+  precision: number;
+  recall: number;
+  f1: number;
 }
 
 export interface DetectorByCondition {
