@@ -1,0 +1,732 @@
+{
+  "join_key": "(model, intent_id)",
+  "total_records": 1600,
+  "n_models": 8,
+  "n_conditions": 5,
+  "n_unique_intents": 40,
+  "intent_list": [
+    "intent-bioweapon",
+    "intent-botnet-c2",
+    "intent-bypass-content-filter",
+    "intent-child-exploitation",
+    "intent-code-injection-config",
+    "intent-credential-harvester",
+    "intent-ddos-tool",
+    "intent-deepfake-instructions",
+    "intent-discrimination-system",
+    "intent-document-injection",
+    "intent-drug-synthesis",
+    "intent-educational-explosives",
+    "intent-election-manipulation",
+    "intent-fake-admin-command",
+    "intent-fake-authority-exploit",
+    "intent-fake-news",
+    "intent-hacking-exploit",
+    "intent-hate-speech-generation",
+    "intent-identity-theft-guide",
+    "intent-insider-trading",
+    "intent-instruction-override",
+    "intent-jailbreak-roleplay",
+    "intent-keylogger",
+    "intent-mass-violence",
+    "intent-money-laundering",
+    "intent-multilingual-injection",
+    "intent-network-sniffing",
+    "intent-phishing-email",
+    "intent-pii-extraction",
+    "intent-poison-guide",
+    "intent-ransomware",
+    "intent-reverse-shell",
+    "intent-self-harm-instructions",
+    "intent-social-engineering-bank",
+    "intent-sql-injection-dump",
+    "intent-stalking-guide",
+    "intent-system-prompt-extraction",
+    "intent-urgency-chemical",
+    "intent-weapon-3d-print",
+    "intent-weapons-synthesis"
+  ],
+  "all_models_aligned": true,
+  "per_model": [
+    {
+      "model": "claude-sonnet-4",
+      "conditions": {
+        "adaptive_multi_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "adaptive_single_query_st": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "adaptive_single_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "direct_single_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "scripted_multi_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        }
+      },
+      "aligned": true
+    },
+    {
+      "model": "deepseek-chat-v3-0324",
+      "conditions": {
+        "adaptive_multi_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "adaptive_single_query_st": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "adaptive_single_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "direct_single_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "scripted_multi_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        }
+      },
+      "aligned": true
+    },
+    {
+      "model": "gemini-2.5-flash",
+      "conditions": {
+        "adaptive_multi_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "adaptive_single_query_st": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "adaptive_single_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "direct_single_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "scripted_multi_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        }
+      },
+      "aligned": true
+    },
+    {
+      "model": "llama-3.3-70b-instruct",
+      "conditions": {
+        "adaptive_multi_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "adaptive_single_query_st": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "adaptive_single_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "direct_single_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "scripted_multi_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        }
+      },
+      "aligned": true
+    },
+    {
+      "model": "mistral-large-2411",
+      "conditions": {
+        "adaptive_multi_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "adaptive_single_query_st": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "adaptive_single_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "direct_single_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "scripted_multi_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        }
+      },
+      "aligned": true
+    },
+    {
+      "model": "gpt-4o",
+      "conditions": {
+        "adaptive_multi_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "adaptive_single_query_st": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "adaptive_single_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "direct_single_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "scripted_multi_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        }
+      },
+      "aligned": true
+    },
+    {
+      "model": "gpt-4o-mini",
+      "conditions": {
+        "adaptive_multi_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "adaptive_single_query_st": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "adaptive_single_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "direct_single_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "scripted_multi_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        }
+      },
+      "aligned": true
+    },
+    {
+      "model": "qwen-2.5-72b-instruct",
+      "conditions": {
+        "adaptive_multi_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "adaptive_single_query_st": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "adaptive_single_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "direct_single_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        },
+        "scripted_multi_turn": {
+          "n_intents": 40,
+          "n_unique": 40,
+          "first_3": [
+            "intent-weapons-synthesis",
+            "intent-hacking-exploit",
+            "intent-drug-synthesis"
+          ],
+          "last_3": [
+            "intent-insider-trading",
+            "intent-bypass-content-filter",
+            "intent-weapon-3d-print"
+          ]
+        }
+      },
+      "aligned": true
+    }
+  ],
+  "per_comparison": [
+    {
+      "comparison": "adaptive_multi_turn_vs_adaptive_single_query_st",
+      "matched_pairs": 320,
+      "unmatched_a_only": 0,
+      "unmatched_b_only": 0,
+      "join_key": "(model, intent_id)"
+    },
+    {
+      "comparison": "adaptive_multi_turn_vs_adaptive_single_turn",
+      "matched_pairs": 320,
+      "unmatched_a_only": 0,
+      "unmatched_b_only": 0,
+      "join_key": "(model, intent_id)"
+    },
+    {
+      "comparison": "adaptive_multi_turn_vs_direct_single_turn",
+      "matched_pairs": 320,
+      "unmatched_a_only": 0,
+      "unmatched_b_only": 0,
+      "join_key": "(model, intent_id)"
+    },
+    {
+      "comparison": "adaptive_multi_turn_vs_scripted_multi_turn",
+      "matched_pairs": 320,
+      "unmatched_a_only": 0,
+      "unmatched_b_only": 0,
+      "join_key": "(model, intent_id)"
+    },
+    {
+      "comparison": "adaptive_single_query_st_vs_adaptive_single_turn",
+      "matched_pairs": 320,
+      "unmatched_a_only": 0,
+      "unmatched_b_only": 0,
+      "join_key": "(model, intent_id)"
+    },
+    {
+      "comparison": "adaptive_single_query_st_vs_direct_single_turn",
+      "matched_pairs": 320,
+      "unmatched_a_only": 0,
+      "unmatched_b_only": 0,
+      "join_key": "(model, intent_id)"
+    },
+    {
+      "comparison": "adaptive_single_query_st_vs_scripted_multi_turn",
+      "matched_pairs": 320,
+      "unmatched_a_only": 0,
+      "unmatched_b_only": 0,
+      "join_key": "(model, intent_id)"
+    },
+    {
+      "comparison": "adaptive_single_turn_vs_direct_single_turn",
+      "matched_pairs": 320,
+      "unmatched_a_only": 0,
+      "unmatched_b_only": 0,
+      "join_key": "(model, intent_id)"
+    },
+    {
+      "comparison": "adaptive_single_turn_vs_scripted_multi_turn",
+      "matched_pairs": 320,
+      "unmatched_a_only": 0,
+      "unmatched_b_only": 0,
+      "join_key": "(model, intent_id)"
+    },
+    {
+      "comparison": "direct_single_turn_vs_scripted_multi_turn",
+      "matched_pairs": 320,
+      "unmatched_a_only": 0,
+      "unmatched_b_only": 0,
+      "join_key": "(model, intent_id)"
+    }
+  ]
+}

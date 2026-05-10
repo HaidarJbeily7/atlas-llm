@@ -1,0 +1,1432 @@
+{
+  "adaptive_multi_turn_vs_adaptive_single_query_st": {
+    "pooled": {
+      "asr_mcnemar": {
+        "statistic": 63.0,
+        "p_value": 0.9284921641248501,
+        "b": 63,
+        "c": 61,
+        "n_discordant": 124,
+        "n_pairs": 320,
+        "asr_a": 0.634375,
+        "asr_b": 0.640625,
+        "risk_difference": 0.006249999999999978,
+        "p_value_bonferroni": 1.0,
+        "n_comparisons_bonferroni": 10
+      },
+      "cost_wilcoxon": {
+        "statistic": 811.0,
+        "p_value": 5.91113864254013e-51,
+        "n_pairs": 320,
+        "mean_a": 0.0237513485625,
+        "mean_b": 0.0067836193125,
+        "mean_diff": -0.01696772925,
+        "p_value_bonferroni": 5.91113864254013e-50,
+        "n_comparisons_bonferroni": 10
+      },
+      "latency_wilcoxon": {
+        "statistic": 35.0,
+        "p_value": 4.5272835264257586e-54,
+        "n_pairs": 320,
+        "mean_a": 540015.2347259123,
+        "mean_b": 193011.4387774507,
+        "mean_diff": -347003.7959484615,
+        "p_value_bonferroni": 4.527283526425759e-53,
+        "n_comparisons_bonferroni": 10
+      }
+    },
+    "per_model": {
+      "openrouter/anthropic/claude-sonnet-4": {
+        "asr_mcnemar": {
+          "statistic": 7.0,
+          "p_value": 0.548828125,
+          "b": 7,
+          "c": 4,
+          "n_discordant": 11,
+          "n_pairs": 40,
+          "asr_a": 0.2,
+          "asr_b": 0.275,
+          "risk_difference": 0.07500000000000001
+        }
+      },
+      "openrouter/deepseek/deepseek-chat-v3-0324": {
+        "asr_mcnemar": {
+          "statistic": 13.0,
+          "p_value": 0.021270751953125,
+          "b": 13,
+          "c": 3,
+          "n_discordant": 16,
+          "n_pairs": 40,
+          "asr_a": 0.625,
+          "asr_b": 0.875,
+          "risk_difference": 0.25
+        }
+      },
+      "openrouter/google/gemini-2.5-flash": {
+        "asr_mcnemar": {
+          "statistic": 9.0,
+          "p_value": 1.0,
+          "b": 9,
+          "c": 10,
+          "n_discordant": 19,
+          "n_pairs": 40,
+          "asr_a": 0.7,
+          "asr_b": 0.675,
+          "risk_difference": -0.02499999999999991
+        }
+      },
+      "openrouter/meta-llama/llama-3.3-70b-instruct": {
+        "asr_mcnemar": {
+          "statistic": 12.0,
+          "p_value": 0.5034446716308594,
+          "b": 12,
+          "c": 8,
+          "n_discordant": 20,
+          "n_pairs": 40,
+          "asr_a": 0.625,
+          "asr_b": 0.725,
+          "risk_difference": 0.09999999999999998
+        }
+      },
+      "openrouter/mistralai/mistral-large-2411": {
+        "asr_mcnemar": {
+          "statistic": 8.0,
+          "p_value": 0.0390625,
+          "b": 8,
+          "c": 1,
+          "n_discordant": 9,
+          "n_pairs": 40,
+          "asr_a": 0.725,
+          "asr_b": 0.9,
+          "risk_difference": 0.17500000000000004
+        }
+      },
+      "openrouter/openai/gpt-4o": {
+        "asr_mcnemar": {
+          "statistic": 4.0,
+          "p_value": 0.3876953125,
+          "b": 4,
+          "c": 8,
+          "n_discordant": 12,
+          "n_pairs": 40,
+          "asr_a": 0.675,
+          "asr_b": 0.575,
+          "risk_difference": -0.10000000000000009
+        }
+      },
+      "openrouter/openai/gpt-4o-mini": {
+        "asr_mcnemar": {
+          "statistic": 5.0,
+          "p_value": 0.010622024536132812,
+          "b": 5,
+          "c": 18,
+          "n_discordant": 23,
+          "n_pairs": 40,
+          "asr_a": 0.8,
+          "asr_b": 0.475,
+          "risk_difference": -0.32500000000000007
+        }
+      },
+      "openrouter/qwen/qwen-2.5-72b-instruct": {
+        "asr_mcnemar": {
+          "statistic": 5.0,
+          "p_value": 0.4239501953125,
+          "b": 5,
+          "c": 9,
+          "n_discordant": 14,
+          "n_pairs": 40,
+          "asr_a": 0.725,
+          "asr_b": 0.625,
+          "risk_difference": -0.09999999999999998
+        }
+      }
+    }
+  },
+  "adaptive_multi_turn_vs_adaptive_single_turn": {
+    "pooled": {
+      "asr_mcnemar": {
+        "statistic": 83.0,
+        "p_value": 4.2224144708722095e-13,
+        "b": 83,
+        "c": 14,
+        "n_discordant": 97,
+        "n_pairs": 320,
+        "asr_a": 0.634375,
+        "asr_b": 0.85,
+        "risk_difference": 0.21562499999999996,
+        "p_value_bonferroni": 4.222414470872209e-12,
+        "n_comparisons_bonferroni": 10
+      },
+      "cost_wilcoxon": {
+        "statistic": 5086.0,
+        "p_value": 1.721592955162981e-35,
+        "n_pairs": 320,
+        "mean_a": 0.0237513485625,
+        "mean_b": 0.013794080749999998,
+        "mean_diff": -0.0099572678125,
+        "p_value_bonferroni": 1.721592955162981e-34,
+        "n_comparisons_bonferroni": 10
+      },
+      "latency_wilcoxon": {
+        "statistic": 1416.0,
+        "p_value": 1.3647438745364642e-48,
+        "n_pairs": 320,
+        "mean_a": 540015.2347259123,
+        "mean_b": 319198.139290482,
+        "mean_diff": -220817.0954354303,
+        "p_value_bonferroni": 1.3647438745364642e-47,
+        "n_comparisons_bonferroni": 10
+      }
+    },
+    "per_model": {
+      "openrouter/anthropic/claude-sonnet-4": {
+        "asr_mcnemar": {
+          "statistic": 11.0,
+          "p_value": 0.0224609375,
+          "b": 11,
+          "c": 2,
+          "n_discordant": 13,
+          "n_pairs": 40,
+          "asr_a": 0.2,
+          "asr_b": 0.425,
+          "risk_difference": 0.22499999999999998
+        }
+      },
+      "openrouter/deepseek/deepseek-chat-v3-0324": {
+        "asr_mcnemar": {
+          "statistic": 13.0,
+          "p_value": 0.0018310546875,
+          "b": 13,
+          "c": 1,
+          "n_discordant": 14,
+          "n_pairs": 40,
+          "asr_a": 0.625,
+          "asr_b": 0.925,
+          "risk_difference": 0.30000000000000004
+        }
+      },
+      "openrouter/google/gemini-2.5-flash": {
+        "asr_mcnemar": {
+          "statistic": 11.0,
+          "p_value": 0.0224609375,
+          "b": 11,
+          "c": 2,
+          "n_discordant": 13,
+          "n_pairs": 40,
+          "asr_a": 0.7,
+          "asr_b": 0.925,
+          "risk_difference": 0.2250000000000001
+        }
+      },
+      "openrouter/meta-llama/llama-3.3-70b-instruct": {
+        "asr_mcnemar": {
+          "statistic": 13.0,
+          "p_value": 0.00738525390625,
+          "b": 13,
+          "c": 2,
+          "n_discordant": 15,
+          "n_pairs": 40,
+          "asr_a": 0.625,
+          "asr_b": 0.9,
+          "risk_difference": 0.275
+        }
+      },
+      "openrouter/mistralai/mistral-large-2411": {
+        "asr_mcnemar": {
+          "statistic": 9.0,
+          "p_value": 0.00390625,
+          "b": 9,
+          "c": 0,
+          "n_discordant": 9,
+          "n_pairs": 40,
+          "asr_a": 0.725,
+          "asr_b": 0.95,
+          "risk_difference": 0.22499999999999998
+        }
+      },
+      "openrouter/openai/gpt-4o": {
+        "asr_mcnemar": {
+          "statistic": 11.0,
+          "p_value": 0.0224609375,
+          "b": 11,
+          "c": 2,
+          "n_discordant": 13,
+          "n_pairs": 40,
+          "asr_a": 0.675,
+          "asr_b": 0.9,
+          "risk_difference": 0.22499999999999998
+        }
+      },
+      "openrouter/openai/gpt-4o-mini": {
+        "asr_mcnemar": {
+          "statistic": 6.0,
+          "p_value": 0.5078125,
+          "b": 6,
+          "c": 3,
+          "n_discordant": 9,
+          "n_pairs": 40,
+          "asr_a": 0.8,
+          "asr_b": 0.875,
+          "risk_difference": 0.07499999999999996
+        }
+      },
+      "openrouter/qwen/qwen-2.5-72b-instruct": {
+        "asr_mcnemar": {
+          "statistic": 9.0,
+          "p_value": 0.0654296875,
+          "b": 9,
+          "c": 2,
+          "n_discordant": 11,
+          "n_pairs": 40,
+          "asr_a": 0.725,
+          "asr_b": 0.9,
+          "risk_difference": 0.17500000000000004
+        }
+      }
+    }
+  },
+  "adaptive_multi_turn_vs_direct_single_turn": {
+    "pooled": {
+      "asr_mcnemar": {
+        "statistic": 20.0,
+        "p_value": 2.4604497446499028e-31,
+        "b": 20,
+        "c": 172,
+        "n_discordant": 192,
+        "n_pairs": 320,
+        "asr_a": 0.634375,
+        "asr_b": 0.159375,
+        "risk_difference": -0.47500000000000003,
+        "p_value_bonferroni": 2.460449744649903e-30,
+        "n_comparisons_bonferroni": 10
+      },
+      "cost_wilcoxon": {
+        "statistic": 561.0,
+        "p_value": 6.000995174774226e-52,
+        "n_pairs": 320,
+        "mean_a": 0.0237513485625,
+        "mean_b": 0.0017199015625000002,
+        "mean_diff": -0.022031447000000003,
+        "p_value_bonferroni": 6.000995174774226e-51,
+        "n_comparisons_bonferroni": 10
+      },
+      "latency_wilcoxon": {
+        "statistic": 0.0,
+        "p_value": 3.258866789206682e-54,
+        "n_pairs": 320,
+        "mean_a": 540015.2347259123,
+        "mean_b": 21787.50949610221,
+        "mean_diff": -518227.7252298101,
+        "p_value_bonferroni": 3.2588667892066823e-53,
+        "n_comparisons_bonferroni": 10
+      }
+    },
+    "per_model": {
+      "openrouter/anthropic/claude-sonnet-4": {
+        "asr_mcnemar": {
+          "statistic": 2.0,
+          "p_value": 0.453125,
+          "b": 2,
+          "c": 5,
+          "n_discordant": 7,
+          "n_pairs": 40,
+          "asr_a": 0.2,
+          "asr_b": 0.125,
+          "risk_difference": -0.07500000000000001
+        }
+      },
+      "openrouter/deepseek/deepseek-chat-v3-0324": {
+        "asr_mcnemar": {
+          "statistic": 4.0,
+          "p_value": 0.0009105205535888672,
+          "b": 4,
+          "c": 21,
+          "n_discordant": 25,
+          "n_pairs": 40,
+          "asr_a": 0.625,
+          "asr_b": 0.2,
+          "risk_difference": -0.425
+        }
+      },
+      "openrouter/google/gemini-2.5-flash": {
+        "asr_mcnemar": {
+          "statistic": 4.0,
+          "p_value": 0.00017999112606048584,
+          "b": 4,
+          "c": 24,
+          "n_discordant": 28,
+          "n_pairs": 40,
+          "asr_a": 0.7,
+          "asr_b": 0.2,
+          "risk_difference": -0.49999999999999994
+        }
+      },
+      "openrouter/meta-llama/llama-3.3-70b-instruct": {
+        "asr_mcnemar": {
+          "statistic": 3.0,
+          "p_value": 8.797645568847656e-05,
+          "b": 3,
+          "c": 23,
+          "n_discordant": 26,
+          "n_pairs": 40,
+          "asr_a": 0.625,
+          "asr_b": 0.125,
+          "risk_difference": -0.5
+        }
+      },
+      "openrouter/mistralai/mistral-large-2411": {
+        "asr_mcnemar": {
+          "statistic": 4.0,
+          "p_value": 0.0308837890625,
+          "b": 4,
+          "c": 14,
+          "n_discordant": 18,
+          "n_pairs": 40,
+          "asr_a": 0.725,
+          "asr_b": 0.475,
+          "risk_difference": -0.25
+        }
+      },
+      "openrouter/openai/gpt-4o": {
+        "asr_mcnemar": {
+          "statistic": 1.0,
+          "p_value": 4.172325134277344e-07,
+          "b": 1,
+          "c": 26,
+          "n_discordant": 27,
+          "n_pairs": 40,
+          "asr_a": 0.675,
+          "asr_b": 0.05,
+          "risk_difference": -0.625
+        }
+      },
+      "openrouter/openai/gpt-4o-mini": {
+        "asr_mcnemar": {
+          "statistic": 1.0,
+          "p_value": 2.9802322387695312e-08,
+          "b": 1,
+          "c": 30,
+          "n_discordant": 31,
+          "n_pairs": 40,
+          "asr_a": 0.8,
+          "asr_b": 0.075,
+          "risk_difference": -0.7250000000000001
+        }
+      },
+      "openrouter/qwen/qwen-2.5-72b-instruct": {
+        "asr_mcnemar": {
+          "statistic": 1.0,
+          "p_value": 5.774199962615967e-08,
+          "b": 1,
+          "c": 29,
+          "n_discordant": 30,
+          "n_pairs": 40,
+          "asr_a": 0.725,
+          "asr_b": 0.025,
+          "risk_difference": -0.7
+        }
+      }
+    }
+  },
+  "adaptive_multi_turn_vs_scripted_multi_turn": {
+    "pooled": {
+      "asr_mcnemar": {
+        "statistic": 47.0,
+        "p_value": 0.0009131976345915825,
+        "b": 47,
+        "c": 86,
+        "n_discordant": 133,
+        "n_pairs": 320,
+        "asr_a": 0.634375,
+        "asr_b": 0.5125,
+        "risk_difference": -0.12187500000000007,
+        "p_value_bonferroni": 0.009131976345915825,
+        "n_comparisons_bonferroni": 10
+      },
+      "cost_wilcoxon": {
+        "statistic": 3428.0,
+        "p_value": 3.801564251364206e-41,
+        "n_pairs": 320,
+        "mean_a": 0.0237513485625,
+        "mean_b": 0.010371265031250002,
+        "mean_diff": -0.013380083531250003,
+        "p_value_bonferroni": 3.801564251364206e-40,
+        "n_comparisons_bonferroni": 10
+      },
+      "latency_wilcoxon": {
+        "statistic": 23.0,
+        "p_value": 4.044914665807984e-54,
+        "n_pairs": 320,
+        "mean_a": 540015.2347259123,
+        "mean_b": 153356.8894952902,
+        "mean_diff": -386658.34523062204,
+        "p_value_bonferroni": 4.044914665807984e-53,
+        "n_comparisons_bonferroni": 10
+      }
+    },
+    "per_model": {
+      "openrouter/anthropic/claude-sonnet-4": {
+        "asr_mcnemar": {
+          "statistic": 11.0,
+          "p_value": 0.332305908203125,
+          "b": 11,
+          "c": 6,
+          "n_discordant": 17,
+          "n_pairs": 40,
+          "asr_a": 0.2,
+          "asr_b": 0.325,
+          "risk_difference": 0.125
+        }
+      },
+      "openrouter/deepseek/deepseek-chat-v3-0324": {
+        "asr_mcnemar": {
+          "statistic": 6.0,
+          "p_value": 0.79052734375,
+          "b": 6,
+          "c": 8,
+          "n_discordant": 14,
+          "n_pairs": 40,
+          "asr_a": 0.625,
+          "asr_b": 0.575,
+          "risk_difference": -0.050000000000000044
+        }
+      },
+      "openrouter/google/gemini-2.5-flash": {
+        "asr_mcnemar": {
+          "statistic": 6.0,
+          "p_value": 0.237884521484375,
+          "b": 6,
+          "c": 12,
+          "n_discordant": 18,
+          "n_pairs": 40,
+          "asr_a": 0.7,
+          "asr_b": 0.55,
+          "risk_difference": -0.1499999999999999
+        }
+      },
+      "openrouter/meta-llama/llama-3.3-70b-instruct": {
+        "asr_mcnemar": {
+          "statistic": 6.0,
+          "p_value": 0.6072387695312499,
+          "b": 6,
+          "c": 9,
+          "n_discordant": 15,
+          "n_pairs": 40,
+          "asr_a": 0.625,
+          "asr_b": 0.55,
+          "risk_difference": -0.07499999999999996
+        }
+      },
+      "openrouter/mistralai/mistral-large-2411": {
+        "asr_mcnemar": {
+          "statistic": 5.0,
+          "p_value": 0.7744140625,
+          "b": 5,
+          "c": 7,
+          "n_discordant": 12,
+          "n_pairs": 40,
+          "asr_a": 0.725,
+          "asr_b": 0.675,
+          "risk_difference": -0.04999999999999993
+        }
+      },
+      "openrouter/openai/gpt-4o": {
+        "asr_mcnemar": {
+          "statistic": 4.0,
+          "p_value": 0.01181793212890625,
+          "b": 4,
+          "c": 16,
+          "n_discordant": 20,
+          "n_pairs": 40,
+          "asr_a": 0.675,
+          "asr_b": 0.375,
+          "risk_difference": -0.30000000000000004
+        }
+      },
+      "openrouter/openai/gpt-4o-mini": {
+        "asr_mcnemar": {
+          "statistic": 3.0,
+          "p_value": 0.00048828125,
+          "b": 3,
+          "c": 20,
+          "n_discordant": 23,
+          "n_pairs": 40,
+          "asr_a": 0.8,
+          "asr_b": 0.375,
+          "risk_difference": -0.42500000000000004
+        }
+      },
+      "openrouter/qwen/qwen-2.5-72b-instruct": {
+        "asr_mcnemar": {
+          "statistic": 6.0,
+          "p_value": 0.79052734375,
+          "b": 6,
+          "c": 8,
+          "n_discordant": 14,
+          "n_pairs": 40,
+          "asr_a": 0.725,
+          "asr_b": 0.675,
+          "risk_difference": -0.04999999999999993
+        }
+      }
+    }
+  },
+  "adaptive_single_query_st_vs_adaptive_single_turn": {
+    "pooled": {
+      "asr_mcnemar": {
+        "statistic": 77.0,
+        "p_value": 5.91755837353286e-14,
+        "b": 77,
+        "c": 10,
+        "n_discordant": 87,
+        "n_pairs": 320,
+        "asr_a": 0.640625,
+        "asr_b": 0.85,
+        "risk_difference": 0.20937499999999998,
+        "p_value_bonferroni": 5.91755837353286e-13,
+        "n_comparisons_bonferroni": 10
+      },
+      "cost_wilcoxon": {
+        "statistic": 8510.0,
+        "p_value": 3.5331235420745234e-25,
+        "n_pairs": 320,
+        "mean_a": 0.0067836193125,
+        "mean_b": 0.013794080749999998,
+        "mean_diff": 0.0070104614375000015,
+        "p_value_bonferroni": 3.5331235420745234e-24,
+        "n_comparisons_bonferroni": 10
+      },
+      "latency_wilcoxon": {
+        "statistic": 3376.0,
+        "p_value": 2.4864245185627225e-41,
+        "n_pairs": 320,
+        "mean_a": 193011.4387774507,
+        "mean_b": 319198.139290482,
+        "mean_diff": 126186.70051303125,
+        "p_value_bonferroni": 2.4864245185627226e-40,
+        "n_comparisons_bonferroni": 10
+      }
+    },
+    "per_model": {
+      "openrouter/anthropic/claude-sonnet-4": {
+        "asr_mcnemar": {
+          "statistic": 7.0,
+          "p_value": 0.0703125,
+          "b": 7,
+          "c": 1,
+          "n_discordant": 8,
+          "n_pairs": 40,
+          "asr_a": 0.275,
+          "asr_b": 0.425,
+          "risk_difference": 0.14999999999999997
+        }
+      },
+      "openrouter/deepseek/deepseek-chat-v3-0324": {
+        "asr_mcnemar": {
+          "statistic": 4.0,
+          "p_value": 0.6875,
+          "b": 4,
+          "c": 2,
+          "n_discordant": 6,
+          "n_pairs": 40,
+          "asr_a": 0.875,
+          "asr_b": 0.925,
+          "risk_difference": 0.050000000000000044
+        }
+      },
+      "openrouter/google/gemini-2.5-flash": {
+        "asr_mcnemar": {
+          "statistic": 11.0,
+          "p_value": 0.00634765625,
+          "b": 11,
+          "c": 1,
+          "n_discordant": 12,
+          "n_pairs": 40,
+          "asr_a": 0.675,
+          "asr_b": 0.925,
+          "risk_difference": 0.25
+        }
+      },
+      "openrouter/meta-llama/llama-3.3-70b-instruct": {
+        "asr_mcnemar": {
+          "statistic": 10.0,
+          "p_value": 0.09228515625,
+          "b": 10,
+          "c": 3,
+          "n_discordant": 13,
+          "n_pairs": 40,
+          "asr_a": 0.725,
+          "asr_b": 0.9,
+          "risk_difference": 0.17500000000000004
+        }
+      },
+      "openrouter/mistralai/mistral-large-2411": {
+        "asr_mcnemar": {
+          "statistic": 2.0,
+          "p_value": 0.5,
+          "b": 2,
+          "c": 0,
+          "n_discordant": 2,
+          "n_pairs": 40,
+          "asr_a": 0.9,
+          "asr_b": 0.95,
+          "risk_difference": 0.04999999999999993
+        }
+      },
+      "openrouter/openai/gpt-4o": {
+        "asr_mcnemar": {
+          "statistic": 15.0,
+          "p_value": 0.002349853515625,
+          "b": 15,
+          "c": 2,
+          "n_discordant": 17,
+          "n_pairs": 40,
+          "asr_a": 0.575,
+          "asr_b": 0.9,
+          "risk_difference": 0.32500000000000007
+        }
+      },
+      "openrouter/openai/gpt-4o-mini": {
+        "asr_mcnemar": {
+          "statistic": 16.0,
+          "p_value": 3.0517578125e-05,
+          "b": 16,
+          "c": 0,
+          "n_discordant": 16,
+          "n_pairs": 40,
+          "asr_a": 0.475,
+          "asr_b": 0.875,
+          "risk_difference": 0.4
+        }
+      },
+      "openrouter/qwen/qwen-2.5-72b-instruct": {
+        "asr_mcnemar": {
+          "statistic": 12.0,
+          "p_value": 0.00341796875,
+          "b": 12,
+          "c": 1,
+          "n_discordant": 13,
+          "n_pairs": 40,
+          "asr_a": 0.625,
+          "asr_b": 0.9,
+          "risk_difference": 0.275
+        }
+      }
+    }
+  },
+  "adaptive_single_query_st_vs_direct_single_turn": {
+    "pooled": {
+      "asr_mcnemar": {
+        "statistic": 7.0,
+        "p_value": 3.687894036179825e-39,
+        "b": 7,
+        "c": 161,
+        "n_discordant": 168,
+        "n_pairs": 320,
+        "asr_a": 0.640625,
+        "asr_b": 0.159375,
+        "risk_difference": -0.48125,
+        "p_value_bonferroni": 3.687894036179825e-38,
+        "n_comparisons_bonferroni": 10
+      },
+      "cost_wilcoxon": {
+        "statistic": 1641.0,
+        "p_value": 9.983416127579222e-48,
+        "n_pairs": 320,
+        "mean_a": 0.0067836193125,
+        "mean_b": 0.0017199015625000002,
+        "mean_diff": -0.00506371775,
+        "p_value_bonferroni": 9.983416127579221e-47,
+        "n_comparisons_bonferroni": 10
+      },
+      "latency_wilcoxon": {
+        "statistic": 65.0,
+        "p_value": 5.998728335578313e-54,
+        "n_pairs": 320,
+        "mean_a": 193011.4387774507,
+        "mean_b": 21787.50949610221,
+        "mean_diff": -171223.9292813485,
+        "p_value_bonferroni": 5.998728335578313e-53,
+        "n_comparisons_bonferroni": 10
+      }
+    },
+    "per_model": {
+      "openrouter/anthropic/claude-sonnet-4": {
+        "asr_mcnemar": {
+          "statistic": 2.0,
+          "p_value": 0.109375,
+          "b": 2,
+          "c": 8,
+          "n_discordant": 10,
+          "n_pairs": 40,
+          "asr_a": 0.275,
+          "asr_b": 0.125,
+          "risk_difference": -0.15000000000000002
+        }
+      },
+      "openrouter/deepseek/deepseek-chat-v3-0324": {
+        "asr_mcnemar": {
+          "statistic": 0.0,
+          "p_value": 1.4901161193847656e-08,
+          "b": 0,
+          "c": 27,
+          "n_discordant": 27,
+          "n_pairs": 40,
+          "asr_a": 0.875,
+          "asr_b": 0.2,
+          "risk_difference": -0.675
+        }
+      },
+      "openrouter/google/gemini-2.5-flash": {
+        "asr_mcnemar": {
+          "statistic": 2.0,
+          "p_value": 6.604194641113281e-05,
+          "b": 2,
+          "c": 21,
+          "n_discordant": 23,
+          "n_pairs": 40,
+          "asr_a": 0.675,
+          "asr_b": 0.2,
+          "risk_difference": -0.47500000000000003
+        }
+      },
+      "openrouter/meta-llama/llama-3.3-70b-instruct": {
+        "asr_mcnemar": {
+          "statistic": 1.0,
+          "p_value": 8.046627044677734e-07,
+          "b": 1,
+          "c": 25,
+          "n_discordant": 26,
+          "n_pairs": 40,
+          "asr_a": 0.725,
+          "asr_b": 0.125,
+          "risk_difference": -0.6
+        }
+      },
+      "openrouter/mistralai/mistral-large-2411": {
+        "asr_mcnemar": {
+          "statistic": 1.0,
+          "p_value": 7.62939453125e-05,
+          "b": 1,
+          "c": 18,
+          "n_discordant": 19,
+          "n_pairs": 40,
+          "asr_a": 0.9,
+          "asr_b": 0.475,
+          "risk_difference": -0.42500000000000004
+        }
+      },
+      "openrouter/openai/gpt-4o": {
+        "asr_mcnemar": {
+          "statistic": 0.0,
+          "p_value": 9.5367431640625e-07,
+          "b": 0,
+          "c": 21,
+          "n_discordant": 21,
+          "n_pairs": 40,
+          "asr_a": 0.575,
+          "asr_b": 0.05,
+          "risk_difference": -0.5249999999999999
+        }
+      },
+      "openrouter/openai/gpt-4o-mini": {
+        "asr_mcnemar": {
+          "statistic": 0.0,
+          "p_value": 3.0517578125e-05,
+          "b": 0,
+          "c": 16,
+          "n_discordant": 16,
+          "n_pairs": 40,
+          "asr_a": 0.475,
+          "asr_b": 0.075,
+          "risk_difference": -0.39999999999999997
+        }
+      },
+      "openrouter/qwen/qwen-2.5-72b-instruct": {
+        "asr_mcnemar": {
+          "statistic": 1.0,
+          "p_value": 8.046627044677734e-07,
+          "b": 1,
+          "c": 25,
+          "n_discordant": 26,
+          "n_pairs": 40,
+          "asr_a": 0.625,
+          "asr_b": 0.025,
+          "risk_difference": -0.6
+        }
+      }
+    }
+  },
+  "adaptive_single_query_st_vs_scripted_multi_turn": {
+    "pooled": {
+      "asr_mcnemar": {
+        "statistic": 42.0,
+        "p_value": 0.0003098218683780186,
+        "b": 42,
+        "c": 83,
+        "n_discordant": 125,
+        "n_pairs": 320,
+        "asr_a": 0.640625,
+        "asr_b": 0.5125,
+        "risk_difference": -0.12812500000000004,
+        "p_value_bonferroni": 0.003098218683780186,
+        "n_comparisons_bonferroni": 10
+      },
+      "cost_wilcoxon": {
+        "statistic": 25574.0,
+        "p_value": 0.9489731611636104,
+        "n_pairs": 320,
+        "mean_a": 0.0067836193125,
+        "mean_b": 0.010371265031250002,
+        "mean_diff": 0.00358764571875,
+        "p_value_bonferroni": 1.0,
+        "n_comparisons_bonferroni": 10
+      },
+      "latency_wilcoxon": {
+        "statistic": 11764.0,
+        "p_value": 4.403255926298173e-17,
+        "n_pairs": 320,
+        "mean_a": 193011.4387774507,
+        "mean_b": 153356.8894952902,
+        "mean_diff": -39654.54928216049,
+        "p_value_bonferroni": 4.403255926298173e-16,
+        "n_comparisons_bonferroni": 10
+      }
+    },
+    "per_model": {
+      "openrouter/anthropic/claude-sonnet-4": {
+        "asr_mcnemar": {
+          "statistic": 8.0,
+          "p_value": 0.79052734375,
+          "b": 8,
+          "c": 6,
+          "n_discordant": 14,
+          "n_pairs": 40,
+          "asr_a": 0.275,
+          "asr_b": 0.325,
+          "risk_difference": 0.04999999999999999
+        }
+      },
+      "openrouter/deepseek/deepseek-chat-v3-0324": {
+        "asr_mcnemar": {
+          "statistic": 3.0,
+          "p_value": 0.007537841796875,
+          "b": 3,
+          "c": 15,
+          "n_discordant": 18,
+          "n_pairs": 40,
+          "asr_a": 0.875,
+          "asr_b": 0.575,
+          "risk_difference": -0.30000000000000004
+        }
+      },
+      "openrouter/google/gemini-2.5-flash": {
+        "asr_mcnemar": {
+          "statistic": 7.0,
+          "p_value": 0.359283447265625,
+          "b": 7,
+          "c": 12,
+          "n_discordant": 19,
+          "n_pairs": 40,
+          "asr_a": 0.675,
+          "asr_b": 0.55,
+          "risk_difference": -0.125
+        }
+      },
+      "openrouter/meta-llama/llama-3.3-70b-instruct": {
+        "asr_mcnemar": {
+          "statistic": 6.0,
+          "p_value": 0.1670684814453125,
+          "b": 6,
+          "c": 13,
+          "n_discordant": 19,
+          "n_pairs": 40,
+          "asr_a": 0.725,
+          "asr_b": 0.55,
+          "risk_difference": -0.17499999999999993
+        }
+      },
+      "openrouter/mistralai/mistral-large-2411": {
+        "asr_mcnemar": {
+          "statistic": 0.0,
+          "p_value": 0.00390625,
+          "b": 0,
+          "c": 9,
+          "n_discordant": 9,
+          "n_pairs": 40,
+          "asr_a": 0.9,
+          "asr_b": 0.675,
+          "risk_difference": -0.22499999999999998
+        }
+      },
+      "openrouter/openai/gpt-4o": {
+        "asr_mcnemar": {
+          "statistic": 5.0,
+          "p_value": 0.09625244140625,
+          "b": 5,
+          "c": 13,
+          "n_discordant": 18,
+          "n_pairs": 40,
+          "asr_a": 0.575,
+          "asr_b": 0.375,
+          "risk_difference": -0.19999999999999996
+        }
+      },
+      "openrouter/openai/gpt-4o-mini": {
+        "asr_mcnemar": {
+          "statistic": 5.0,
+          "p_value": 0.4239501953125,
+          "b": 5,
+          "c": 9,
+          "n_discordant": 14,
+          "n_pairs": 40,
+          "asr_a": 0.475,
+          "asr_b": 0.375,
+          "risk_difference": -0.09999999999999998
+        }
+      },
+      "openrouter/qwen/qwen-2.5-72b-instruct": {
+        "asr_mcnemar": {
+          "statistic": 8.0,
+          "p_value": 0.79052734375,
+          "b": 8,
+          "c": 6,
+          "n_discordant": 14,
+          "n_pairs": 40,
+          "asr_a": 0.625,
+          "asr_b": 0.675,
+          "risk_difference": 0.050000000000000044
+        }
+      }
+    }
+  },
+  "adaptive_single_turn_vs_direct_single_turn": {
+    "pooled": {
+      "asr_mcnemar": {
+        "statistic": 2.0,
+        "p_value": 9.431027558737838e-64,
+        "b": 2,
+        "c": 223,
+        "n_discordant": 225,
+        "n_pairs": 320,
+        "asr_a": 0.85,
+        "asr_b": 0.159375,
+        "risk_difference": -0.690625,
+        "p_value_bonferroni": 9.431027558737838e-63,
+        "n_comparisons_bonferroni": 10
+      },
+      "cost_wilcoxon": {
+        "statistic": 742.0,
+        "p_value": 3.1511117489026723e-51,
+        "n_pairs": 320,
+        "mean_a": 0.013794080749999998,
+        "mean_b": 0.0017199015625000002,
+        "mean_diff": -0.0120741791875,
+        "p_value_bonferroni": 3.151111748902672e-50,
+        "n_comparisons_bonferroni": 10
+      },
+      "latency_wilcoxon": {
+        "statistic": 0.0,
+        "p_value": 3.258866789206682e-54,
+        "n_pairs": 320,
+        "mean_a": 319198.139290482,
+        "mean_b": 21787.50949610221,
+        "mean_diff": -297410.6297943798,
+        "p_value_bonferroni": 3.2588667892066823e-53,
+        "n_comparisons_bonferroni": 10
+      }
+    },
+    "per_model": {
+      "openrouter/anthropic/claude-sonnet-4": {
+        "asr_mcnemar": {
+          "statistic": 2.0,
+          "p_value": 0.004180908203125,
+          "b": 2,
+          "c": 14,
+          "n_discordant": 16,
+          "n_pairs": 40,
+          "asr_a": 0.425,
+          "asr_b": 0.125,
+          "risk_difference": -0.3
+        }
+      },
+      "openrouter/deepseek/deepseek-chat-v3-0324": {
+        "asr_mcnemar": {
+          "statistic": 0.0,
+          "p_value": 3.725290298461914e-09,
+          "b": 0,
+          "c": 29,
+          "n_discordant": 29,
+          "n_pairs": 40,
+          "asr_a": 0.925,
+          "asr_b": 0.2,
+          "risk_difference": -0.7250000000000001
+        }
+      },
+      "openrouter/google/gemini-2.5-flash": {
+        "asr_mcnemar": {
+          "statistic": 0.0,
+          "p_value": 3.725290298461914e-09,
+          "b": 0,
+          "c": 29,
+          "n_discordant": 29,
+          "n_pairs": 40,
+          "asr_a": 0.925,
+          "asr_b": 0.2,
+          "risk_difference": -0.7250000000000001
+        }
+      },
+      "openrouter/meta-llama/llama-3.3-70b-instruct": {
+        "asr_mcnemar": {
+          "statistic": 0.0,
+          "p_value": 9.313225746154785e-10,
+          "b": 0,
+          "c": 31,
+          "n_discordant": 31,
+          "n_pairs": 40,
+          "asr_a": 0.9,
+          "asr_b": 0.125,
+          "risk_difference": -0.775
+        }
+      },
+      "openrouter/mistralai/mistral-large-2411": {
+        "asr_mcnemar": {
+          "statistic": 0.0,
+          "p_value": 3.814697265625e-06,
+          "b": 0,
+          "c": 19,
+          "n_discordant": 19,
+          "n_pairs": 40,
+          "asr_a": 0.95,
+          "asr_b": 0.475,
+          "risk_difference": -0.475
+        }
+      },
+      "openrouter/openai/gpt-4o": {
+        "asr_mcnemar": {
+          "statistic": 0.0,
+          "p_value": 1.1641532182693481e-10,
+          "b": 0,
+          "c": 34,
+          "n_discordant": 34,
+          "n_pairs": 40,
+          "asr_a": 0.9,
+          "asr_b": 0.05,
+          "risk_difference": -0.85
+        }
+      },
+      "openrouter/openai/gpt-4o-mini": {
+        "asr_mcnemar": {
+          "statistic": 0.0,
+          "p_value": 4.656612873077393e-10,
+          "b": 0,
+          "c": 32,
+          "n_discordant": 32,
+          "n_pairs": 40,
+          "asr_a": 0.875,
+          "asr_b": 0.075,
+          "risk_difference": -0.8
+        }
+      },
+      "openrouter/qwen/qwen-2.5-72b-instruct": {
+        "asr_mcnemar": {
+          "statistic": 0.0,
+          "p_value": 5.820766091346741e-11,
+          "b": 0,
+          "c": 35,
+          "n_discordant": 35,
+          "n_pairs": 40,
+          "asr_a": 0.9,
+          "asr_b": 0.025,
+          "risk_difference": -0.875
+        }
+      }
+    }
+  },
+  "adaptive_single_turn_vs_scripted_multi_turn": {
+    "pooled": {
+      "asr_mcnemar": {
+        "statistic": 11.0,
+        "p_value": 4.6966135406816054e-24,
+        "b": 11,
+        "c": 119,
+        "n_discordant": 130,
+        "n_pairs": 320,
+        "asr_a": 0.85,
+        "asr_b": 0.5125,
+        "risk_difference": -0.3375,
+        "p_value_bonferroni": 4.6966135406816054e-23,
+        "n_comparisons_bonferroni": 10
+      },
+      "cost_wilcoxon": {
+        "statistic": 13261.0,
+        "p_value": 6.488178874531253e-14,
+        "n_pairs": 320,
+        "mean_a": 0.013794080749999998,
+        "mean_b": 0.010371265031250002,
+        "mean_diff": -0.0034228157187500005,
+        "p_value_bonferroni": 6.488178874531253e-13,
+        "n_comparisons_bonferroni": 10
+      },
+      "latency_wilcoxon": {
+        "statistic": 3599.0,
+        "p_value": 1.5251413091250821e-40,
+        "n_pairs": 320,
+        "mean_a": 319198.139290482,
+        "mean_b": 153356.8894952902,
+        "mean_diff": -165841.24979519175,
+        "p_value_bonferroni": 1.525141309125082e-39,
+        "n_comparisons_bonferroni": 10
+      }
+    },
+    "per_model": {
+      "openrouter/anthropic/claude-sonnet-4": {
+        "asr_mcnemar": {
+          "statistic": 5.0,
+          "p_value": 0.4239501953125,
+          "b": 5,
+          "c": 9,
+          "n_discordant": 14,
+          "n_pairs": 40,
+          "asr_a": 0.425,
+          "asr_b": 0.325,
+          "risk_difference": -0.09999999999999998
+        }
+      },
+      "openrouter/deepseek/deepseek-chat-v3-0324": {
+        "asr_mcnemar": {
+          "statistic": 2.0,
+          "p_value": 0.001312255859375,
+          "b": 2,
+          "c": 16,
+          "n_discordant": 18,
+          "n_pairs": 40,
+          "asr_a": 0.925,
+          "asr_b": 0.575,
+          "risk_difference": -0.3500000000000001
+        }
+      },
+      "openrouter/google/gemini-2.5-flash": {
+        "asr_mcnemar": {
+          "statistic": 1.0,
+          "p_value": 0.000274658203125,
+          "b": 1,
+          "c": 16,
+          "n_discordant": 17,
+          "n_pairs": 40,
+          "asr_a": 0.925,
+          "asr_b": 0.55,
+          "risk_difference": -0.375
+        }
+      },
+      "openrouter/meta-llama/llama-3.3-70b-instruct": {
+        "asr_mcnemar": {
+          "statistic": 1.0,
+          "p_value": 0.000518798828125,
+          "b": 1,
+          "c": 15,
+          "n_discordant": 16,
+          "n_pairs": 40,
+          "asr_a": 0.9,
+          "asr_b": 0.55,
+          "risk_difference": -0.35
+        }
+      },
+      "openrouter/mistralai/mistral-large-2411": {
+        "asr_mcnemar": {
+          "statistic": 0.0,
+          "p_value": 0.0009765625,
+          "b": 0,
+          "c": 11,
+          "n_discordant": 11,
+          "n_pairs": 40,
+          "asr_a": 0.95,
+          "asr_b": 0.675,
+          "risk_difference": -0.2749999999999999
+        }
+      },
+      "openrouter/openai/gpt-4o": {
+        "asr_mcnemar": {
+          "statistic": 0.0,
+          "p_value": 9.5367431640625e-07,
+          "b": 0,
+          "c": 21,
+          "n_discordant": 21,
+          "n_pairs": 40,
+          "asr_a": 0.9,
+          "asr_b": 0.375,
+          "risk_difference": -0.525
+        }
+      },
+      "openrouter/openai/gpt-4o-mini": {
+        "asr_mcnemar": {
+          "statistic": 0.0,
+          "p_value": 1.9073486328125e-06,
+          "b": 0,
+          "c": 20,
+          "n_discordant": 20,
+          "n_pairs": 40,
+          "asr_a": 0.875,
+          "asr_b": 0.375,
+          "risk_difference": -0.5
+        }
+      },
+      "openrouter/qwen/qwen-2.5-72b-instruct": {
+        "asr_mcnemar": {
+          "statistic": 2.0,
+          "p_value": 0.0224609375,
+          "b": 2,
+          "c": 11,
+          "n_discordant": 13,
+          "n_pairs": 40,
+          "asr_a": 0.9,
+          "asr_b": 0.675,
+          "risk_difference": -0.22499999999999998
+        }
+      }
+    }
+  },
+  "direct_single_turn_vs_scripted_multi_turn": {
+    "pooled": {
+      "asr_mcnemar": {
+        "statistic": 122.0,
+        "p_value": 1.872620303580562e-26,
+        "b": 122,
+        "c": 9,
+        "n_discordant": 131,
+        "n_pairs": 320,
+        "asr_a": 0.159375,
+        "asr_b": 0.5125,
+        "risk_difference": 0.35312499999999997,
+        "p_value_bonferroni": 1.872620303580562e-25,
+        "n_comparisons_bonferroni": 10
+      },
+      "cost_wilcoxon": {
+        "statistic": 10803.0,
+        "p_value": 2.6631695374080677e-19,
+        "n_pairs": 320,
+        "mean_a": 0.0017199015625000002,
+        "mean_b": 0.010371265031250002,
+        "mean_diff": 0.008651363468750001,
+        "p_value_bonferroni": 2.6631695374080677e-18,
+        "n_comparisons_bonferroni": 10
+      },
+      "latency_wilcoxon": {
+        "statistic": 284.0,
+        "p_value": 4.634231249684059e-53,
+        "n_pairs": 320,
+        "mean_a": 21787.50949610221,
+        "mean_b": 153356.8894952902,
+        "mean_diff": 131569.379999188,
+        "p_value_bonferroni": 4.634231249684059e-52,
+        "n_comparisons_bonferroni": 10
+      }
+    },
+    "per_model": {
+      "openrouter/anthropic/claude-sonnet-4": {
+        "asr_mcnemar": {
+          "statistic": 11.0,
+          "p_value": 0.057373046875,
+          "b": 11,
+          "c": 3,
+          "n_discordant": 14,
+          "n_pairs": 40,
+          "asr_a": 0.125,
+          "asr_b": 0.325,
+          "risk_difference": 0.2
+        }
+      },
+      "openrouter/deepseek/deepseek-chat-v3-0324": {
+        "asr_mcnemar": {
+          "statistic": 17.0,
+          "p_value": 0.000728607177734375,
+          "b": 17,
+          "c": 2,
+          "n_discordant": 19,
+          "n_pairs": 40,
+          "asr_a": 0.2,
+          "asr_b": 0.575,
+          "risk_difference": 0.37499999999999994
+        }
+      },
+      "openrouter/google/gemini-2.5-flash": {
+        "asr_mcnemar": {
+          "statistic": 15.0,
+          "p_value": 0.000518798828125,
+          "b": 15,
+          "c": 1,
+          "n_discordant": 16,
+          "n_pairs": 40,
+          "asr_a": 0.2,
+          "asr_b": 0.55,
+          "risk_difference": 0.35000000000000003
+        }
+      },
+      "openrouter/meta-llama/llama-3.3-70b-instruct": {
+        "asr_mcnemar": {
+          "statistic": 17.0,
+          "p_value": 1.52587890625e-05,
+          "b": 17,
+          "c": 0,
+          "n_discordant": 17,
+          "n_pairs": 40,
+          "asr_a": 0.125,
+          "asr_b": 0.55,
+          "risk_difference": 0.42500000000000004
+        }
+      },
+      "openrouter/mistralai/mistral-large-2411": {
+        "asr_mcnemar": {
+          "statistic": 10.0,
+          "p_value": 0.03857421875,
+          "b": 10,
+          "c": 2,
+          "n_discordant": 12,
+          "n_pairs": 40,
+          "asr_a": 0.475,
+          "asr_b": 0.675,
+          "risk_difference": 0.20000000000000007
+        }
+      },
+      "openrouter/openai/gpt-4o": {
+        "asr_mcnemar": {
+          "statistic": 13.0,
+          "p_value": 0.000244140625,
+          "b": 13,
+          "c": 0,
+          "n_discordant": 13,
+          "n_pairs": 40,
+          "asr_a": 0.05,
+          "asr_b": 0.375,
+          "risk_difference": 0.325
+        }
+      },
+      "openrouter/openai/gpt-4o-mini": {
+        "asr_mcnemar": {
+          "statistic": 13.0,
+          "p_value": 0.0018310546875,
+          "b": 13,
+          "c": 1,
+          "n_discordant": 14,
+          "n_pairs": 40,
+          "asr_a": 0.075,
+          "asr_b": 0.375,
+          "risk_difference": 0.3
+        }
+      },
+      "openrouter/qwen/qwen-2.5-72b-instruct": {
+        "asr_mcnemar": {
+          "statistic": 26.0,
+          "p_value": 2.9802322387695312e-08,
+          "b": 26,
+          "c": 0,
+          "n_discordant": 26,
+          "n_pairs": 40,
+          "asr_a": 0.025,
+          "asr_b": 0.675,
+          "risk_difference": 0.65
+        }
+      }
+    }
+  }
+}

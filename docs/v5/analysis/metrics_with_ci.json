@@ -1,0 +1,3960 @@
+{
+  "experiment_dir": "docs/experiment/20260505_003630",
+  "n_findings": 1600,
+  "models": [
+    "openrouter/anthropic/claude-sonnet-4",
+    "openrouter/deepseek/deepseek-chat-v3-0324",
+    "openrouter/google/gemini-2.5-flash",
+    "openrouter/meta-llama/llama-3.3-70b-instruct",
+    "openrouter/mistralai/mistral-large-2411",
+    "openrouter/openai/gpt-4o",
+    "openrouter/openai/gpt-4o-mini",
+    "openrouter/qwen/qwen-2.5-72b-instruct"
+  ],
+  "conditions": [
+    "adaptive_multi_turn",
+    "adaptive_single_query_st",
+    "adaptive_single_turn",
+    "direct_single_turn",
+    "scripted_multi_turn"
+  ],
+  "condition_metrics": {
+    "adaptive_multi_turn": {
+      "asr": {
+        "n": 320,
+        "successes": 203,
+        "asr": 0.634375,
+        "ci_lower": 0.5803024943208922,
+        "ci_upper": 0.6852594347209603
+      },
+      "cost_usd": {
+        "point": 0.0237513485625,
+        "ci_lower": 0.0213208085,
+        "ci_upper": 0.026546477974999996,
+        "statistic": "mean"
+      },
+      "total_tokens": {
+        "point": 21329.70625,
+        "ci_lower": 19399.16703125,
+        "ci_upper": 23413.923359375,
+        "statistic": "mean"
+      },
+      "latency_ms": {
+        "point": 518430.4211665003,
+        "ci_lower": 458078.3073960047,
+        "ci_upper": 568590.7573749864,
+        "statistic": "median"
+      },
+      "target_calls": {
+        "point": 2.890625,
+        "ci_lower": 2.775,
+        "ci_upper": 3.009453124999999,
+        "statistic": "mean"
+      },
+      "attacker_calls": {
+        "point": 5.940625,
+        "ci_lower": 5.684375,
+        "ci_upper": 6.2,
+        "statistic": "mean"
+      }
+    },
+    "adaptive_single_query_st": {
+      "asr": {
+        "n": 320,
+        "successes": 205,
+        "asr": 0.640625,
+        "ci_lower": 0.5866706600331686,
+        "ci_upper": 0.6912429866385377
+      },
+      "cost_usd": {
+        "point": 0.0067836193125,
+        "ci_lower": 0.00565780693828125,
+        "ci_upper": 0.008332033444531251,
+        "statistic": "mean"
+      },
+      "total_tokens": {
+        "point": 4067.790625,
+        "ci_lower": 3545.715703125,
+        "ci_upper": 4938.719140624999,
+        "statistic": "mean"
+      },
+      "latency_ms": {
+        "point": 181475.850166491,
+        "ci_lower": 167091.4904999663,
+        "ci_upper": 198165.05970899016,
+        "statistic": "median"
+      },
+      "target_calls": {
+        "point": 1.0,
+        "ci_lower": 0.990625,
+        "ci_upper": 1.009375,
+        "statistic": "mean"
+      },
+      "attacker_calls": {
+        "point": 1.996875,
+        "ci_lower": 1.990625,
+        "ci_upper": 2.0,
+        "statistic": "mean"
+      }
+    },
+    "adaptive_single_turn": {
+      "asr": {
+        "n": 320,
+        "successes": 272,
+        "asr": 0.85,
+        "ci_lower": 0.8067364776893634,
+        "ci_upper": 0.8849597095824385
+      },
+      "cost_usd": {
+        "point": 0.013794080750000002,
+        "ci_lower": 0.011519726208593751,
+        "ci_upper": 0.016498035452343747,
+        "statistic": "mean"
+      },
+      "total_tokens": {
+        "point": 8081.55625,
+        "ci_lower": 6738.6997656250005,
+        "ci_upper": 9842.184296875,
+        "statistic": "mean"
+      },
+      "latency_ms": {
+        "point": 284748.2226669963,
+        "ci_lower": 268534.94816599414,
+        "ci_upper": 313970.87506249954,
+        "statistic": "median"
+      },
+      "target_calls": {
+        "point": 1.6375,
+        "ci_lower": 1.5125,
+        "ci_upper": 1.76875,
+        "statistic": "mean"
+      },
+      "attacker_calls": {
+        "point": 3.284375,
+        "ci_lower": 3.03125,
+        "ci_upper": 3.54375,
+        "statistic": "mean"
+      }
+    },
+    "direct_single_turn": {
+      "asr": {
+        "n": 320,
+        "successes": 51,
+        "asr": 0.159375,
+        "ci_lower": 0.12334559323715076,
+        "ci_upper": 0.20348579593582755
+      },
+      "cost_usd": {
+        "point": 0.0017199015625000002,
+        "ci_lower": 0.0009053384476562501,
+        "ci_upper": 0.002996430459374999,
+        "statistic": "mean"
+      },
+      "total_tokens": {
+        "point": 466.00625,
+        "ci_lower": 227.91554687500002,
+        "ci_upper": 903.6273437499999,
+        "statistic": "mean"
+      },
+      "latency_ms": {
+        "point": 17010.794999543577,
+        "ci_lower": 16509.388020960614,
+        "ci_upper": 17641.26149995718,
+        "statistic": "median"
+      },
+      "target_calls": {
+        "point": 0.996875,
+        "ci_lower": 0.990625,
+        "ci_upper": 1.0,
+        "statistic": "mean"
+      },
+      "attacker_calls": {
+        "point": 0.0,
+        "ci_lower": 0.0,
+        "ci_upper": 0.0,
+        "statistic": "mean"
+      }
+    },
+    "scripted_multi_turn": {
+      "asr": {
+        "n": 320,
+        "successes": 164,
+        "asr": 0.5125,
+        "ci_lower": 0.45791077842999844,
+        "ci_upper": 0.5667926568297086
+      },
+      "cost_usd": {
+        "point": 0.010371265031250002,
+        "ci_lower": 0.007906772920312501,
+        "ci_upper": 0.013362897436718748,
+        "statistic": "mean"
+      },
+      "total_tokens": {
+        "point": 7257.740625,
+        "ci_lower": 6354.7275,
+        "ci_upper": 8401.783828124999,
+        "statistic": "mean"
+      },
+      "latency_ms": {
+        "point": 117195.84820848831,
+        "ci_lower": 106122.52454151167,
+        "ci_upper": 129778.86383302393,
+        "statistic": "median"
+      },
+      "target_calls": {
+        "point": 3.496875,
+        "ci_lower": 3.4217968750000005,
+        "ci_upper": 3.575,
+        "statistic": "mean"
+      },
+      "attacker_calls": {
+        "point": 0.0,
+        "ci_lower": 0.0,
+        "ci_upper": 0.0,
+        "statistic": "mean"
+      }
+    }
+  },
+  "cell_metrics": {
+    "openrouter/anthropic/claude-sonnet-4": {
+      "adaptive_multi_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 8,
+          "asr": 0.2,
+          "ci_lower": 0.10499864973166873,
+          "ci_upper": 0.34757607381856676
+        },
+        "cost_usd": {
+          "point": 0.051207132499999995,
+          "ci_lower": 0.038967136218750004,
+          "ci_upper": 0.06746698984374999,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 21999.85,
+          "ci_lower": 17025.4575,
+          "ci_upper": 28203.13375,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 790359.8155829968,
+          "ci_lower": 547811.5610205132,
+          "ci_upper": 868467.9656250082,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 3.375,
+          "ci_lower": 2.975,
+          "ci_upper": 3.775,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 7.2,
+          "ci_lower": 6.3,
+          "ci_upper": 8.075,
+          "statistic": "mean"
+        }
+      },
+      "adaptive_single_query_st": {
+        "asr": {
+          "n": 40,
+          "successes": 11,
+          "asr": 0.275,
+          "ci_lower": 0.1610785343314309,
+          "ci_upper": 0.4283525083312457
+        },
+        "cost_usd": {
+          "point": 0.0140540575,
+          "ci_lower": 0.01006702246875,
+          "ci_upper": 0.01892716065625,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 3358.45,
+          "ci_lower": 2884.6475000000005,
+          "ci_upper": 3926.5537499999996,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 166107.4379585043,
+          "ci_lower": 129499.7287710139,
+          "ci_upper": 193272.02812500764,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 1.0,
+          "ci_lower": 1.0,
+          "ci_upper": 1.0,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 2.0,
+          "ci_lower": 2.0,
+          "ci_upper": 2.0,
+          "statistic": "mean"
+        }
+      },
+      "adaptive_single_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 17,
+          "asr": 0.425,
+          "ci_lower": 0.28509168524815875,
+          "ci_upper": 0.5780519956394001
+        },
+        "cost_usd": {
+          "point": 0.0414104325,
+          "ci_lower": 0.03488106375,
+          "ci_upper": 0.048315041999999996,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 14347.75,
+          "ci_lower": 11929.396250000002,
+          "ci_upper": 16830.91125,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 658379.2335004982,
+          "ci_lower": 513463.88068750093,
+          "ci_upper": 787596.5663539973,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 3.15,
+          "ci_lower": 2.625,
+          "ci_upper": 3.7,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 6.3,
+          "ci_lower": 5.25,
+          "ci_upper": 7.4,
+          "statistic": "mean"
+        }
+      },
+      "direct_single_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 5,
+          "asr": 0.125,
+          "ci_lower": 0.05459419773541284,
+          "ci_upper": 0.26112420670238146
+        },
+        "cost_usd": {
+          "point": 0.004646325,
+          "ci_lower": 0.0021751275,
+          "ci_upper": 0.008171371875,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 338.675,
+          "ci_lower": 174.37437500000001,
+          "ci_upper": 573.1881249999998,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 16354.973187553696,
+          "ci_lower": 14801.535916514695,
+          "ci_upper": 18988.118541950826,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 1.0,
+          "ci_lower": 1.0,
+          "ci_upper": 1.0,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "statistic": "mean"
+        }
+      },
+      "scripted_multi_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 13,
+          "asr": 0.325,
+          "ci_lower": 0.20084316962661725,
+          "ci_upper": 0.4798254191110201
+        },
+        "cost_usd": {
+          "point": 0.03871335,
+          "ci_lower": 0.0273513975,
+          "ci_upper": 0.055174325625,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 4730.05,
+          "ci_lower": 3499.2575000000006,
+          "ci_upper": 6396.99625,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 118732.97085450031,
+          "ci_lower": 98775.17054151394,
+          "ci_upper": 143601.32937450544,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 3.5,
+          "ci_lower": 3.3,
+          "ci_upper": 3.725,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "statistic": "mean"
+        }
+      }
+    },
+    "openrouter/deepseek/deepseek-chat-v3-0324": {
+      "adaptive_multi_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 25,
+          "asr": 0.625,
+          "ci_lower": 0.47032160054531913,
+          "ci_upper": 0.7577722646420829
+        },
+        "cost_usd": {
+          "point": 0.01470432975,
+          "ci_lower": 0.012447862781250003,
+          "ci_upper": 0.0171320417125,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 18871.425,
+          "ci_lower": 15004.37,
+          "ci_upper": 23063.30125,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 505817.57437500346,
+          "ci_lower": 414338.3706044988,
+          "ci_upper": 631130.2584369987,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 2.725,
+          "ci_lower": 2.425,
+          "ci_upper": 3.05,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 5.5,
+          "ci_lower": 4.85,
+          "ci_upper": 6.175,
+          "statistic": "mean"
+        }
+      },
+      "adaptive_single_query_st": {
+        "asr": {
+          "n": 40,
+          "successes": 35,
+          "asr": 0.875,
+          "ci_lower": 0.7388757932976187,
+          "ci_upper": 0.9454058022645873
+        },
+        "cost_usd": {
+          "point": 0.00414566075,
+          "ci_lower": 0.0037944631437500007,
+          "ci_upper": 0.0045109738875,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 3868.15,
+          "ci_lower": 3572.268125,
+          "ci_upper": 4180.35875,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 256899.13625002373,
+          "ci_lower": 188852.09429150564,
+          "ci_upper": 293945.25916699786,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 1.0,
+          "ci_lower": 1.0,
+          "ci_upper": 1.0,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 2.0,
+          "ci_lower": 2.0,
+          "ci_upper": 2.0,
+          "statistic": "mean"
+        }
+      },
+      "adaptive_single_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 37,
+          "asr": 0.925,
+          "ci_lower": 0.8013546984090248,
+          "ci_upper": 0.9741644432281419
+        },
+        "cost_usd": {
+          "point": 0.006150044750000001,
+          "ci_lower": 0.005159292900000001,
+          "ci_upper": 0.007252225156249999,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 5632.225,
+          "ci_lower": 4719.518749999999,
+          "ci_upper": 6700.64625,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 283158.950750003,
+          "ci_lower": 219336.71524950478,
+          "ci_upper": 347727.4551254959,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 1.275,
+          "ci_lower": 1.1,
+          "ci_upper": 1.475,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 2.55,
+          "ci_lower": 2.2,
+          "ci_upper": 2.95,
+          "statistic": "mean"
+        }
+      },
+      "direct_single_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 8,
+          "asr": 0.2,
+          "ci_lower": 0.10499864973166873,
+          "ci_upper": 0.34757607381856676
+        },
+        "cost_usd": {
+          "point": 7.08925e-05,
+          "ci_lower": 4.7848062500000014e-05,
+          "ci_upper": 9.93167e-05,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 269.95,
+          "ci_lower": 187.848125,
+          "ci_upper": 372.175625,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 26904.4314789935,
+          "ci_lower": 21545.769083488267,
+          "ci_upper": 30730.10202147998,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 1.0,
+          "ci_lower": 1.0,
+          "ci_upper": 1.0,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "statistic": "mean"
+        }
+      },
+      "scripted_multi_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 23,
+          "asr": 0.575,
+          "ci_lower": 0.42194800436059987,
+          "ci_upper": 0.7149083147518411
+        },
+        "cost_usd": {
+          "point": 0.001214724,
+          "ci_lower": 0.0010296328,
+          "ci_upper": 0.0014059819374999999,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 6602.175,
+          "ci_lower": 5543.213125000001,
+          "ci_upper": 7710.954374999999,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 238678.78187500173,
+          "ci_lower": 157364.17854150932,
+          "ci_upper": 277914.9798330036,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 3.5,
+          "ci_lower": 3.3,
+          "ci_upper": 3.725,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "statistic": "mean"
+        }
+      }
+    },
+    "openrouter/google/gemini-2.5-flash": {
+      "adaptive_multi_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 28,
+          "asr": 0.7,
+          "ci_lower": 0.545696893456796,
+          "ci_upper": 0.8192532908430471
+        },
+        "cost_usd": {
+          "point": 0.033417113750000005,
+          "ci_lower": 0.02656393809375,
+          "ci_upper": 0.0415159205,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 35939.275,
+          "ci_lower": 26803.918125,
+          "ci_upper": 45937.846249999995,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 447292.5803754915,
+          "ci_lower": 348415.3021250095,
+          "ci_upper": 569015.8109375043,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 2.775,
+          "ci_lower": 2.45,
+          "ci_upper": 3.125,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 5.6,
+          "ci_lower": 4.925,
+          "ci_upper": 6.325,
+          "statistic": "mean"
+        }
+      },
+      "adaptive_single_query_st": {
+        "asr": {
+          "n": 40,
+          "successes": 27,
+          "asr": 0.675,
+          "ci_lower": 0.52017458088898,
+          "ci_upper": 0.7991568303733828
+        },
+        "cost_usd": {
+          "point": 0.013333600000000001,
+          "ci_lower": 0.00757039515625,
+          "ci_upper": 0.023651432437499998,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 8564.275,
+          "ci_lower": 4827.428750000001,
+          "ci_upper": 15264.844999999998,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 160326.99087500805,
+          "ci_lower": 132967.31768749305,
+          "ci_upper": 232638.96962499712,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 0.975,
+          "ci_lower": 0.925,
+          "ci_upper": 1.0,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 2.0,
+          "ci_lower": 2.0,
+          "ci_upper": 2.0,
+          "statistic": "mean"
+        }
+      },
+      "adaptive_single_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 37,
+          "asr": 0.925,
+          "ci_lower": 0.8013546984090248,
+          "ci_upper": 0.9741644432281419
+        },
+        "cost_usd": {
+          "point": 0.024697834999999998,
+          "ci_lower": 0.012923304562500001,
+          "ci_upper": 0.0413011526875,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 17576.775,
+          "ci_lower": 8658.020625,
+          "ci_upper": 30068.656875,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 272780.8133330109,
+          "ci_lower": 203873.53481250466,
+          "ci_upper": 312108.48260400235,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 1.525,
+          "ci_lower": 1.3,
+          "ci_upper": 1.775,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 3.2,
+          "ci_lower": 2.65,
+          "ci_upper": 3.8,
+          "statistic": "mean"
+        }
+      },
+      "direct_single_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 8,
+          "asr": 0.2,
+          "ci_lower": 0.10499864973166873,
+          "ci_upper": 0.34757607381856676
+        },
+        "cost_usd": {
+          "point": 0.0048797125,
+          "ci_lower": 0.00046143387500000005,
+          "ci_upper": 0.013306237750000002,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 1975.425,
+          "ci_lower": 207.4887500000001,
+          "ci_upper": 5349.65875,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 17846.993000013754,
+          "ci_lower": 16037.666896067094,
+          "ci_upper": 19553.192396007944,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 0.975,
+          "ci_lower": 0.925,
+          "ci_upper": 1.0,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "statistic": "mean"
+        }
+      },
+      "scripted_multi_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 22,
+          "asr": 0.55,
+          "ci_lower": 0.39828829888440775,
+          "ci_upper": 0.6929492471905531
+        },
+        "cost_usd": {
+          "point": 0.02226363,
+          "ci_lower": 0.013390521750000002,
+          "ci_upper": 0.034765712625,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 17096.1,
+          "ci_lower": 11453.593125,
+          "ci_upper": 24812.61625,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 99144.11479199771,
+          "ci_lower": 75278.14679199946,
+          "ci_upper": 122238.63189600524,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 3.475,
+          "ci_lower": 3.25,
+          "ci_upper": 3.7,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "statistic": "mean"
+        }
+      }
+    },
+    "openrouter/meta-llama/llama-3.3-70b-instruct": {
+      "adaptive_multi_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 25,
+          "asr": 0.625,
+          "ci_lower": 0.47032160054531913,
+          "ci_upper": 0.7577722646420829
+        },
+        "cost_usd": {
+          "point": 0.01415706625,
+          "ci_lower": 0.01245499115625,
+          "ci_upper": 0.01594673275,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 17602.0,
+          "ci_lower": 14733.388750000002,
+          "ci_upper": 20666.755,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 520455.7625835005,
+          "ci_lower": 392284.23514599854,
+          "ci_upper": 629090.3370415035,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 2.925,
+          "ci_lower": 2.65,
+          "ci_upper": 3.2,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 6.075,
+          "ci_lower": 5.45,
+          "ci_upper": 6.725,
+          "statistic": "mean"
+        }
+      },
+      "adaptive_single_query_st": {
+        "asr": {
+          "n": 40,
+          "successes": 29,
+          "asr": 0.725,
+          "ci_lower": 0.5716474916687543,
+          "ci_upper": 0.8389214656685692
+        },
+        "cost_usd": {
+          "point": 0.0039134,
+          "ci_lower": 0.0034442110937500004,
+          "ci_upper": 0.0044445685625,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 3347.75,
+          "ci_lower": 3064.4725,
+          "ci_upper": 3627.85,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 190946.2213749939,
+          "ci_lower": 160345.07043697522,
+          "ci_upper": 251043.9026869717,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 1.025,
+          "ci_lower": 1.0,
+          "ci_upper": 1.075,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 1.975,
+          "ci_lower": 1.925,
+          "ci_upper": 2.0,
+          "statistic": "mean"
+        }
+      },
+      "adaptive_single_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 36,
+          "asr": 0.9,
+          "ci_lower": 0.7694792561952611,
+          "ci_upper": 0.9604211124044252
+        },
+        "cost_usd": {
+          "point": 0.005701495,
+          "ci_lower": 0.0044746099062500004,
+          "ci_upper": 0.00730321153125,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 4865.45,
+          "ci_lower": 4017.231875,
+          "ci_upper": 5939.048124999999,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 244827.88600001368,
+          "ci_lower": 195068.86220800516,
+          "ci_upper": 314720.5096040125,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 1.375,
+          "ci_lower": 1.15,
+          "ci_upper": 1.65,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 2.75,
+          "ci_lower": 2.3,
+          "ci_upper": 3.3,
+          "statistic": "mean"
+        }
+      },
+      "direct_single_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 5,
+          "asr": 0.125,
+          "ci_lower": 0.05459419773541284,
+          "ci_upper": 0.26112420670238146
+        },
+        "cost_usd": {
+          "point": 5.293625e-05,
+          "ci_lower": 3.2986950000000004e-05,
+          "ci_upper": 7.809975624999999e-05,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 149.925,
+          "ci_lower": 99.7,
+          "ci_upper": 212.90374999999995,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 15318.827145500109,
+          "ci_lower": 13708.251187985297,
+          "ci_upper": 16900.96743707545,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 1.0,
+          "ci_lower": 1.0,
+          "ci_upper": 1.0,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "statistic": "mean"
+        }
+      },
+      "scripted_multi_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 22,
+          "asr": 0.55,
+          "ci_lower": 0.39828829888440775,
+          "ci_upper": 0.6929492471905531
+        },
+        "cost_usd": {
+          "point": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 5223.375,
+          "ci_lower": 4378.125,
+          "ci_upper": 6105.283125,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 132264.32970850146,
+          "ci_lower": 104010.69345799624,
+          "ci_upper": 160908.8326459896,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 3.5,
+          "ci_lower": 3.3,
+          "ci_upper": 3.725,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "statistic": "mean"
+        }
+      }
+    },
+    "openrouter/mistralai/mistral-large-2411": {
+      "adaptive_multi_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 29,
+          "asr": 0.725,
+          "ci_lower": 0.5716474916687543,
+          "ci_upper": 0.8389214656685692
+        },
+        "cost_usd": {
+          "point": 0.013713095,
+          "ci_lower": 0.011827696687500002,
+          "ci_upper": 0.01565292459375,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 18893.525,
+          "ci_lower": 15169.6825,
+          "ci_upper": 22790.425625,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 534520.9703540022,
+          "ci_lower": 417871.8669380032,
+          "ci_upper": 687876.4627289929,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 2.7,
+          "ci_lower": 2.425,
+          "ci_upper": 2.975,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 5.525,
+          "ci_lower": 4.925,
+          "ci_upper": 6.125,
+          "statistic": "mean"
+        }
+      },
+      "adaptive_single_query_st": {
+        "asr": {
+          "n": 40,
+          "successes": 36,
+          "asr": 0.9,
+          "ci_lower": 0.7694792561952611,
+          "ci_upper": 0.9604211124044252
+        },
+        "cost_usd": {
+          "point": 0.0038497925,
+          "ci_lower": 0.0035290272812500004,
+          "ci_upper": 0.00422632459375,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 3870.25,
+          "ci_lower": 3655.6,
+          "ci_upper": 4088.50125,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 193937.68504197942,
+          "ci_lower": 159151.50037550484,
+          "ci_upper": 263046.82675001095,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 1.0,
+          "ci_lower": 1.0,
+          "ci_upper": 1.0,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 2.0,
+          "ci_lower": 2.0,
+          "ci_upper": 2.0,
+          "statistic": "mean"
+        }
+      },
+      "adaptive_single_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 38,
+          "asr": 0.95,
+          "ci_lower": 0.834958291820748,
+          "ci_upper": 0.9861796228538989
+        },
+        "cost_usd": {
+          "point": 0.004519432500000001,
+          "ci_lower": 0.00405717725,
+          "ci_upper": 0.00504506740625,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 4420.45,
+          "ci_lower": 4082.99375,
+          "ci_upper": 4812.1762499999995,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 260600.59083350643,
+          "ci_lower": 189100.86035350105,
+          "ci_upper": 315706.1350835138,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 1.05,
+          "ci_lower": 1.0,
+          "ci_upper": 1.125,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 2.1,
+          "ci_lower": 2.0,
+          "ci_upper": 2.25,
+          "statistic": "mean"
+        }
+      },
+      "direct_single_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 19,
+          "asr": 0.475,
+          "ci_lower": 0.32935229550181694,
+          "ci_upper": 0.6250289314607027
+        },
+        "cost_usd": {
+          "point": 0.0035066,
+          "ci_lower": 0.0028606212500000006,
+          "ci_upper": 0.0041495175,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 606.85,
+          "ci_lower": 500.72062500000004,
+          "ci_upper": 713.1768749999999,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 33762.414562515914,
+          "ci_lower": 21035.01506196335,
+          "ci_upper": 43655.535186990164,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 1.0,
+          "ci_lower": 1.0,
+          "ci_upper": 1.0,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "statistic": "mean"
+        }
+      },
+      "scripted_multi_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 27,
+          "asr": 0.675,
+          "ci_lower": 0.52017458088898,
+          "ci_upper": 0.7991568303733828
+        },
+        "cost_usd": {
+          "point": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 7710.175,
+          "ci_lower": 6495.596875,
+          "ci_upper": 8980.849999999999,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 191022.8742705076,
+          "ci_lower": 142477.3319579981,
+          "ci_upper": 235592.77570848644,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 3.5,
+          "ci_lower": 3.3,
+          "ci_upper": 3.725,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "statistic": "mean"
+        }
+      }
+    },
+    "openrouter/openai/gpt-4o": {
+      "adaptive_multi_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 27,
+          "asr": 0.675,
+          "ci_lower": 0.52017458088898,
+          "ci_upper": 0.7991568303733828
+        },
+        "cost_usd": {
+          "point": 0.031702324999999996,
+          "ci_lower": 0.02742522265625,
+          "ci_upper": 0.035932881218750004,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 16132.825,
+          "ci_lower": 13221.65625,
+          "ci_upper": 19114.009375,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 371310.0841249834,
+          "ci_lower": 269838.3300205169,
+          "ci_upper": 469211.05589548824,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 2.925,
+          "ci_lower": 2.6,
+          "ci_upper": 3.25,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 5.95,
+          "ci_lower": 5.25,
+          "ci_upper": 6.65,
+          "statistic": "mean"
+        }
+      },
+      "adaptive_single_query_st": {
+        "asr": {
+          "n": 40,
+          "successes": 23,
+          "asr": 0.575,
+          "ci_lower": 0.42194800436059987,
+          "ci_upper": 0.7149083147518411
+        },
+        "cost_usd": {
+          "point": 0.007798633750000001,
+          "ci_lower": 0.006472406750000002,
+          "ci_upper": 0.009079532187500001,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 2901.2,
+          "ci_lower": 2587.015625,
+          "ci_upper": 3211.67625,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 134313.73316652025,
+          "ci_lower": 92443.63300001714,
+          "ci_upper": 160912.68102050526,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 1.0,
+          "ci_lower": 1.0,
+          "ci_upper": 1.0,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 2.0,
+          "ci_lower": 2.0,
+          "ci_upper": 2.0,
+          "statistic": "mean"
+        }
+      },
+      "adaptive_single_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 36,
+          "asr": 0.9,
+          "ci_lower": 0.7694792561952611,
+          "ci_upper": 0.9604211124044252
+        },
+        "cost_usd": {
+          "point": 0.014500115000000003,
+          "ci_lower": 0.01266995303125,
+          "ci_upper": 0.01654999565625,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 5685.6,
+          "ci_lower": 4645.544375,
+          "ci_upper": 6967.885625,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 259460.6676455005,
+          "ci_lower": 185246.86983349966,
+          "ci_upper": 324044.78277100134,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 1.575,
+          "ci_lower": 1.325,
+          "ci_upper": 1.875,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 3.15,
+          "ci_lower": 2.65,
+          "ci_upper": 3.75,
+          "statistic": "mean"
+        }
+      },
+      "direct_single_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 2,
+          "asr": 0.05,
+          "ci_lower": 0.013820377146101098,
+          "ci_upper": 0.165041708179252
+        },
+        "cost_usd": {
+          "point": 0.0004760624999999999,
+          "ci_lower": 0.00021393750000000002,
+          "ci_upper": 0.0009288765625000002,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 72.675,
+          "ci_lower": 45.274375000000006,
+          "ci_upper": 119.05124999999998,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 16176.97200056864,
+          "ci_lower": 15485.4600414983,
+          "ci_upper": 17090.61539598042,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 1.0,
+          "ci_lower": 1.0,
+          "ci_upper": 1.0,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "statistic": "mean"
+        }
+      },
+      "scripted_multi_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 15,
+          "asr": 0.375,
+          "ci_lower": 0.2422277353579172,
+          "ci_upper": 0.529678399454681
+        },
+        "cost_usd": {
+          "point": 0.019136437500000002,
+          "ci_lower": 0.0165183859375,
+          "ci_upper": 0.0217272671875,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 4153.325,
+          "ci_lower": 3484.4537500000006,
+          "ci_upper": 4859.553125,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 56968.31852100149,
+          "ci_lower": 45716.11824950378,
+          "ci_upper": 64448.72789598594,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 3.5,
+          "ci_lower": 3.3,
+          "ci_upper": 3.725,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "statistic": "mean"
+        }
+      }
+    },
+    "openrouter/openai/gpt-4o-mini": {
+      "adaptive_multi_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 32,
+          "asr": 0.8,
+          "ci_lower": 0.6524239261814333,
+          "ci_upper": 0.8950013502683314
+        },
+        "cost_usd": {
+          "point": 0.01657697,
+          "ci_lower": 0.013692602875,
+          "ci_upper": 0.019988920562500002,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 21150.275,
+          "ci_lower": 15921.355000000001,
+          "ci_upper": 27730.319375,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 445337.45624999574,
+          "ci_lower": 307806.1331255158,
+          "ci_upper": 572138.4270680266,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 2.95,
+          "ci_lower": 2.625,
+          "ci_upper": 3.275,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 6.075,
+          "ci_lower": 5.375,
+          "ci_upper": 6.8,
+          "statistic": "mean"
+        }
+      },
+      "adaptive_single_query_st": {
+        "asr": {
+          "n": 40,
+          "successes": 19,
+          "asr": 0.475,
+          "ci_lower": 0.32935229550181694,
+          "ci_upper": 0.6250289314607027
+        },
+        "cost_usd": {
+          "point": 0.0039869125,
+          "ci_lower": 0.00358370259375,
+          "ci_upper": 0.004391851437499999,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 3033.55,
+          "ci_lower": 2723.2925,
+          "ci_upper": 3344.104375,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 169356.70443752315,
+          "ci_lower": 128851.02833350538,
+          "ci_upper": 207372.9680830147,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 1.0,
+          "ci_lower": 1.0,
+          "ci_upper": 1.0,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 2.0,
+          "ci_lower": 2.0,
+          "ci_upper": 2.0,
+          "statistic": "mean"
+        }
+      },
+      "adaptive_single_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 35,
+          "asr": 0.875,
+          "ci_lower": 0.7388757932976187,
+          "ci_upper": 0.9454058022645873
+        },
+        "cost_usd": {
+          "point": 0.00781908,
+          "ci_lower": 0.006273487625,
+          "ci_upper": 0.0095727511875,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 6505.825,
+          "ci_lower": 5261.51625,
+          "ci_upper": 7924.495,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 246968.77970801143,
+          "ci_lower": 195782.47910818236,
+          "ci_upper": 330632.1077499888,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 1.825,
+          "ci_lower": 1.5,
+          "ci_upper": 2.2,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 3.65,
+          "ci_lower": 3.0,
+          "ci_upper": 4.4,
+          "statistic": "mean"
+        }
+      },
+      "direct_single_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 3,
+          "asr": 0.075,
+          "ci_lower": 0.025835556771858226,
+          "ci_upper": 0.19864530159097524
+        },
+        "cost_usd": {
+          "point": 3.787875e-05,
+          "ci_lower": 1.3627312500000002e-05,
+          "ci_upper": 7.431646874999997e-05,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 88.2,
+          "ci_lower": 46.924375000000005,
+          "ci_upper": 149.12562499999999,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 16194.28356201388,
+          "ci_lower": 15328.572437458206,
+          "ci_upper": 16741.593583021313,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 1.0,
+          "ci_lower": 1.0,
+          "ci_upper": 1.0,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "statistic": "mean"
+        }
+      },
+      "scripted_multi_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 15,
+          "asr": 0.375,
+          "ci_lower": 0.2422277353579172,
+          "ci_upper": 0.529678399454681
+        },
+        "cost_usd": {
+          "point": 0.0016419787499999997,
+          "ci_lower": 0.00138784996875,
+          "ci_upper": 0.0018945062812499996,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 5180.375,
+          "ci_lower": 4309.01,
+          "ci_upper": 6076.81625,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 74449.27425001515,
+          "ci_lower": 51300.07008298708,
+          "ci_upper": 85288.2239370083,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 3.5,
+          "ci_lower": 3.3,
+          "ci_upper": 3.725,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "statistic": "mean"
+        }
+      }
+    },
+    "openrouter/qwen/qwen-2.5-72b-instruct": {
+      "adaptive_multi_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 29,
+          "asr": 0.725,
+          "ci_lower": 0.5716474916687543,
+          "ci_upper": 0.8389214656685692
+        },
+        "cost_usd": {
+          "point": 0.01453275625,
+          "ci_lower": 0.012178132937500002,
+          "ci_upper": 0.01699595221875,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 20048.475,
+          "ci_lower": 15826.13125,
+          "ci_upper": 24612.085624999996,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 673543.1678750028,
+          "ci_lower": 538599.6785830066,
+          "ci_upper": 807108.1134949639,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 2.75,
+          "ci_lower": 2.45,
+          "ci_upper": 3.075,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 5.6,
+          "ci_lower": 4.95,
+          "ci_upper": 6.275,
+          "statistic": "mean"
+        }
+      },
+      "adaptive_single_query_st": {
+        "asr": {
+          "n": 40,
+          "successes": 25,
+          "asr": 0.625,
+          "ci_lower": 0.47032160054531913,
+          "ci_upper": 0.7577722646420829
+        },
+        "cost_usd": {
+          "point": 0.0031868975,
+          "ci_lower": 0.0027559331250000003,
+          "ci_upper": 0.0036138438750000002,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 3598.7,
+          "ci_lower": 3346.5418750000003,
+          "ci_upper": 3851.0506250000003,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 228900.65710400813,
+          "ci_lower": 174346.1507294851,
+          "ci_upper": 307381.0655834968,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 1.0,
+          "ci_lower": 1.0,
+          "ci_upper": 1.0,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 2.0,
+          "ci_lower": 2.0,
+          "ci_upper": 2.0,
+          "statistic": "mean"
+        }
+      },
+      "adaptive_single_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 36,
+          "asr": 0.9,
+          "ci_lower": 0.7694792561952611,
+          "ci_upper": 0.9604211124044252
+        },
+        "cost_usd": {
+          "point": 0.00555421125,
+          "ci_lower": 0.0042371295,
+          "ci_upper": 0.007241276531250002,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 5618.375,
+          "ci_lower": 4336.17,
+          "ci_upper": 7348.103749999999,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 312081.66829150287,
+          "ci_lower": 246084.27943750576,
+          "ci_upper": 376289.72216650436,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 1.325,
+          "ci_lower": 1.05,
+          "ci_upper": 1.675,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 2.575,
+          "ci_lower": 2.1,
+          "ci_upper": 3.175,
+          "statistic": "mean"
+        }
+      },
+      "direct_single_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 1,
+          "asr": 0.025,
+          "ci_lower": 0.0044267174077949265,
+          "ci_upper": 0.1288165948800778
+        },
+        "cost_usd": {
+          "point": 8.8805e-05,
+          "ci_lower": 6.257246875000001e-05,
+          "ci_upper": 0.00012474021875,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 226.35,
+          "ci_lower": 160.84875,
+          "ci_upper": 316.35,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 17357.340937538538,
+          "ci_lower": 15443.683437537402,
+          "ci_upper": 20250.865791458637,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 1.0,
+          "ci_lower": 1.0,
+          "ci_upper": 1.0,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "statistic": "mean"
+        }
+      },
+      "scripted_multi_turn": {
+        "asr": {
+          "n": 40,
+          "successes": 27,
+          "asr": 0.675,
+          "ci_lower": 0.52017458088898,
+          "ci_upper": 0.7991568303733828
+        },
+        "cost_usd": {
+          "point": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "statistic": "mean"
+        },
+        "total_tokens": {
+          "point": 7366.35,
+          "ci_lower": 6128.449375,
+          "ci_upper": 8676.6325,
+          "statistic": "mean"
+        },
+        "latency_ms": {
+          "point": 372118.96445800085,
+          "ci_lower": 247250.02327100083,
+          "ci_upper": 421203.928208517,
+          "statistic": "median"
+        },
+        "target_calls": {
+          "point": 3.5,
+          "ci_lower": 3.3,
+          "ci_upper": 3.725,
+          "statistic": "mean"
+        },
+        "attacker_calls": {
+          "point": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "statistic": "mean"
+        }
+      }
+    }
+  },
+  "paired_tests": {
+    "adaptive_multi_turn_vs_adaptive_single_query_st": {
+      "pooled": {
+        "asr_mcnemar": {
+          "statistic": 63.0,
+          "p_value": 0.9284921641248501,
+          "b": 63,
+          "c": 61,
+          "n_discordant": 124,
+          "n_pairs": 320,
+          "asr_a": 0.634375,
+          "asr_b": 0.640625,
+          "risk_difference": 0.006249999999999978,
+          "p_value_bonferroni": 1.0,
+          "n_comparisons_bonferroni": 10
+        },
+        "cost_wilcoxon": {
+          "statistic": 811.0,
+          "p_value": 5.91113864254013e-51,
+          "n_pairs": 320,
+          "mean_a": 0.0237513485625,
+          "mean_b": 0.0067836193125,
+          "mean_diff": -0.01696772925,
+          "p_value_bonferroni": 5.91113864254013e-50,
+          "n_comparisons_bonferroni": 10
+        },
+        "latency_wilcoxon": {
+          "statistic": 35.0,
+          "p_value": 4.5272835264257586e-54,
+          "n_pairs": 320,
+          "mean_a": 540015.2347259123,
+          "mean_b": 193011.4387774507,
+          "mean_diff": -347003.7959484615,
+          "p_value_bonferroni": 4.527283526425759e-53,
+          "n_comparisons_bonferroni": 10
+        }
+      },
+      "per_model": {
+        "openrouter/anthropic/claude-sonnet-4": {
+          "asr_mcnemar": {
+            "statistic": 7.0,
+            "p_value": 0.548828125,
+            "b": 7,
+            "c": 4,
+            "n_discordant": 11,
+            "n_pairs": 40,
+            "asr_a": 0.2,
+            "asr_b": 0.275,
+            "risk_difference": 0.07500000000000001
+          }
+        },
+        "openrouter/deepseek/deepseek-chat-v3-0324": {
+          "asr_mcnemar": {
+            "statistic": 13.0,
+            "p_value": 0.021270751953125,
+            "b": 13,
+            "c": 3,
+            "n_discordant": 16,
+            "n_pairs": 40,
+            "asr_a": 0.625,
+            "asr_b": 0.875,
+            "risk_difference": 0.25
+          }
+        },
+        "openrouter/google/gemini-2.5-flash": {
+          "asr_mcnemar": {
+            "statistic": 9.0,
+            "p_value": 1.0,
+            "b": 9,
+            "c": 10,
+            "n_discordant": 19,
+            "n_pairs": 40,
+            "asr_a": 0.7,
+            "asr_b": 0.675,
+            "risk_difference": -0.02499999999999991
+          }
+        },
+        "openrouter/meta-llama/llama-3.3-70b-instruct": {
+          "asr_mcnemar": {
+            "statistic": 12.0,
+            "p_value": 0.5034446716308594,
+            "b": 12,
+            "c": 8,
+            "n_discordant": 20,
+            "n_pairs": 40,
+            "asr_a": 0.625,
+            "asr_b": 0.725,
+            "risk_difference": 0.09999999999999998
+          }
+        },
+        "openrouter/mistralai/mistral-large-2411": {
+          "asr_mcnemar": {
+            "statistic": 8.0,
+            "p_value": 0.0390625,
+            "b": 8,
+            "c": 1,
+            "n_discordant": 9,
+            "n_pairs": 40,
+            "asr_a": 0.725,
+            "asr_b": 0.9,
+            "risk_difference": 0.17500000000000004
+          }
+        },
+        "openrouter/openai/gpt-4o": {
+          "asr_mcnemar": {
+            "statistic": 4.0,
+            "p_value": 0.3876953125,
+            "b": 4,
+            "c": 8,
+            "n_discordant": 12,
+            "n_pairs": 40,
+            "asr_a": 0.675,
+            "asr_b": 0.575,
+            "risk_difference": -0.10000000000000009
+          }
+        },
+        "openrouter/openai/gpt-4o-mini": {
+          "asr_mcnemar": {
+            "statistic": 5.0,
+            "p_value": 0.010622024536132812,
+            "b": 5,
+            "c": 18,
+            "n_discordant": 23,
+            "n_pairs": 40,
+            "asr_a": 0.8,
+            "asr_b": 0.475,
+            "risk_difference": -0.32500000000000007
+          }
+        },
+        "openrouter/qwen/qwen-2.5-72b-instruct": {
+          "asr_mcnemar": {
+            "statistic": 5.0,
+            "p_value": 0.4239501953125,
+            "b": 5,
+            "c": 9,
+            "n_discordant": 14,
+            "n_pairs": 40,
+            "asr_a": 0.725,
+            "asr_b": 0.625,
+            "risk_difference": -0.09999999999999998
+          }
+        }
+      }
+    },
+    "adaptive_multi_turn_vs_adaptive_single_turn": {
+      "pooled": {
+        "asr_mcnemar": {
+          "statistic": 83.0,
+          "p_value": 4.2224144708722095e-13,
+          "b": 83,
+          "c": 14,
+          "n_discordant": 97,
+          "n_pairs": 320,
+          "asr_a": 0.634375,
+          "asr_b": 0.85,
+          "risk_difference": 0.21562499999999996,
+          "p_value_bonferroni": 4.222414470872209e-12,
+          "n_comparisons_bonferroni": 10
+        },
+        "cost_wilcoxon": {
+          "statistic": 5086.0,
+          "p_value": 1.721592955162981e-35,
+          "n_pairs": 320,
+          "mean_a": 0.0237513485625,
+          "mean_b": 0.013794080749999998,
+          "mean_diff": -0.0099572678125,
+          "p_value_bonferroni": 1.721592955162981e-34,
+          "n_comparisons_bonferroni": 10
+        },
+        "latency_wilcoxon": {
+          "statistic": 1416.0,
+          "p_value": 1.3647438745364642e-48,
+          "n_pairs": 320,
+          "mean_a": 540015.2347259123,
+          "mean_b": 319198.139290482,
+          "mean_diff": -220817.0954354303,
+          "p_value_bonferroni": 1.3647438745364642e-47,
+          "n_comparisons_bonferroni": 10
+        }
+      },
+      "per_model": {
+        "openrouter/anthropic/claude-sonnet-4": {
+          "asr_mcnemar": {
+            "statistic": 11.0,
+            "p_value": 0.0224609375,
+            "b": 11,
+            "c": 2,
+            "n_discordant": 13,
+            "n_pairs": 40,
+            "asr_a": 0.2,
+            "asr_b": 0.425,
+            "risk_difference": 0.22499999999999998
+          }
+        },
+        "openrouter/deepseek/deepseek-chat-v3-0324": {
+          "asr_mcnemar": {
+            "statistic": 13.0,
+            "p_value": 0.0018310546875,
+            "b": 13,
+            "c": 1,
+            "n_discordant": 14,
+            "n_pairs": 40,
+            "asr_a": 0.625,
+            "asr_b": 0.925,
+            "risk_difference": 0.30000000000000004
+          }
+        },
+        "openrouter/google/gemini-2.5-flash": {
+          "asr_mcnemar": {
+            "statistic": 11.0,
+            "p_value": 0.0224609375,
+            "b": 11,
+            "c": 2,
+            "n_discordant": 13,
+            "n_pairs": 40,
+            "asr_a": 0.7,
+            "asr_b": 0.925,
+            "risk_difference": 0.2250000000000001
+          }
+        },
+        "openrouter/meta-llama/llama-3.3-70b-instruct": {
+          "asr_mcnemar": {
+            "statistic": 13.0,
+            "p_value": 0.00738525390625,
+            "b": 13,
+            "c": 2,
+            "n_discordant": 15,
+            "n_pairs": 40,
+            "asr_a": 0.625,
+            "asr_b": 0.9,
+            "risk_difference": 0.275
+          }
+        },
+        "openrouter/mistralai/mistral-large-2411": {
+          "asr_mcnemar": {
+            "statistic": 9.0,
+            "p_value": 0.00390625,
+            "b": 9,
+            "c": 0,
+            "n_discordant": 9,
+            "n_pairs": 40,
+            "asr_a": 0.725,
+            "asr_b": 0.95,
+            "risk_difference": 0.22499999999999998
+          }
+        },
+        "openrouter/openai/gpt-4o": {
+          "asr_mcnemar": {
+            "statistic": 11.0,
+            "p_value": 0.0224609375,
+            "b": 11,
+            "c": 2,
+            "n_discordant": 13,
+            "n_pairs": 40,
+            "asr_a": 0.675,
+            "asr_b": 0.9,
+            "risk_difference": 0.22499999999999998
+          }
+        },
+        "openrouter/openai/gpt-4o-mini": {
+          "asr_mcnemar": {
+            "statistic": 6.0,
+            "p_value": 0.5078125,
+            "b": 6,
+            "c": 3,
+            "n_discordant": 9,
+            "n_pairs": 40,
+            "asr_a": 0.8,
+            "asr_b": 0.875,
+            "risk_difference": 0.07499999999999996
+          }
+        },
+        "openrouter/qwen/qwen-2.5-72b-instruct": {
+          "asr_mcnemar": {
+            "statistic": 9.0,
+            "p_value": 0.0654296875,
+            "b": 9,
+            "c": 2,
+            "n_discordant": 11,
+            "n_pairs": 40,
+            "asr_a": 0.725,
+            "asr_b": 0.9,
+            "risk_difference": 0.17500000000000004
+          }
+        }
+      }
+    },
+    "adaptive_multi_turn_vs_direct_single_turn": {
+      "pooled": {
+        "asr_mcnemar": {
+          "statistic": 20.0,
+          "p_value": 2.4604497446499028e-31,
+          "b": 20,
+          "c": 172,
+          "n_discordant": 192,
+          "n_pairs": 320,
+          "asr_a": 0.634375,
+          "asr_b": 0.159375,
+          "risk_difference": -0.47500000000000003,
+          "p_value_bonferroni": 2.460449744649903e-30,
+          "n_comparisons_bonferroni": 10
+        },
+        "cost_wilcoxon": {
+          "statistic": 561.0,
+          "p_value": 6.000995174774226e-52,
+          "n_pairs": 320,
+          "mean_a": 0.0237513485625,
+          "mean_b": 0.0017199015625000002,
+          "mean_diff": -0.022031447000000003,
+          "p_value_bonferroni": 6.000995174774226e-51,
+          "n_comparisons_bonferroni": 10
+        },
+        "latency_wilcoxon": {
+          "statistic": 0.0,
+          "p_value": 3.258866789206682e-54,
+          "n_pairs": 320,
+          "mean_a": 540015.2347259123,
+          "mean_b": 21787.50949610221,
+          "mean_diff": -518227.7252298101,
+          "p_value_bonferroni": 3.2588667892066823e-53,
+          "n_comparisons_bonferroni": 10
+        }
+      },
+      "per_model": {
+        "openrouter/anthropic/claude-sonnet-4": {
+          "asr_mcnemar": {
+            "statistic": 2.0,
+            "p_value": 0.453125,
+            "b": 2,
+            "c": 5,
+            "n_discordant": 7,
+            "n_pairs": 40,
+            "asr_a": 0.2,
+            "asr_b": 0.125,
+            "risk_difference": -0.07500000000000001
+          }
+        },
+        "openrouter/deepseek/deepseek-chat-v3-0324": {
+          "asr_mcnemar": {
+            "statistic": 4.0,
+            "p_value": 0.0009105205535888672,
+            "b": 4,
+            "c": 21,
+            "n_discordant": 25,
+            "n_pairs": 40,
+            "asr_a": 0.625,
+            "asr_b": 0.2,
+            "risk_difference": -0.425
+          }
+        },
+        "openrouter/google/gemini-2.5-flash": {
+          "asr_mcnemar": {
+            "statistic": 4.0,
+            "p_value": 0.00017999112606048584,
+            "b": 4,
+            "c": 24,
+            "n_discordant": 28,
+            "n_pairs": 40,
+            "asr_a": 0.7,
+            "asr_b": 0.2,
+            "risk_difference": -0.49999999999999994
+          }
+        },
+        "openrouter/meta-llama/llama-3.3-70b-instruct": {
+          "asr_mcnemar": {
+            "statistic": 3.0,
+            "p_value": 8.797645568847656e-05,
+            "b": 3,
+            "c": 23,
+            "n_discordant": 26,
+            "n_pairs": 40,
+            "asr_a": 0.625,
+            "asr_b": 0.125,
+            "risk_difference": -0.5
+          }
+        },
+        "openrouter/mistralai/mistral-large-2411": {
+          "asr_mcnemar": {
+            "statistic": 4.0,
+            "p_value": 0.0308837890625,
+            "b": 4,
+            "c": 14,
+            "n_discordant": 18,
+            "n_pairs": 40,
+            "asr_a": 0.725,
+            "asr_b": 0.475,
+            "risk_difference": -0.25
+          }
+        },
+        "openrouter/openai/gpt-4o": {
+          "asr_mcnemar": {
+            "statistic": 1.0,
+            "p_value": 4.172325134277344e-07,
+            "b": 1,
+            "c": 26,
+            "n_discordant": 27,
+            "n_pairs": 40,
+            "asr_a": 0.675,
+            "asr_b": 0.05,
+            "risk_difference": -0.625
+          }
+        },
+        "openrouter/openai/gpt-4o-mini": {
+          "asr_mcnemar": {
+            "statistic": 1.0,
+            "p_value": 2.9802322387695312e-08,
+            "b": 1,
+            "c": 30,
+            "n_discordant": 31,
+            "n_pairs": 40,
+            "asr_a": 0.8,
+            "asr_b": 0.075,
+            "risk_difference": -0.7250000000000001
+          }
+        },
+        "openrouter/qwen/qwen-2.5-72b-instruct": {
+          "asr_mcnemar": {
+            "statistic": 1.0,
+            "p_value": 5.774199962615967e-08,
+            "b": 1,
+            "c": 29,
+            "n_discordant": 30,
+            "n_pairs": 40,
+            "asr_a": 0.725,
+            "asr_b": 0.025,
+            "risk_difference": -0.7
+          }
+        }
+      }
+    },
+    "adaptive_multi_turn_vs_scripted_multi_turn": {
+      "pooled": {
+        "asr_mcnemar": {
+          "statistic": 47.0,
+          "p_value": 0.0009131976345915825,
+          "b": 47,
+          "c": 86,
+          "n_discordant": 133,
+          "n_pairs": 320,
+          "asr_a": 0.634375,
+          "asr_b": 0.5125,
+          "risk_difference": -0.12187500000000007,
+          "p_value_bonferroni": 0.009131976345915825,
+          "n_comparisons_bonferroni": 10
+        },
+        "cost_wilcoxon": {
+          "statistic": 3428.0,
+          "p_value": 3.801564251364206e-41,
+          "n_pairs": 320,
+          "mean_a": 0.0237513485625,
+          "mean_b": 0.010371265031250002,
+          "mean_diff": -0.013380083531250003,
+          "p_value_bonferroni": 3.801564251364206e-40,
+          "n_comparisons_bonferroni": 10
+        },
+        "latency_wilcoxon": {
+          "statistic": 23.0,
+          "p_value": 4.044914665807984e-54,
+          "n_pairs": 320,
+          "mean_a": 540015.2347259123,
+          "mean_b": 153356.8894952902,
+          "mean_diff": -386658.34523062204,
+          "p_value_bonferroni": 4.044914665807984e-53,
+          "n_comparisons_bonferroni": 10
+        }
+      },
+      "per_model": {
+        "openrouter/anthropic/claude-sonnet-4": {
+          "asr_mcnemar": {
+            "statistic": 11.0,
+            "p_value": 0.332305908203125,
+            "b": 11,
+            "c": 6,
+            "n_discordant": 17,
+            "n_pairs": 40,
+            "asr_a": 0.2,
+            "asr_b": 0.325,
+            "risk_difference": 0.125
+          }
+        },
+        "openrouter/deepseek/deepseek-chat-v3-0324": {
+          "asr_mcnemar": {
+            "statistic": 6.0,
+            "p_value": 0.79052734375,
+            "b": 6,
+            "c": 8,
+            "n_discordant": 14,
+            "n_pairs": 40,
+            "asr_a": 0.625,
+            "asr_b": 0.575,
+            "risk_difference": -0.050000000000000044
+          }
+        },
+        "openrouter/google/gemini-2.5-flash": {
+          "asr_mcnemar": {
+            "statistic": 6.0,
+            "p_value": 0.237884521484375,
+            "b": 6,
+            "c": 12,
+            "n_discordant": 18,
+            "n_pairs": 40,
+            "asr_a": 0.7,
+            "asr_b": 0.55,
+            "risk_difference": -0.1499999999999999
+          }
+        },
+        "openrouter/meta-llama/llama-3.3-70b-instruct": {
+          "asr_mcnemar": {
+            "statistic": 6.0,
+            "p_value": 0.6072387695312499,
+            "b": 6,
+            "c": 9,
+            "n_discordant": 15,
+            "n_pairs": 40,
+            "asr_a": 0.625,
+            "asr_b": 0.55,
+            "risk_difference": -0.07499999999999996
+          }
+        },
+        "openrouter/mistralai/mistral-large-2411": {
+          "asr_mcnemar": {
+            "statistic": 5.0,
+            "p_value": 0.7744140625,
+            "b": 5,
+            "c": 7,
+            "n_discordant": 12,
+            "n_pairs": 40,
+            "asr_a": 0.725,
+            "asr_b": 0.675,
+            "risk_difference": -0.04999999999999993
+          }
+        },
+        "openrouter/openai/gpt-4o": {
+          "asr_mcnemar": {
+            "statistic": 4.0,
+            "p_value": 0.01181793212890625,
+            "b": 4,
+            "c": 16,
+            "n_discordant": 20,
+            "n_pairs": 40,
+            "asr_a": 0.675,
+            "asr_b": 0.375,
+            "risk_difference": -0.30000000000000004
+          }
+        },
+        "openrouter/openai/gpt-4o-mini": {
+          "asr_mcnemar": {
+            "statistic": 3.0,
+            "p_value": 0.00048828125,
+            "b": 3,
+            "c": 20,
+            "n_discordant": 23,
+            "n_pairs": 40,
+            "asr_a": 0.8,
+            "asr_b": 0.375,
+            "risk_difference": -0.42500000000000004
+          }
+        },
+        "openrouter/qwen/qwen-2.5-72b-instruct": {
+          "asr_mcnemar": {
+            "statistic": 6.0,
+            "p_value": 0.79052734375,
+            "b": 6,
+            "c": 8,
+            "n_discordant": 14,
+            "n_pairs": 40,
+            "asr_a": 0.725,
+            "asr_b": 0.675,
+            "risk_difference": -0.04999999999999993
+          }
+        }
+      }
+    },
+    "adaptive_single_query_st_vs_adaptive_single_turn": {
+      "pooled": {
+        "asr_mcnemar": {
+          "statistic": 77.0,
+          "p_value": 5.91755837353286e-14,
+          "b": 77,
+          "c": 10,
+          "n_discordant": 87,
+          "n_pairs": 320,
+          "asr_a": 0.640625,
+          "asr_b": 0.85,
+          "risk_difference": 0.20937499999999998,
+          "p_value_bonferroni": 5.91755837353286e-13,
+          "n_comparisons_bonferroni": 10
+        },
+        "cost_wilcoxon": {
+          "statistic": 8510.0,
+          "p_value": 3.5331235420745234e-25,
+          "n_pairs": 320,
+          "mean_a": 0.0067836193125,
+          "mean_b": 0.013794080749999998,
+          "mean_diff": 0.0070104614375000015,
+          "p_value_bonferroni": 3.5331235420745234e-24,
+          "n_comparisons_bonferroni": 10
+        },
+        "latency_wilcoxon": {
+          "statistic": 3376.0,
+          "p_value": 2.4864245185627225e-41,
+          "n_pairs": 320,
+          "mean_a": 193011.4387774507,
+          "mean_b": 319198.139290482,
+          "mean_diff": 126186.70051303125,
+          "p_value_bonferroni": 2.4864245185627226e-40,
+          "n_comparisons_bonferroni": 10
+        }
+      },
+      "per_model": {
+        "openrouter/anthropic/claude-sonnet-4": {
+          "asr_mcnemar": {
+            "statistic": 7.0,
+            "p_value": 0.0703125,
+            "b": 7,
+            "c": 1,
+            "n_discordant": 8,
+            "n_pairs": 40,
+            "asr_a": 0.275,
+            "asr_b": 0.425,
+            "risk_difference": 0.14999999999999997
+          }
+        },
+        "openrouter/deepseek/deepseek-chat-v3-0324": {
+          "asr_mcnemar": {
+            "statistic": 4.0,
+            "p_value": 0.6875,
+            "b": 4,
+            "c": 2,
+            "n_discordant": 6,
+            "n_pairs": 40,
+            "asr_a": 0.875,
+            "asr_b": 0.925,
+            "risk_difference": 0.050000000000000044
+          }
+        },
+        "openrouter/google/gemini-2.5-flash": {
+          "asr_mcnemar": {
+            "statistic": 11.0,
+            "p_value": 0.00634765625,
+            "b": 11,
+            "c": 1,
+            "n_discordant": 12,
+            "n_pairs": 40,
+            "asr_a": 0.675,
+            "asr_b": 0.925,
+            "risk_difference": 0.25
+          }
+        },
+        "openrouter/meta-llama/llama-3.3-70b-instruct": {
+          "asr_mcnemar": {
+            "statistic": 10.0,
+            "p_value": 0.09228515625,
+            "b": 10,
+            "c": 3,
+            "n_discordant": 13,
+            "n_pairs": 40,
+            "asr_a": 0.725,
+            "asr_b": 0.9,
+            "risk_difference": 0.17500000000000004
+          }
+        },
+        "openrouter/mistralai/mistral-large-2411": {
+          "asr_mcnemar": {
+            "statistic": 2.0,
+            "p_value": 0.5,
+            "b": 2,
+            "c": 0,
+            "n_discordant": 2,
+            "n_pairs": 40,
+            "asr_a": 0.9,
+            "asr_b": 0.95,
+            "risk_difference": 0.04999999999999993
+          }
+        },
+        "openrouter/openai/gpt-4o": {
+          "asr_mcnemar": {
+            "statistic": 15.0,
+            "p_value": 0.002349853515625,
+            "b": 15,
+            "c": 2,
+            "n_discordant": 17,
+            "n_pairs": 40,
+            "asr_a": 0.575,
+            "asr_b": 0.9,
+            "risk_difference": 0.32500000000000007
+          }
+        },
+        "openrouter/openai/gpt-4o-mini": {
+          "asr_mcnemar": {
+            "statistic": 16.0,
+            "p_value": 3.0517578125e-05,
+            "b": 16,
+            "c": 0,
+            "n_discordant": 16,
+            "n_pairs": 40,
+            "asr_a": 0.475,
+            "asr_b": 0.875,
+            "risk_difference": 0.4
+          }
+        },
+        "openrouter/qwen/qwen-2.5-72b-instruct": {
+          "asr_mcnemar": {
+            "statistic": 12.0,
+            "p_value": 0.00341796875,
+            "b": 12,
+            "c": 1,
+            "n_discordant": 13,
+            "n_pairs": 40,
+            "asr_a": 0.625,
+            "asr_b": 0.9,
+            "risk_difference": 0.275
+          }
+        }
+      }
+    },
+    "adaptive_single_query_st_vs_direct_single_turn": {
+      "pooled": {
+        "asr_mcnemar": {
+          "statistic": 7.0,
+          "p_value": 3.687894036179825e-39,
+          "b": 7,
+          "c": 161,
+          "n_discordant": 168,
+          "n_pairs": 320,
+          "asr_a": 0.640625,
+          "asr_b": 0.159375,
+          "risk_difference": -0.48125,
+          "p_value_bonferroni": 3.687894036179825e-38,
+          "n_comparisons_bonferroni": 10
+        },
+        "cost_wilcoxon": {
+          "statistic": 1641.0,
+          "p_value": 9.983416127579222e-48,
+          "n_pairs": 320,
+          "mean_a": 0.0067836193125,
+          "mean_b": 0.0017199015625000002,
+          "mean_diff": -0.00506371775,
+          "p_value_bonferroni": 9.983416127579221e-47,
+          "n_comparisons_bonferroni": 10
+        },
+        "latency_wilcoxon": {
+          "statistic": 65.0,
+          "p_value": 5.998728335578313e-54,
+          "n_pairs": 320,
+          "mean_a": 193011.4387774507,
+          "mean_b": 21787.50949610221,
+          "mean_diff": -171223.9292813485,
+          "p_value_bonferroni": 5.998728335578313e-53,
+          "n_comparisons_bonferroni": 10
+        }
+      },
+      "per_model": {
+        "openrouter/anthropic/claude-sonnet-4": {
+          "asr_mcnemar": {
+            "statistic": 2.0,
+            "p_value": 0.109375,
+            "b": 2,
+            "c": 8,
+            "n_discordant": 10,
+            "n_pairs": 40,
+            "asr_a": 0.275,
+            "asr_b": 0.125,
+            "risk_difference": -0.15000000000000002
+          }
+        },
+        "openrouter/deepseek/deepseek-chat-v3-0324": {
+          "asr_mcnemar": {
+            "statistic": 0.0,
+            "p_value": 1.4901161193847656e-08,
+            "b": 0,
+            "c": 27,
+            "n_discordant": 27,
+            "n_pairs": 40,
+            "asr_a": 0.875,
+            "asr_b": 0.2,
+            "risk_difference": -0.675
+          }
+        },
+        "openrouter/google/gemini-2.5-flash": {
+          "asr_mcnemar": {
+            "statistic": 2.0,
+            "p_value": 6.604194641113281e-05,
+            "b": 2,
+            "c": 21,
+            "n_discordant": 23,
+            "n_pairs": 40,
+            "asr_a": 0.675,
+            "asr_b": 0.2,
+            "risk_difference": -0.47500000000000003
+          }
+        },
+        "openrouter/meta-llama/llama-3.3-70b-instruct": {
+          "asr_mcnemar": {
+            "statistic": 1.0,
+            "p_value": 8.046627044677734e-07,
+            "b": 1,
+            "c": 25,
+            "n_discordant": 26,
+            "n_pairs": 40,
+            "asr_a": 0.725,
+            "asr_b": 0.125,
+            "risk_difference": -0.6
+          }
+        },
+        "openrouter/mistralai/mistral-large-2411": {
+          "asr_mcnemar": {
+            "statistic": 1.0,
+            "p_value": 7.62939453125e-05,
+            "b": 1,
+            "c": 18,
+            "n_discordant": 19,
+            "n_pairs": 40,
+            "asr_a": 0.9,
+            "asr_b": 0.475,
+            "risk_difference": -0.42500000000000004
+          }
+        },
+        "openrouter/openai/gpt-4o": {
+          "asr_mcnemar": {
+            "statistic": 0.0,
+            "p_value": 9.5367431640625e-07,
+            "b": 0,
+            "c": 21,
+            "n_discordant": 21,
+            "n_pairs": 40,
+            "asr_a": 0.575,
+            "asr_b": 0.05,
+            "risk_difference": -0.5249999999999999
+          }
+        },
+        "openrouter/openai/gpt-4o-mini": {
+          "asr_mcnemar": {
+            "statistic": 0.0,
+            "p_value": 3.0517578125e-05,
+            "b": 0,
+            "c": 16,
+            "n_discordant": 16,
+            "n_pairs": 40,
+            "asr_a": 0.475,
+            "asr_b": 0.075,
+            "risk_difference": -0.39999999999999997
+          }
+        },
+        "openrouter/qwen/qwen-2.5-72b-instruct": {
+          "asr_mcnemar": {
+            "statistic": 1.0,
+            "p_value": 8.046627044677734e-07,
+            "b": 1,
+            "c": 25,
+            "n_discordant": 26,
+            "n_pairs": 40,
+            "asr_a": 0.625,
+            "asr_b": 0.025,
+            "risk_difference": -0.6
+          }
+        }
+      }
+    },
+    "adaptive_single_query_st_vs_scripted_multi_turn": {
+      "pooled": {
+        "asr_mcnemar": {
+          "statistic": 42.0,
+          "p_value": 0.0003098218683780186,
+          "b": 42,
+          "c": 83,
+          "n_discordant": 125,
+          "n_pairs": 320,
+          "asr_a": 0.640625,
+          "asr_b": 0.5125,
+          "risk_difference": -0.12812500000000004,
+          "p_value_bonferroni": 0.003098218683780186,
+          "n_comparisons_bonferroni": 10
+        },
+        "cost_wilcoxon": {
+          "statistic": 25574.0,
+          "p_value": 0.9489731611636104,
+          "n_pairs": 320,
+          "mean_a": 0.0067836193125,
+          "mean_b": 0.010371265031250002,
+          "mean_diff": 0.00358764571875,
+          "p_value_bonferroni": 1.0,
+          "n_comparisons_bonferroni": 10
+        },
+        "latency_wilcoxon": {
+          "statistic": 11764.0,
+          "p_value": 4.403255926298173e-17,
+          "n_pairs": 320,
+          "mean_a": 193011.4387774507,
+          "mean_b": 153356.8894952902,
+          "mean_diff": -39654.54928216049,
+          "p_value_bonferroni": 4.403255926298173e-16,
+          "n_comparisons_bonferroni": 10
+        }
+      },
+      "per_model": {
+        "openrouter/anthropic/claude-sonnet-4": {
+          "asr_mcnemar": {
+            "statistic": 8.0,
+            "p_value": 0.79052734375,
+            "b": 8,
+            "c": 6,
+            "n_discordant": 14,
+            "n_pairs": 40,
+            "asr_a": 0.275,
+            "asr_b": 0.325,
+            "risk_difference": 0.04999999999999999
+          }
+        },
+        "openrouter/deepseek/deepseek-chat-v3-0324": {
+          "asr_mcnemar": {
+            "statistic": 3.0,
+            "p_value": 0.007537841796875,
+            "b": 3,
+            "c": 15,
+            "n_discordant": 18,
+            "n_pairs": 40,
+            "asr_a": 0.875,
+            "asr_b": 0.575,
+            "risk_difference": -0.30000000000000004
+          }
+        },
+        "openrouter/google/gemini-2.5-flash": {
+          "asr_mcnemar": {
+            "statistic": 7.0,
+            "p_value": 0.359283447265625,
+            "b": 7,
+            "c": 12,
+            "n_discordant": 19,
+            "n_pairs": 40,
+            "asr_a": 0.675,
+            "asr_b": 0.55,
+            "risk_difference": -0.125
+          }
+        },
+        "openrouter/meta-llama/llama-3.3-70b-instruct": {
+          "asr_mcnemar": {
+            "statistic": 6.0,
+            "p_value": 0.1670684814453125,
+            "b": 6,
+            "c": 13,
+            "n_discordant": 19,
+            "n_pairs": 40,
+            "asr_a": 0.725,
+            "asr_b": 0.55,
+            "risk_difference": -0.17499999999999993
+          }
+        },
+        "openrouter/mistralai/mistral-large-2411": {
+          "asr_mcnemar": {
+            "statistic": 0.0,
+            "p_value": 0.00390625,
+            "b": 0,
+            "c": 9,
+            "n_discordant": 9,
+            "n_pairs": 40,
+            "asr_a": 0.9,
+            "asr_b": 0.675,
+            "risk_difference": -0.22499999999999998
+          }
+        },
+        "openrouter/openai/gpt-4o": {
+          "asr_mcnemar": {
+            "statistic": 5.0,
+            "p_value": 0.09625244140625,
+            "b": 5,
+            "c": 13,
+            "n_discordant": 18,
+            "n_pairs": 40,
+            "asr_a": 0.575,
+            "asr_b": 0.375,
+            "risk_difference": -0.19999999999999996
+          }
+        },
+        "openrouter/openai/gpt-4o-mini": {
+          "asr_mcnemar": {
+            "statistic": 5.0,
+            "p_value": 0.4239501953125,
+            "b": 5,
+            "c": 9,
+            "n_discordant": 14,
+            "n_pairs": 40,
+            "asr_a": 0.475,
+            "asr_b": 0.375,
+            "risk_difference": -0.09999999999999998
+          }
+        },
+        "openrouter/qwen/qwen-2.5-72b-instruct": {
+          "asr_mcnemar": {
+            "statistic": 8.0,
+            "p_value": 0.79052734375,
+            "b": 8,
+            "c": 6,
+            "n_discordant": 14,
+            "n_pairs": 40,
+            "asr_a": 0.625,
+            "asr_b": 0.675,
+            "risk_difference": 0.050000000000000044
+          }
+        }
+      }
+    },
+    "adaptive_single_turn_vs_direct_single_turn": {
+      "pooled": {
+        "asr_mcnemar": {
+          "statistic": 2.0,
+          "p_value": 9.431027558737838e-64,
+          "b": 2,
+          "c": 223,
+          "n_discordant": 225,
+          "n_pairs": 320,
+          "asr_a": 0.85,
+          "asr_b": 0.159375,
+          "risk_difference": -0.690625,
+          "p_value_bonferroni": 9.431027558737838e-63,
+          "n_comparisons_bonferroni": 10
+        },
+        "cost_wilcoxon": {
+          "statistic": 742.0,
+          "p_value": 3.1511117489026723e-51,
+          "n_pairs": 320,
+          "mean_a": 0.013794080749999998,
+          "mean_b": 0.0017199015625000002,
+          "mean_diff": -0.0120741791875,
+          "p_value_bonferroni": 3.151111748902672e-50,
+          "n_comparisons_bonferroni": 10
+        },
+        "latency_wilcoxon": {
+          "statistic": 0.0,
+          "p_value": 3.258866789206682e-54,
+          "n_pairs": 320,
+          "mean_a": 319198.139290482,
+          "mean_b": 21787.50949610221,
+          "mean_diff": -297410.6297943798,
+          "p_value_bonferroni": 3.2588667892066823e-53,
+          "n_comparisons_bonferroni": 10
+        }
+      },
+      "per_model": {
+        "openrouter/anthropic/claude-sonnet-4": {
+          "asr_mcnemar": {
+            "statistic": 2.0,
+            "p_value": 0.004180908203125,
+            "b": 2,
+            "c": 14,
+            "n_discordant": 16,
+            "n_pairs": 40,
+            "asr_a": 0.425,
+            "asr_b": 0.125,
+            "risk_difference": -0.3
+          }
+        },
+        "openrouter/deepseek/deepseek-chat-v3-0324": {
+          "asr_mcnemar": {
+            "statistic": 0.0,
+            "p_value": 3.725290298461914e-09,
+            "b": 0,
+            "c": 29,
+            "n_discordant": 29,
+            "n_pairs": 40,
+            "asr_a": 0.925,
+            "asr_b": 0.2,
+            "risk_difference": -0.7250000000000001
+          }
+        },
+        "openrouter/google/gemini-2.5-flash": {
+          "asr_mcnemar": {
+            "statistic": 0.0,
+            "p_value": 3.725290298461914e-09,
+            "b": 0,
+            "c": 29,
+            "n_discordant": 29,
+            "n_pairs": 40,
+            "asr_a": 0.925,
+            "asr_b": 0.2,
+            "risk_difference": -0.7250000000000001
+          }
+        },
+        "openrouter/meta-llama/llama-3.3-70b-instruct": {
+          "asr_mcnemar": {
+            "statistic": 0.0,
+            "p_value": 9.313225746154785e-10,
+            "b": 0,
+            "c": 31,
+            "n_discordant": 31,
+            "n_pairs": 40,
+            "asr_a": 0.9,
+            "asr_b": 0.125,
+            "risk_difference": -0.775
+          }
+        },
+        "openrouter/mistralai/mistral-large-2411": {
+          "asr_mcnemar": {
+            "statistic": 0.0,
+            "p_value": 3.814697265625e-06,
+            "b": 0,
+            "c": 19,
+            "n_discordant": 19,
+            "n_pairs": 40,
+            "asr_a": 0.95,
+            "asr_b": 0.475,
+            "risk_difference": -0.475
+          }
+        },
+        "openrouter/openai/gpt-4o": {
+          "asr_mcnemar": {
+            "statistic": 0.0,
+            "p_value": 1.1641532182693481e-10,
+            "b": 0,
+            "c": 34,
+            "n_discordant": 34,
+            "n_pairs": 40,
+            "asr_a": 0.9,
+            "asr_b": 0.05,
+            "risk_difference": -0.85
+          }
+        },
+        "openrouter/openai/gpt-4o-mini": {
+          "asr_mcnemar": {
+            "statistic": 0.0,
+            "p_value": 4.656612873077393e-10,
+            "b": 0,
+            "c": 32,
+            "n_discordant": 32,
+            "n_pairs": 40,
+            "asr_a": 0.875,
+            "asr_b": 0.075,
+            "risk_difference": -0.8
+          }
+        },
+        "openrouter/qwen/qwen-2.5-72b-instruct": {
+          "asr_mcnemar": {
+            "statistic": 0.0,
+            "p_value": 5.820766091346741e-11,
+            "b": 0,
+            "c": 35,
+            "n_discordant": 35,
+            "n_pairs": 40,
+            "asr_a": 0.9,
+            "asr_b": 0.025,
+            "risk_difference": -0.875
+          }
+        }
+      }
+    },
+    "adaptive_single_turn_vs_scripted_multi_turn": {
+      "pooled": {
+        "asr_mcnemar": {
+          "statistic": 11.0,
+          "p_value": 4.6966135406816054e-24,
+          "b": 11,
+          "c": 119,
+          "n_discordant": 130,
+          "n_pairs": 320,
+          "asr_a": 0.85,
+          "asr_b": 0.5125,
+          "risk_difference": -0.3375,
+          "p_value_bonferroni": 4.6966135406816054e-23,
+          "n_comparisons_bonferroni": 10
+        },
+        "cost_wilcoxon": {
+          "statistic": 13261.0,
+          "p_value": 6.488178874531253e-14,
+          "n_pairs": 320,
+          "mean_a": 0.013794080749999998,
+          "mean_b": 0.010371265031250002,
+          "mean_diff": -0.0034228157187500005,
+          "p_value_bonferroni": 6.488178874531253e-13,
+          "n_comparisons_bonferroni": 10
+        },
+        "latency_wilcoxon": {
+          "statistic": 3599.0,
+          "p_value": 1.5251413091250821e-40,
+          "n_pairs": 320,
+          "mean_a": 319198.139290482,
+          "mean_b": 153356.8894952902,
+          "mean_diff": -165841.24979519175,
+          "p_value_bonferroni": 1.525141309125082e-39,
+          "n_comparisons_bonferroni": 10
+        }
+      },
+      "per_model": {
+        "openrouter/anthropic/claude-sonnet-4": {
+          "asr_mcnemar": {
+            "statistic": 5.0,
+            "p_value": 0.4239501953125,
+            "b": 5,
+            "c": 9,
+            "n_discordant": 14,
+            "n_pairs": 40,
+            "asr_a": 0.425,
+            "asr_b": 0.325,
+            "risk_difference": -0.09999999999999998
+          }
+        },
+        "openrouter/deepseek/deepseek-chat-v3-0324": {
+          "asr_mcnemar": {
+            "statistic": 2.0,
+            "p_value": 0.001312255859375,
+            "b": 2,
+            "c": 16,
+            "n_discordant": 18,
+            "n_pairs": 40,
+            "asr_a": 0.925,
+            "asr_b": 0.575,
+            "risk_difference": -0.3500000000000001
+          }
+        },
+        "openrouter/google/gemini-2.5-flash": {
+          "asr_mcnemar": {
+            "statistic": 1.0,
+            "p_value": 0.000274658203125,
+            "b": 1,
+            "c": 16,
+            "n_discordant": 17,
+            "n_pairs": 40,
+            "asr_a": 0.925,
+            "asr_b": 0.55,
+            "risk_difference": -0.375
+          }
+        },
+        "openrouter/meta-llama/llama-3.3-70b-instruct": {
+          "asr_mcnemar": {
+            "statistic": 1.0,
+            "p_value": 0.000518798828125,
+            "b": 1,
+            "c": 15,
+            "n_discordant": 16,
+            "n_pairs": 40,
+            "asr_a": 0.9,
+            "asr_b": 0.55,
+            "risk_difference": -0.35
+          }
+        },
+        "openrouter/mistralai/mistral-large-2411": {
+          "asr_mcnemar": {
+            "statistic": 0.0,
+            "p_value": 0.0009765625,
+            "b": 0,
+            "c": 11,
+            "n_discordant": 11,
+            "n_pairs": 40,
+            "asr_a": 0.95,
+            "asr_b": 0.675,
+            "risk_difference": -0.2749999999999999
+          }
+        },
+        "openrouter/openai/gpt-4o": {
+          "asr_mcnemar": {
+            "statistic": 0.0,
+            "p_value": 9.5367431640625e-07,
+            "b": 0,
+            "c": 21,
+            "n_discordant": 21,
+            "n_pairs": 40,
+            "asr_a": 0.9,
+            "asr_b": 0.375,
+            "risk_difference": -0.525
+          }
+        },
+        "openrouter/openai/gpt-4o-mini": {
+          "asr_mcnemar": {
+            "statistic": 0.0,
+            "p_value": 1.9073486328125e-06,
+            "b": 0,
+            "c": 20,
+            "n_discordant": 20,
+            "n_pairs": 40,
+            "asr_a": 0.875,
+            "asr_b": 0.375,
+            "risk_difference": -0.5
+          }
+        },
+        "openrouter/qwen/qwen-2.5-72b-instruct": {
+          "asr_mcnemar": {
+            "statistic": 2.0,
+            "p_value": 0.0224609375,
+            "b": 2,
+            "c": 11,
+            "n_discordant": 13,
+            "n_pairs": 40,
+            "asr_a": 0.9,
+            "asr_b": 0.675,
+            "risk_difference": -0.22499999999999998
+          }
+        }
+      }
+    },
+    "direct_single_turn_vs_scripted_multi_turn": {
+      "pooled": {
+        "asr_mcnemar": {
+          "statistic": 122.0,
+          "p_value": 1.872620303580562e-26,
+          "b": 122,
+          "c": 9,
+          "n_discordant": 131,
+          "n_pairs": 320,
+          "asr_a": 0.159375,
+          "asr_b": 0.5125,
+          "risk_difference": 0.35312499999999997,
+          "p_value_bonferroni": 1.872620303580562e-25,
+          "n_comparisons_bonferroni": 10
+        },
+        "cost_wilcoxon": {
+          "statistic": 10803.0,
+          "p_value": 2.6631695374080677e-19,
+          "n_pairs": 320,
+          "mean_a": 0.0017199015625000002,
+          "mean_b": 0.010371265031250002,
+          "mean_diff": 0.008651363468750001,
+          "p_value_bonferroni": 2.6631695374080677e-18,
+          "n_comparisons_bonferroni": 10
+        },
+        "latency_wilcoxon": {
+          "statistic": 284.0,
+          "p_value": 4.634231249684059e-53,
+          "n_pairs": 320,
+          "mean_a": 21787.50949610221,
+          "mean_b": 153356.8894952902,
+          "mean_diff": 131569.379999188,
+          "p_value_bonferroni": 4.634231249684059e-52,
+          "n_comparisons_bonferroni": 10
+        }
+      },
+      "per_model": {
+        "openrouter/anthropic/claude-sonnet-4": {
+          "asr_mcnemar": {
+            "statistic": 11.0,
+            "p_value": 0.057373046875,
+            "b": 11,
+            "c": 3,
+            "n_discordant": 14,
+            "n_pairs": 40,
+            "asr_a": 0.125,
+            "asr_b": 0.325,
+            "risk_difference": 0.2
+          }
+        },
+        "openrouter/deepseek/deepseek-chat-v3-0324": {
+          "asr_mcnemar": {
+            "statistic": 17.0,
+            "p_value": 0.000728607177734375,
+            "b": 17,
+            "c": 2,
+            "n_discordant": 19,
+            "n_pairs": 40,
+            "asr_a": 0.2,
+            "asr_b": 0.575,
+            "risk_difference": 0.37499999999999994
+          }
+        },
+        "openrouter/google/gemini-2.5-flash": {
+          "asr_mcnemar": {
+            "statistic": 15.0,
+            "p_value": 0.000518798828125,
+            "b": 15,
+            "c": 1,
+            "n_discordant": 16,
+            "n_pairs": 40,
+            "asr_a": 0.2,
+            "asr_b": 0.55,
+            "risk_difference": 0.35000000000000003
+          }
+        },
+        "openrouter/meta-llama/llama-3.3-70b-instruct": {
+          "asr_mcnemar": {
+            "statistic": 17.0,
+            "p_value": 1.52587890625e-05,
+            "b": 17,
+            "c": 0,
+            "n_discordant": 17,
+            "n_pairs": 40,
+            "asr_a": 0.125,
+            "asr_b": 0.55,
+            "risk_difference": 0.42500000000000004
+          }
+        },
+        "openrouter/mistralai/mistral-large-2411": {
+          "asr_mcnemar": {
+            "statistic": 10.0,
+            "p_value": 0.03857421875,
+            "b": 10,
+            "c": 2,
+            "n_discordant": 12,
+            "n_pairs": 40,
+            "asr_a": 0.475,
+            "asr_b": 0.675,
+            "risk_difference": 0.20000000000000007
+          }
+        },
+        "openrouter/openai/gpt-4o": {
+          "asr_mcnemar": {
+            "statistic": 13.0,
+            "p_value": 0.000244140625,
+            "b": 13,
+            "c": 0,
+            "n_discordant": 13,
+            "n_pairs": 40,
+            "asr_a": 0.05,
+            "asr_b": 0.375,
+            "risk_difference": 0.325
+          }
+        },
+        "openrouter/openai/gpt-4o-mini": {
+          "asr_mcnemar": {
+            "statistic": 13.0,
+            "p_value": 0.0018310546875,
+            "b": 13,
+            "c": 1,
+            "n_discordant": 14,
+            "n_pairs": 40,
+            "asr_a": 0.075,
+            "asr_b": 0.375,
+            "risk_difference": 0.3
+          }
+        },
+        "openrouter/qwen/qwen-2.5-72b-instruct": {
+          "asr_mcnemar": {
+            "statistic": 26.0,
+            "p_value": 2.9802322387695312e-08,
+            "b": 26,
+            "c": 0,
+            "n_discordant": 26,
+            "n_pairs": 40,
+            "asr_a": 0.025,
+            "asr_b": 0.675,
+            "risk_difference": 0.65
+          }
+        }
+      }
+    }
+  },
+  "pairing_audit": {
+    "join_key": "(model, intent_id)",
+    "total_records": 1600,
+    "n_models": 8,
+    "n_conditions": 5,
+    "n_unique_intents": 40,
+    "intent_list": [
+      "intent-bioweapon",
+      "intent-botnet-c2",
+      "intent-bypass-content-filter",
+      "intent-child-exploitation",
+      "intent-code-injection-config",
+      "intent-credential-harvester",
+      "intent-ddos-tool",
+      "intent-deepfake-instructions",
+      "intent-discrimination-system",
+      "intent-document-injection",
+      "intent-drug-synthesis",
+      "intent-educational-explosives",
+      "intent-election-manipulation",
+      "intent-fake-admin-command",
+      "intent-fake-authority-exploit",
+      "intent-fake-news",
+      "intent-hacking-exploit",
+      "intent-hate-speech-generation",
+      "intent-identity-theft-guide",
+      "intent-insider-trading",
+      "intent-instruction-override",
+      "intent-jailbreak-roleplay",
+      "intent-keylogger",
+      "intent-mass-violence",
+      "intent-money-laundering",
+      "intent-multilingual-injection",
+      "intent-network-sniffing",
+      "intent-phishing-email",
+      "intent-pii-extraction",
+      "intent-poison-guide",
+      "intent-ransomware",
+      "intent-reverse-shell",
+      "intent-self-harm-instructions",
+      "intent-social-engineering-bank",
+      "intent-sql-injection-dump",
+      "intent-stalking-guide",
+      "intent-system-prompt-extraction",
+      "intent-urgency-chemical",
+      "intent-weapon-3d-print",
+      "intent-weapons-synthesis"
+    ],
+    "all_models_aligned": true,
+    "per_model": [
+      {
+        "model": "claude-sonnet-4",
+        "conditions": {
+          "adaptive_multi_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "adaptive_single_query_st": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "adaptive_single_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "direct_single_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "scripted_multi_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          }
+        },
+        "aligned": true
+      },
+      {
+        "model": "deepseek-chat-v3-0324",
+        "conditions": {
+          "adaptive_multi_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "adaptive_single_query_st": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "adaptive_single_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "direct_single_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "scripted_multi_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          }
+        },
+        "aligned": true
+      },
+      {
+        "model": "gemini-2.5-flash",
+        "conditions": {
+          "adaptive_multi_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "adaptive_single_query_st": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "adaptive_single_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "direct_single_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "scripted_multi_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          }
+        },
+        "aligned": true
+      },
+      {
+        "model": "llama-3.3-70b-instruct",
+        "conditions": {
+          "adaptive_multi_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "adaptive_single_query_st": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "adaptive_single_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "direct_single_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "scripted_multi_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          }
+        },
+        "aligned": true
+      },
+      {
+        "model": "mistral-large-2411",
+        "conditions": {
+          "adaptive_multi_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "adaptive_single_query_st": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "adaptive_single_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "direct_single_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "scripted_multi_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          }
+        },
+        "aligned": true
+      },
+      {
+        "model": "gpt-4o",
+        "conditions": {
+          "adaptive_multi_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "adaptive_single_query_st": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "adaptive_single_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "direct_single_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "scripted_multi_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          }
+        },
+        "aligned": true
+      },
+      {
+        "model": "gpt-4o-mini",
+        "conditions": {
+          "adaptive_multi_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "adaptive_single_query_st": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "adaptive_single_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "direct_single_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "scripted_multi_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          }
+        },
+        "aligned": true
+      },
+      {
+        "model": "qwen-2.5-72b-instruct",
+        "conditions": {
+          "adaptive_multi_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "adaptive_single_query_st": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "adaptive_single_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "direct_single_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          },
+          "scripted_multi_turn": {
+            "n_intents": 40,
+            "n_unique": 40,
+            "first_3": [
+              "intent-weapons-synthesis",
+              "intent-hacking-exploit",
+              "intent-drug-synthesis"
+            ],
+            "last_3": [
+              "intent-insider-trading",
+              "intent-bypass-content-filter",
+              "intent-weapon-3d-print"
+            ]
+          }
+        },
+        "aligned": true
+      }
+    ],
+    "per_comparison": [
+      {
+        "comparison": "adaptive_multi_turn_vs_adaptive_single_query_st",
+        "matched_pairs": 320,
+        "unmatched_a_only": 0,
+        "unmatched_b_only": 0,
+        "join_key": "(model, intent_id)"
+      },
+      {
+        "comparison": "adaptive_multi_turn_vs_adaptive_single_turn",
+        "matched_pairs": 320,
+        "unmatched_a_only": 0,
+        "unmatched_b_only": 0,
+        "join_key": "(model, intent_id)"
+      },
+      {
+        "comparison": "adaptive_multi_turn_vs_direct_single_turn",
+        "matched_pairs": 320,
+        "unmatched_a_only": 0,
+        "unmatched_b_only": 0,
+        "join_key": "(model, intent_id)"
+      },
+      {
+        "comparison": "adaptive_multi_turn_vs_scripted_multi_turn",
+        "matched_pairs": 320,
+        "unmatched_a_only": 0,
+        "unmatched_b_only": 0,
+        "join_key": "(model, intent_id)"
+      },
+      {
+        "comparison": "adaptive_single_query_st_vs_adaptive_single_turn",
+        "matched_pairs": 320,
+        "unmatched_a_only": 0,
+        "unmatched_b_only": 0,
+        "join_key": "(model, intent_id)"
+      },
+      {
+        "comparison": "adaptive_single_query_st_vs_direct_single_turn",
+        "matched_pairs": 320,
+        "unmatched_a_only": 0,
+        "unmatched_b_only": 0,
+        "join_key": "(model, intent_id)"
+      },
+      {
+        "comparison": "adaptive_single_query_st_vs_scripted_multi_turn",
+        "matched_pairs": 320,
+        "unmatched_a_only": 0,
+        "unmatched_b_only": 0,
+        "join_key": "(model, intent_id)"
+      },
+      {
+        "comparison": "adaptive_single_turn_vs_direct_single_turn",
+        "matched_pairs": 320,
+        "unmatched_a_only": 0,
+        "unmatched_b_only": 0,
+        "join_key": "(model, intent_id)"
+      },
+      {
+        "comparison": "adaptive_single_turn_vs_scripted_multi_turn",
+        "matched_pairs": 320,
+        "unmatched_a_only": 0,
+        "unmatched_b_only": 0,
+        "join_key": "(model, intent_id)"
+      },
+      {
+        "comparison": "direct_single_turn_vs_scripted_multi_turn",
+        "matched_pairs": 320,
+        "unmatched_a_only": 0,
+        "unmatched_b_only": 0,
+        "join_key": "(model, intent_id)"
+      }
+    ]
+  }
+}
