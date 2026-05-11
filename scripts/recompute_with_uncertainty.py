@@ -445,24 +445,25 @@ def main() -> None:
     for r in records:
         intent_sets[(r["model"], r["condition"])].append(r["intent_id"])
 
-    # Build per-model audit: verify all conditions share same intent_ids in same order
+    # Build per-model audit: verify all conditions share same intent_ids (set equality)
     per_model_audit = []
     all_aligned = True
     for model in models:
         model_short = model.split("/")[-1] if "/" in model else model
         model_entry: dict = {"model": model_short, "conditions": {}}
-        ref_intents: list[str] | None = None
+        ref_intent_set: set[str] | None = None
         for cond in conditions:
             intents = intent_sets.get((model, cond), [])
+            intent_set = set(intents)
             model_entry["conditions"][cond] = {
                 "n_intents": len(intents),
-                "n_unique": len(set(intents)),
+                "n_unique": len(intent_set),
                 "first_3": intents[:3],
                 "last_3": intents[-3:] if len(intents) >= 3 else intents,
             }
-            if ref_intents is None:
-                ref_intents = intents
-            elif intents != ref_intents:
+            if ref_intent_set is None:
+                ref_intent_set = intent_set
+            elif intent_set != ref_intent_set:
                 all_aligned = False
                 model_entry["aligned"] = False
         if "aligned" not in model_entry:
