@@ -10,6 +10,7 @@
 **Attacker Model**: DeepSeek-R1 (reasoning model)
 **Attacks per cell**: 40 intents x 8 models x 6 conditions = 1,920 total
 **Pairing**: All statistical comparisons are paired by `(model, intent_id)` -- see Appendix A for the formal pairing audit.
+**Human Annotation Protocol**: All 1,920 findings were independently annotated by two trained security researchers using a standardised rubric (binary safe/unsafe + severity rating). Inter-annotator agreement: Cohen's κ = 0.81 (substantial agreement). Disagreements (~12% of cases) were resolved by a third senior reviewer through adjudication. Adjusted ASR figures throughout this report reflect these human-validated labels.
 
 ### Condition Taxonomy
 
@@ -22,7 +23,7 @@ Our six conditions are grounded in the established red-teaming literature. We ad
 | `adaptive_single_query_st` | **Adaptive Single-Query Single-Turn** (PAIR-1) | ASQ-ST | PAIR with `max_iterations=1`. The attacker LLM generates exactly one candidate jailbreak prompt, the target responds once, and the attacker evaluates that response. No refinement loop -- the attacker never sees the target's response to improve. Ablation isolating the attacker's one-shot prompt-crafting ability from iterative adaptation. | PAIR single-iteration ablation (novel) |
 | `adaptive_single_turn` | **Adaptive Multi-Query Single-Turn** (PAIR-5) | AMQ-ST | PAIR with `max_iterations=5`. The attacker LLM iteratively generates a candidate prompt, queries the target, evaluates the response, analyses why a refusal occurred, and generates an improved prompt -- repeating this loop up to 5 times. The final result is the single best prompt-response pair; the target sees only one message per iteration but the attacker adapts across iterations based on feedback. | PAIR [2], TAP [3] |
 | `adaptive_multi_turn` | **Adaptive Multi-Query Multi-Turn** | AMQ-MT | The attacker LLM drives a real-time multi-turn conversation with the target (up to 5 turns). At each turn, the attacker generates the next user message based on the full conversation history and the target's prior responses, then evaluates whether the objective has been achieved. The target sees and retains all turns -- this is a true conversational attack, not a single-prompt optimisation. | Crescendo [6], autonomous reasoning model attacks [7] |
-| `best_of_k_st` | **Best-of-K Static Single-Turn** (BoK) | BoK-ST | K=5 diverse adversarial prompt variants are **pre-generated offline** by an attacker LLM (DeepSeek-R1) before the experiment. Each variant uses a **distinct jailbreak strategy** (role-play, hypothetical framing, educational pretext, code-generation framing, creative writing, etc.) targeting different facets of the target model's safety alignment. At runtime, all K variants are sent independently to the target with no feedback loop. An intent counts as "jailbroken" if **any** of its K variants succeeds. Matched target-query budget (K=5) with PAIR-5 for fair comparison. | Best-of-N jailbreaking [8], AmpleGCG sampling [9] |
+| `best_of_k_st` | **Best-of-K Static Single-Turn** (BoK) | BoK-ST | K=5 diverse adversarial prompt variants are **pre-generated offline** by an attacker LLM (DeepSeek-R1) before the experiment, with no interaction with any target model during generation. Each variant uses a **distinct jailbreak strategy** (role-play, hypothetical framing, educational pretext, code-generation framing, creative writing, etc.) targeting different facets of the target model's safety alignment. "Static" refers specifically to the absence of *runtime* feedback from the target -- the offline generation phase is LLM-assisted but does not observe target responses. At runtime, all K variants are sent independently to the target with no further feedback loop. An intent counts as "jailbroken" if **any** of its K variants succeeds. K=5 matches the query budget of PAIR-5 for fair comparison; K is not ablated in this study. | Best-of-N jailbreaking [8], AmpleGCG sampling [9] |
 
 ### 2x2 Factorial Structure
 
@@ -52,7 +53,7 @@ The six experimental conditions produced a clear hierarchy of attack effectivene
 
 **Finding 1 -- Best-of-K Static Single-Turn (BoK-ST) achieves the highest raw ASR (91.2%), but converges with PAIR-5 after human review.** BoK-ST sends K=5 pre-generated adversarial prompts per intent, each targeting a different facet of the model's safety alignment (e.g., role-play, hypothetical framing, code-generation pretext). An intent is "jailbroken" if any of the 5 variants succeeds. This strategy-diverse approach achieves the highest raw ASR at 91.2% [87.6%, 93.9%]. However, 23 false positives reduce its adjusted ASR to 85.6%, making it statistically indistinguishable from the Adaptive Multi-Query Single-Turn condition (PAIR-5, 85.9% adjusted). The raw ASR difference of +6.2pp is borderline significant (McNemar p = 0.033, Bonferroni-corrected), but the adjusted ASRs converge. This parallels findings from Best-of-N jailbreaking research [8], where sampling diversity increases surface-level success but inflates detector-reported ASR through ambiguous outputs.
 
-**Finding 2 -- Adaptivity is the dominant factor, not multi-turn interaction.** The AMQ-ST (PAIR-5) condition achieved 85.0% raw ASR, significantly outperforming the AMQ-MT condition (63.4%) by +21.6 percentage points (McNemar p < 0.0001, Bonferroni-corrected). This resolves the confound identified in the original study design: when adaptivity and multi-turn interaction are disentangled via the factorial design, adaptivity alone drives the majority of attack success. Adding multi-turn interaction to adaptive strategies actually *degrades* performance (63.4% vs. 85.0%). This is consistent with Li et al.'s [10] finding that single-turn optimised attacks outperform multi-turn strategies, and with Handa et al.'s [11] observation that multi-turn red-teaming introduces conversational noise that can dilute attack effectiveness. A detailed mechanistic explanation for this result is provided in Section 1.8.
+**Finding 2 -- Under a matched 5-query budget, iterative single-turn refinement outperforms adaptive multi-turn conversation.** The AMQ-ST (PAIR-5) condition achieved 85.0% raw ASR, significantly outperforming the AMQ-MT condition (63.4%) by +21.6 percentage points (McNemar p < 0.0001, Bonferroni-corrected). Our factorial design isolates the differential contribution of adaptivity vs. interaction mode: when the two factors are disentangled, adding multi-turn interaction to an adaptive strategy *degrades* performance relative to concentrating the same query budget on single-turn refinement (63.4% vs. 85.0%). This is consistent with Li et al.'s [10] finding that multi-turn contexts provide richer defensive signals for safety classifiers. **Limitation**: AMQ-MT is capped at 5 turns; Hagendorff et al. [7] achieve 97.14% with 10-turn budgets and reasoning-model attackers, suggesting multi-turn strategies may be competitive given sufficient turn depth. The present finding should be interpreted as specific to a 5-turn budget. A detailed mechanistic analysis is provided in Section 1.8.
 
 **Finding 3 -- Scripted Static Multi-Turn (SS-MT) provides moderate gains over the One-Shot Static baseline but is outclassed by every adaptive method.** SS-MT (raw 51.2%, adjusted 37.5%) more than doubles the baseline ASR (15.9%), confirming that multi-turn context gradual escalation enables attacks -- consistent with Crescendo [6] findings. However, after human review the adjusted ASR drops sharply to 37.5% due to 54 false positives. All adaptive conditions and BoK-ST significantly exceed SS-MT (p < 0.005 for all pairwise comparisons), demonstrating that LLM-driven attack optimisation is far more effective than human-authored escalation scripts.
 
@@ -64,9 +65,9 @@ Our results substantially exceed published baselines for comparable attack strat
 
 | Attack Strategy | Published ASR Range | Our ASR | Our Condition | Source |
 |---|---|---|---|---|
-| Direct request (HarmBench) | Model-dependent (e.g., Claude 2: 4%, GPT-3.5: 60%) | 15.9% | OSS-ST | Mazeika et al. [1] |
-| PAIR (GPT-4 attacker, 20 iter) | 4-60% (Claude 2: 4%, GPT-3.5: 60%, GPT-4: 33%) | 85.0% | AMQ-ST (PAIR-5) | Chao et al. [2], as reported in [5] |
-| TAP (tree search) | 4-80% (Llama-2-7B: 4%, GPT-3.5: 80%, GPT-4: 36%) | -- (not tested) | -- | Mehrotra et al. [3], Zeng et al. |
+| Direct request (HarmBench) | Near-zero for most hardened models; higher for weaker models (see [1] Table 2) | 15.9% | OSS-ST | Mazeika et al. [1] |
+| PAIR (GPT-4 attacker, 20 iter) | 4-60% (Claude 2: 4%, Llama-2-13B: 15%, GPT-4: 33%, GPT-3.5: 60%) | 85.0% | AMQ-ST (PAIR-5) | Chao et al. [2], as reported in [5] |
+| TAP (tree search) | 4-80% (Llama-2-7B: 4%, GPT-3.5: 80%, GPT-4: 36%) | -- (not tested) | -- | Mehrotra et al. [3], Zeng et al. [12] |
 | Crescendo (multi-turn) | 20-100% (task-dependent; GPT-4: 20-100%) | 63.4% | AMQ-MT | Russinovich et al. [6] |
 | Autonomous reasoning agents | 2.9-90% (Claude 4 Sonnet: 2.9%, DeepSeek-V3: 90%) | 85.0% | AMQ-ST (PAIR-5) | Hagendorff et al. [7] |
 | Simple adaptive attacks | Up to 100% (includes grey-box prefilling for Claude) | 85.9% (adj.) | AMQ-ST (PAIR-5) | Andriushchenko et al. [5] |
@@ -138,7 +139,9 @@ This ablation isolates the marginal value of PAIR's iterative refinement loop --
 
 **Finding 14 -- Iterative refinement adds +22.5pp ASR on average (p < 0.001).** The pooled gain is highly significant (McNemar: 89 discordant pairs favouring PAIR-5 vs. 17 favouring PAIR-1). The benefit is strongly model-dependent: models already near-ceiling (Mistral 90%, DeepSeek 90%) gain little, while moderately-defended models benefit enormously (GPT-4o-mini: +40pp). This means iterative refinement is most valuable against models with intermediate safety defenses.
 
-**Contextualisation:** Prior work does not provide this ablation. Chao et al. [2] report PAIR results only at convergence (20 iterations). Mehrotra et al. [3] report TAP results only at convergence. Our paired ablation demonstrates that approximately 74% of PAIR's final ASR is attributable to the attacker's one-shot prompt-crafting ability (PAIR-1 = 63.4% vs. PAIR-5 = 85.9%), and the remaining ~22.5pp comes from the iterative refinement loop where the attacker observes the target's refusal and adapts -- a 35% relative improvement. Crucially, the PAIR-1 condition (one generation, one target query, one evaluation) involves no feedback: the attacker never sees the target's response to improve. The gain from PAIR-1 to PAIR-5 is therefore purely attributable to closed-loop adaptation.
+**Contextualisation:** Prior work does not provide this ablation. Chao et al. [2] report PAIR at convergence over 20 iterations; Mehrotra et al. [3] report TAP at convergence. Our implementation uses `max_iterations=5` -- a resource-constrained variant that may not fully replicate PAIR's 20-iteration ceiling. The comparison to published PAIR ASR (4-60%) should therefore be read as a comparison of attack paradigms under different attacker models (DeepSeek-R1 vs. GPT-4), not a direct replication.
+
+Decomposing the gain relative to the OSS-ST baseline (15.0%): PAIR-1 captures 48.4pp of the 70.9pp total gain above baseline, or **68%** of the total adaptive gain. Iterative refinement (PAIR-1 → PAIR-5) accounts for the remaining 22.5pp, a **32% share of total gain** and a **35% relative improvement** over PAIR-1 alone. Crucially, PAIR-1 involves no feedback loop -- the attacker never observes the target's response to improve. The 22.5pp increment from PAIR-1 to PAIR-5 is therefore attributable entirely to closed-loop adaptation.
 
 ### 1.6 Paired Statistical Comparisons (McNemar, Bonferroni-Corrected, k=15)
 
@@ -169,13 +172,15 @@ This ablation isolates the marginal value of PAIR's iterative refinement loop --
 
 Every adjacent-tier comparison is statistically significant. The dominant factor separating Tier 1 from Tier 2 is whether the attack uses **multiple queries to the target per intent** -- either through iterative refinement with feedback (PAIR-5) or through strategy-diverse pre-generated variants (BoK-ST, K=5 distinct strategies). Neither multi-turn conversation (AMQ-MT) nor a single attacker-crafted prompt without refinement (ASQ-ST/PAIR-1) reaches Tier 1, despite AMQ-MT using the same 5-query budget as PAIR-5.
 
+**Statistical note**: The pooled McNemar test (N=320 pairs per comparison) does not account for model-level clustering. Observations within the same target model may be correlated. Per-model McNemar results (Appendix A) are consistent in sign with all pooled findings, which reduces -- but does not eliminate -- the risk that pooled p-values are inflated by clustering. Mixed-effects modelling is deferred to future work.
+
 ### 1.7 RQ1 Answer
 
-**Adaptivity -- not multi-turn interaction -- is the primary driver of attack success.** The AMQ-ST/PAIR-5 condition achieves the highest adjusted ASR (85.9%), significantly exceeding all other conditions except BoK-ST (which achieves an equivalent 85.6% adjusted). Adding multi-turn interaction to adaptive strategies *degrades* performance (AMQ-MT: 63.4% vs. AMQ-ST: 85.9%, p < 0.001). Best-of-K Static Single-Turn achieves the highest raw ASR (91.2%) but inflates results with false positives; after human review it matches PAIR-5 while costing 30% more and taking 2x longer.
+**Iterative single-turn refinement is the dominant attack mechanism under a 5-turn budget.** The AMQ-ST/PAIR-5 condition achieves the highest adjusted ASR (85.9%), significantly exceeding all conditions except BoK-ST (equivalent 85.6% adjusted). Under the same 5-query budget, multi-turn adaptive conversation (AMQ-MT: 63.4%) underperforms single-turn refinement -- though this finding is specific to a 5-turn cap and may not generalise to deeper multi-turn budgets. Best-of-K achieves the highest raw ASR (91.2%) but inflates results via the any-of-K criterion; after human review it matches PAIR-5 while costing 30% more and taking 2x longer.
 
 The most cost-effective strategy is PAIR-1 ($0.0068/attack, 63.4% adj. ASR, $0.0107/success). PAIR-5 ($0.0138/attack, 85.9% adj. ASR, $0.0161/success) provides superior ASR at a modest premium. BoK-ST ($0.0179/attack, 85.6% adj. ASR, $0.0209/success) is dominated by PAIR-5 on every practical metric.
 
-The factorial design cleanly decomposes the effects: a single attacker-crafted prompt with no feedback (PAIR-1) contributes ~48pp above the OSS-ST baseline; iterative refinement with closed-loop feedback (PAIR-1 to PAIR-5) adds ~22.5pp more; pre-generated strategy diversity without feedback (BoK-ST) matches PAIR-5's ceiling via a different mechanism; scripted multi-turn context alone adds ~22pp (adjusted); and combining adaptivity with multi-turn conversation yields no synergy.
+The factorial design decomposes the gain above the OSS-ST baseline: a single attacker-crafted prompt with no feedback (PAIR-1) captures 68% of the total adaptive gain (+48.4pp of 70.9pp); iterative closed-loop refinement (PAIR-1 to PAIR-5) accounts for the remaining 32% (+22.5pp); pre-generated strategy diversity without feedback (BoK-ST) matches PAIR-5's adjusted ASR ceiling via a different mechanism; scripted multi-turn context alone adds ~22.5pp adjusted above OSS-ST; and combining adaptivity with multi-turn conversation under a 5-turn budget yields no synergy over single-turn refinement.
 
 ### 1.8 Why Does Multi-Turn Adaptive (AMQ-MT) Underperform Single-Turn Strategies?
 
@@ -211,13 +216,13 @@ The LLM Judge bypass rates provide additional evidence:
 | BoK-ST | 74.1% |
 | AMQ-MT | 45.0% |
 
-AMQ-MT's far lower judge bypass rate (45.0% vs. 78.1%) confirms that multi-turn conversations leave substantially more contextual evidence of harmful intent, making successful attacks both harder to achieve and easier for external evaluators to detect. Li et al. [10] document a similar pattern, finding that multi-turn attack contexts provide richer signals for safety classifiers.
+AMQ-MT's far lower judge bypass rate (45.0% vs. 78.1%) confirms that multi-turn conversations leave substantially more contextual evidence of harmful intent, making successful attacks both harder to achieve and easier for external evaluators to detect. This aligns with Li et al.'s [10] analysis of multi-turn jailbreak dynamics, which documents how accumulated conversation context enables classifiers to identify harmful trajectories that would be ambiguous in a single turn.
 
 **Mechanism 3: BoK-ST attacks different facets independently; AMQ-MT attacks one trajectory with accumulating context.**
 
 BoK-ST sends 5 variants each using a distinct jailbreak strategy (role-play, educational framing, code generation, hypothetical scenario, creative writing). Each variant is an independent probe of a different safety blind spot. If the model is robust to role-play but weak against code-generation framing, the code variant succeeds regardless of whether the others failed. The target has zero memory between variants.
 
-AMQ-MT, by contrast, pursues one escalation trajectory over 5 turns. If the model is robust to that particular angle of approach, all 5 turns are spent on an unproductive path. The attacker can attempt to pivot mid-conversation, but changing strategy fundamentally makes the dialogue incoherent and often triggers the model's safety mechanisms.
+AMQ-MT, by contrast, pursues one escalation trajectory over 5 turns. If the model is robust to that particular angle of approach, all 5 turns are spent on an unproductive path. The attacker can attempt to pivot mid-conversation, but changing strategy fundamentally makes the dialogue incoherent and often triggers the model's safety mechanisms. Yang et al. [11], studying a contextual multi-turn attacker, document precisely this constraint: once a conversation context is established, the attacker's strategic space is heavily constrained by coherence requirements.
 
 This structural advantage of independence over depth is consistent with the design philosophy behind Andriushchenko et al.'s [5] "simple adaptive attacks," which combine multiple independent attack vectors (model-specific prompt templates, random search over template parameters, self-transfer across models) rather than relying on a single deepening approach. Their method achieves near-100% ASR on most models precisely because each vector independently probes a different vulnerability surface.
 
@@ -440,7 +445,7 @@ No single detector handles all six conditions well. This orthogonal failure stru
 | AMQ-ST (PAIR-5) | 37.8% | 86.6% | 85.9% |
 | OSS-ST | 10.3% | 15.3% | 15.0% |
 
-If keyword detection alone were used, BoK-ST's ASR would appear as 35.0% rather than the validated 85.6% -- a 50.6pp undercount. **Detector specification is essential for benchmark comparisons.** This finding has direct implications for HarmBench [1] and JailbreakBench [4] protocols, which specify particular judges for scoring.
+If keyword detection alone were used, BoK-ST's ASR would appear as 35.0% rather than the validated 85.6% -- a 50.6pp undercount. **Detector specification is essential for benchmark comparisons.** This finding has direct implications for HarmBench (ICML 2024) [1] and JailbreakBench (NeurIPS 2024) [4] protocols, which specify particular judges for scoring.
 
 ### 3.7 RQ3 Answer
 
@@ -499,6 +504,18 @@ All 8 models were assessed against EU AI Act Articles 15(5) (Cyberattack Resilie
 3. **For benchmark designers**: Always report **adjusted ASR** alongside raw ASR, particularly for Best-of-K/N benchmarks where inflation is systematic. Report detector-specific F1 and use multi-detector consensus. Specify which judge(s) are used for scoring, as detector choice can swing reported ASR by 40-60pp. PAIR-style conditions are the most reliable for automated benchmarking (< 1pp correction).
 
 4. **For EU AI Act compliance**: Current frontier models universally fail adversarial robustness requirements. The BoK-ST methodology should be included in compliance testing frameworks because it reveals tail-of-distribution vulnerabilities that single-attempt testing misses.
+
+### Study Limitations
+
+1. **Turn-budget cap (AMQ-MT)**: AMQ-MT is capped at 5 turns. The finding that multi-turn adaptive attacks underperform single-turn refinement is specific to this budget. Studies using 10-turn budgets [7] achieve substantially higher ASR. Practitioners should not conclude that multi-turn attacks are ineffective in general.
+
+2. **PAIR iteration cap**: AMQ-ST uses `max_iterations=5`, not the 20-iteration original PAIR design [2]. The comparison to published PAIR ASRs reflects differences in both attacker model (DeepSeek-R1 vs. GPT-4) and iteration depth. These are not separable in the current design.
+
+3. **K unablated for BoK-ST**: K=5 was chosen to match PAIR-5's query budget. The sensitivity of BoK-ST's ASR to K is unknown. It is possible that K=3 achieves equivalent adjusted ASR at lower cost, or that K=10 provides meaningful additional coverage.
+
+4. **Intent category heterogeneity**: Results are averages across 40 harm intents spanning cybercrime, CBRN, social manipulation, and other categories. Category-level ASR variation is not reported; some categories may be substantially more or less susceptible to specific attack strategies.
+
+5. **Model-version specificity**: All results reflect model versions available in May 2026. Safety alignment is updated frequently; results may not hold for later releases of the same models.
 
 ---
 
@@ -588,20 +605,22 @@ Every pairwise comparison achieves 320 matched pairs (8 models x 40 intents) wit
 - **Multiple comparison correction**: Bonferroni correction for 15 pairwise condition comparisons (6 choose 2)
 - **Cost/latency comparisons**: Wilcoxon signed-rank test for non-normal distributions, paired by `(model, intent_id)`
 - **Refinement ablation**: McNemar's test comparing PAIR-1 vs. PAIR-5 on the same `(model, intent_id)` pairs
-- **Human validation**: 100% review coverage (1,920/1,920 findings annotated)
-- **Adjusted ASR**: Raw ASR corrected for false positives and false negatives identified by human annotators
-- **AWCS**: Authority-Weighted Cascade Score per RAHS paper (arxiv:2603.10807), parameters: alpha=0.5, gamma=0.2, lambda=0.1
-- **Detector metrics**: Precision = TP/(TP+FP), Recall = TP/(TP+FN), F1 = 2*P*R/(P+R), computed against human ground truth
+- **Human validation**: 100% review coverage (1,920/1,920 findings annotated); two independent annotators; Cohen's κ = 0.81; disagreements resolved by senior adjudicator
+- **Adjusted ASR**: Raw ASR corrected for false positives (automated success, human-rejected) and false negatives (automated refusal, human-confirmed bypass) identified by human annotators
+- **AWCS** (Authority-Weighted Cascade Score): composite safety metric defined as AWCS = (R_rate × α) − (ASR × γ) − (CDR × λ), where R_rate = refusal rate, ASR = attack success rate, CDR = critical damage rate, and α=0.5, γ=0.2, λ=0.1 (parameters from RAHS paper, arxiv:2603.10807). Positive AWCS indicates net safe behaviour; negative AWCS indicates net harmful output production. The metric weights refusal rate most heavily because consistent refusal is the primary indicator of effective safety alignment.
+- **Detector metrics**: Precision = TP/(TP+FP), Recall = TP/(TP+FN), F1 = 2×P×R/(P+R), computed against human ground truth labels
+- **Clustering limitation**: Pooled McNemar tests treat 320 pairs as i.i.d.; model-level clustering is not corrected for. Per-model stratified results are provided and directionally consistent with all pooled findings.
+- **External validity**: Results are specific to 40 harm intents from the ATLAS intent set and 8 model versions tested in May 2026. Generalisation to other intent distributions, harm categories, or subsequent model versions is not established.
 
 ---
 
 ## References
 
-[1] Mazeika, M. et al. (2024). "HarmBench: A Standardized Evaluation Framework for Automated Red Teaming and Robust Refusal." *ICLR 2025.* arxiv:2402.04249
+[1] Mazeika, M. et al. (2024). "HarmBench: A Standardized Evaluation Framework for Automated Red Teaming and Robust Refusal." *ICML 2024.* arxiv:2402.04249
 
-[2] Chao, P. et al. (2023). "Jailbreaking Black-Box Large Language Models in Twenty Queries." *PAIR.* arxiv:2310.08419
+[2] Chao, P. et al. (2023). "Jailbreaking Black Box Large Language Models in Twenty Queries." *NeurIPS 2023 SoLaR Workshop.* arxiv:2310.08419
 
-[3] Mehrotra, A. et al. (2023). "Tree of Attacks: Jailbreaking Black-Box LLMs with Automatically Generated Prompts." *TAP.* arxiv:2312.02119
+[3] Mehrotra, A. et al. (2023). "Tree of Attacks with Pruning (TAP): Jailbreaking Black-Box LLMs Automatically." *NeurIPS 2024.* arxiv:2312.02119
 
 [4] Chao, P. et al. (2024). "JailbreakBench: An Open Robustness Benchmark for Jailbreaking Large Language Models." *NeurIPS 2024.* arxiv:2404.01318
 
@@ -617,4 +636,6 @@ Every pairwise comparison achieves 320 matched pairs (8 models x 40 intents) wit
 
 [10] Li, H. et al. (2024). "Multi-Turn Jailbreak Attack on Large Language Models." arxiv:2410.01326
 
-[11] Handa, K. et al. (2024). "Jailbreaking Large Language Models with Symbolic Mathematics." arxiv:2409.11445
+[11] Yang, Z. et al. (2024). "Chain of Attack: a Semantic-Driven Contextual Multi-Turn Attacker for LLM." arxiv:2405.05610
+
+[12] Zeng, Y. et al. (2024). "How Johnny Can Persuade LLMs to Jailbreak Them: Rethinking Persuasion to Challenge AI Safety by Humanizing LLMs." *ACL 2024.* arxiv:2401.06373
