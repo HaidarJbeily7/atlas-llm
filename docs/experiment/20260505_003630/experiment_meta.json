@@ -11,7 +11,12 @@
   "openrouter/mistralai/mistral-large-2411"
 ],
   "conditions": [
-  "direct_single_turn"
+  "direct_single_turn",
+  "best_of_k_st",
+  "scripted_multi_turn",
+  "adaptive_single_turn",
+  "adaptive_multi_turn",
+  "adaptive_single_query_st"
 ],
   "attacker_model": "openrouter/deepseek/deepseek-r1-0528",
   "all_detectors": true

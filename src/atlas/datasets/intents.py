@@ -5,6 +5,7 @@ from atlas.core.models import Intent
 from atlas.datasets.manager import DatasetManager
 
 _INTENTS_FILE = "experiment_intents.json"
+_BOK_VARIANTS_FILE = "bok_variants.json"
 
 
 class IntentLoader:
@@ -17,6 +18,14 @@ class IntentLoader:
     def _ensure_loaded(self) -> list[Intent]:
         if self._intents is None:
             raw = self._dm.load_json(_INTENTS_FILE)
+            # Merge pre-generated BoK variants if available
+            try:
+                bok = self._dm.load_json(_BOK_VARIANTS_FILE)
+            except Exception:
+                bok = {}
+            for item in raw:
+                if item["id"] in bok:
+                    item["bok_variants"] = bok[item["id"]]
             self._intents = [Intent(**item) for item in raw]
         return self._intents
 

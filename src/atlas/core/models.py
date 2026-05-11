@@ -28,6 +28,7 @@ class Intent(BaseModel):
     objective: str  # plain-language goal (used by attacker LLM)
     direct_prompt: str  # single-turn static prompt
     scripted_turns: list[str] = Field(default_factory=list)
+    bok_variants: list[str] = Field(default_factory=list)
     tags: list[str] = Field(default_factory=list)
 
 

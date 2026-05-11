@@ -34,11 +34,13 @@ ATTACKER_MODEL="openrouter/deepseek/deepseek-r1-0528"
 
 # The six experimental conditions (probes)
 CONDITIONS=(
-    "jailbreak"                 # static single-turn (DAN/DUDE/STAN templates)
+    "direct_single_turn",
+    
     "scripted_multi_turn"       # static multi-turn
     "adaptive_single_query_st"  # adaptive single-query single-turn (PAIR 1 iter, no refinement)
     "adaptive_single_turn"      # adaptive multi-query single-turn (PAIR up to 5 iterations)
     "adaptive_multi_turn"       # adaptive multi-turn
+    "best_of_k_st"              # non-adaptive matched-budget baseline (K=5 pre-generated variants)
 )
 
 RESULTS_DIR="./results/experiment"

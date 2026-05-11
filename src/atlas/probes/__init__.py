@@ -40,6 +40,7 @@ PROBE_MODULES = {
     "adaptive_single_query_st": "atlas.probes.adaptive_single_query_single_turn",
     "adaptive_single_turn": "atlas.probes.adaptive_single_turn",
     "adaptive_multi_turn": "atlas.probes.adaptive_multi_turn",
+    "best_of_k_st": "atlas.probes.best_of_k_single_turn",
 }
 
 # Mapping from probe category to recommended default detectors
@@ -72,4 +73,5 @@ DEFAULT_PROBE_DETECTORS = {
     "adaptive_single_query_st": ["keyword", "refusal"],
     "adaptive_single_turn": ["keyword", "refusal"],
     "adaptive_multi_turn": ["keyword", "refusal"],
+    "best_of_k_st": ["keyword", "refusal"],
 }
