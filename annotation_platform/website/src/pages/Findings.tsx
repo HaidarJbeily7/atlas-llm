@@ -118,6 +118,88 @@ function DetectorCard({ d }: { d: FindingDetail['detector_results'][number] }) {
   );
 }
 
+function BokVariantCard({ variant, index }: {
+  variant: {
+    variant_index: number;
+    prompt: string;
+    response_preview: string;
+    passed: boolean;
+    detector_summary?: Array<{ name: string; passed: boolean; score: number }>;
+  };
+  index: number;
+}) {
+  const [open, setOpen] = useState(false);
+  const attackSucceeded = !variant.passed;
+
+  return (
+    <div className={clsx(
+      'rounded-lg border text-xs',
+      attackSucceeded
+        ? 'bg-red-900/15 border-red-800/40'
+        : 'bg-green-900/15 border-green-800/40'
+    )}>
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="w-full text-left px-3 py-2 cursor-pointer"
+      >
+        <div className="flex justify-between items-center">
+          <span className="font-medium text-gray-200">
+            Variant {variant.variant_index + 1}
+          </span>
+          <span className="flex items-center gap-2">
+            <span className={attackSucceeded ? 'text-red-400 font-semibold' : 'text-green-400'}>
+              {attackSucceeded ? 'ATTACK SUCCESS' : 'REFUSED'}
+            </span>
+            {variant.detector_summary && variant.detector_summary.length > 0 && (
+              <span className="text-gray-500">
+                ({variant.detector_summary.filter(d => !d.passed).length}/{variant.detector_summary.length} detectors flagged)
+              </span>
+            )}
+            <svg className={clsx('w-3 h-3 text-gray-500 transition-transform', open && 'rotate-180')}
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </span>
+        </div>
+        <p className="text-gray-400 truncate mt-1">{variant.prompt.slice(0, 150)}...</p>
+      </button>
+
+      {open && (
+        <div className="border-t border-gray-700/50 px-3 py-3 space-y-3">
+          <div>
+            <p className="text-gray-500 mb-1 font-medium">Prompt</p>
+            <pre className="text-gray-300 bg-gray-800/60 rounded px-2 py-1.5 whitespace-pre-wrap max-h-48 overflow-auto">
+              {variant.prompt}
+            </pre>
+          </div>
+          <div>
+            <p className="text-gray-500 mb-1 font-medium">Response</p>
+            <pre className="text-gray-300 bg-gray-800/60 rounded px-2 py-1.5 whitespace-pre-wrap max-h-48 overflow-auto">
+              {variant.response_preview}
+            </pre>
+          </div>
+          {variant.detector_summary && variant.detector_summary.length > 0 && (
+            <div>
+              <p className="text-gray-500 mb-1 font-medium">Detectors</p>
+              <div className="flex flex-wrap gap-1.5">
+                {variant.detector_summary.map((d, di) => (
+                  <span key={di} className={clsx(
+                    'rounded px-2 py-0.5',
+                    d.passed ? 'bg-green-900/30 text-green-400' : 'bg-red-900/30 text-red-400'
+                  )}>
+                    {d.name}: {d.passed ? 'PASS' : 'FAIL'} ({d.score.toFixed(2)})
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function FindingExpanded({ finding }: { finding: FindingDetail }) {
   const a = finding.attempt;
   const meta = a.metadata;
@@ -215,6 +297,37 @@ function FindingExpanded({ finding }: { finding: FindingDetail }) {
           <div>
             <p className="text-xs text-gray-500 mb-1 font-medium">Response</p>
             <pre className="text-xs text-gray-300 bg-gray-800 rounded-lg p-3 max-h-48 overflow-auto whitespace-pre-wrap">{a.response}</pre>
+          </div>
+        </div>
+      )}
+
+      {/* Best-of-K summary bar */}
+      {meta.bok_aggregated && (
+        <div className="flex gap-4 text-xs rounded-lg px-4 py-2 bg-cyan-900/10 border border-cyan-800/20">
+          <span className="text-gray-500">Strategy: <span className="text-white font-medium">Best-of-K (non-adaptive)</span></span>
+          <span className="text-gray-500">K: <span className="text-cyan-300 font-medium">{String(meta.bok_total_variants ?? 5)}</span></span>
+          <span className="text-gray-500">Variants that bypassed safety: <span className={clsx('font-medium', Number(meta.bok_variants_failed) > 0 ? 'text-red-400' : 'text-green-400')}>{String(meta.bok_variants_failed ?? 0)} / {String(meta.bok_total_variants ?? 5)}</span></span>
+          <span className="text-gray-500">Best variant: <span className="text-cyan-300 font-medium">#{String(Number(meta.bok_best_variant_index ?? 0) + 1)}</span></span>
+        </div>
+      )}
+
+      {/* Best-of-K variants */}
+      {meta.bok_aggregated && Array.isArray(meta.bok_all_variants) && (
+        <div>
+          <p className="text-xs text-gray-500 mb-2 font-medium">
+            Best-of-K Variants ({(meta.bok_all_variants as Array<Record<string, unknown>>).length} variants,{' '}
+            <span className="text-red-400">{String(meta.bok_variants_failed ?? 0)} attack(s) succeeded</span>)
+          </p>
+          <div className="space-y-2">
+            {(meta.bok_all_variants as Array<{
+              variant_index: number;
+              prompt: string;
+              response_preview: string;
+              passed: boolean;
+              detector_summary?: Array<{ name: string; passed: boolean; score: number }>;
+            }>).map((v, i) => (
+              <BokVariantCard key={i} variant={v} index={i} />
+            ))}
           </div>
         </div>
       )}
@@ -550,10 +663,12 @@ export default function Findings() {
                       'text-blue-400': f.condition === 'adaptive_single_query_st',
                       'text-amber-400': f.condition === 'adaptive_single_turn',
                       'text-purple-400': f.condition === 'adaptive_multi_turn',
+                      'text-cyan-400': f.condition === 'best_of_k_st',
                     })}>
                       {f.condition === 'adaptive_single_query_st' ? '1Q' :
                        f.condition === 'adaptive_single_turn' ? 'MQ' :
-                       f.condition === 'adaptive_multi_turn' ? 'MT' : null}
+                       f.condition === 'adaptive_multi_turn' ? 'MT' :
+                       f.condition === 'best_of_k_st' ? 'BoK' : null}
                     </span>
                   )}
                   <span className="badge badge-info text-[10px] whitespace-nowrap">{f.model_short}</span>
