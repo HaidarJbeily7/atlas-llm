@@ -302,17 +302,17 @@ function FindingExpanded({ finding }: { finding: FindingDetail }) {
       )}
 
       {/* Best-of-K summary bar */}
-      {meta.bok_aggregated && (
+      {Boolean(meta.bok_aggregated) && (
         <div className="flex gap-4 text-xs rounded-lg px-4 py-2 bg-cyan-900/10 border border-cyan-800/20">
           <span className="text-gray-500">Strategy: <span className="text-white font-medium">Best-of-K (non-adaptive)</span></span>
-          <span className="text-gray-500">K: <span className="text-cyan-300 font-medium">{String(meta.bok_total_variants ?? 5)}</span></span>
-          <span className="text-gray-500">Variants that bypassed safety: <span className={clsx('font-medium', Number(meta.bok_variants_failed) > 0 ? 'text-red-400' : 'text-green-400')}>{String(meta.bok_variants_failed ?? 0)} / {String(meta.bok_total_variants ?? 5)}</span></span>
-          <span className="text-gray-500">Best variant: <span className="text-cyan-300 font-medium">#{String(Number(meta.bok_best_variant_index ?? 0) + 1)}</span></span>
+          <span className="text-gray-500">K: <span className="text-cyan-300 font-medium">{String(meta.bok_total_variants !== undefined ? meta.bok_total_variants : 5)}</span></span>
+          <span className="text-gray-500">Variants that bypassed safety: <span className={clsx('font-medium', Number(meta.bok_variants_failed || 0) > 0 ? 'text-red-400' : 'text-green-400')}>{String(meta.bok_variants_failed !== undefined ? meta.bok_variants_failed : 0)}{' / '}{String(meta.bok_total_variants !== undefined ? meta.bok_total_variants : 5)}</span></span>
+          <span className="text-gray-500">Best variant: <span className="text-cyan-300 font-medium">{'#'}{String(Number(meta.bok_best_variant_index || 0) + 1)}</span></span>
         </div>
       )}
 
       {/* Best-of-K variants */}
-      {meta.bok_aggregated && Array.isArray(meta.bok_all_variants) && (
+      {Boolean(meta.bok_aggregated) && Array.isArray(meta.bok_all_variants) && (
         <div>
           <p className="text-xs text-gray-500 mb-2 font-medium">
             Best-of-K Variants ({(meta.bok_all_variants as Array<Record<string, unknown>>).length} variants,{' '}
