@@ -118,7 +118,7 @@ function DetectorCard({ d }: { d: FindingDetail['detector_results'][number] }) {
   );
 }
 
-function BokVariantCard({ variant, index }: {
+function BokVariantCard({ variant }: {
   variant: {
     variant_index: number;
     prompt: string;
