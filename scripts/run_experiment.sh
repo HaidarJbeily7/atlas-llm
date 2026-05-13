@@ -40,7 +40,7 @@ CONDITIONS=(
     "adaptive_single_query_st"  # adaptive single-query single-turn (PAIR 1 iter, no refinement)
     "adaptive_single_turn"      # adaptive multi-query single-turn (PAIR up to 5 iterations)
     "adaptive_multi_turn"       # adaptive multi-turn
-    "best_of_k_st"              # non-adaptive matched-budget baseline (K=5 pre-generated variants)
+    "best_of_k_st"              # non-adaptive baseline matching maximum target-query cap (K=5 pre-generated variants)
 )
 
 RESULTS_DIR="./results/experiment"
