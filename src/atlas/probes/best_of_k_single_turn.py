@@ -5,10 +5,13 @@ independently (one attempt per variant). No attacker LLM is used at
 runtime — all variants were generated offline before the experiment via
 ``scripts/generate_bok_variants.py``.
 
-This is the matched-budget non-adaptive control for ``adaptive_single_turn``
-(PAIR with K=5 iterations). Both conditions use up to 5 target queries per
-intent, but BoK generates all variants upfront without seeing any target
-responses, while PAIR refines iteratively with feedback.
+This is the non-adaptive control for ``adaptive_single_turn`` (PAIR-5),
+matching the maximum target-query cap of 5. Both conditions allow up to 5
+target queries per intent, but BoK generates all variants upfront without
+seeing any target responses, while PAIR refines iteratively with feedback.
+Note: PAIR-5 early-stops upon success (realized target calls often < 5),
+while BoK-ST sends all K variants. The maximum cap is matched, but
+realized target calls differ.
 
 Success criterion: an intent is "jailbroken" if ANY of the K variants
 succeeds (evaluated independently by detectors, aggregated in analysis).
@@ -47,7 +50,7 @@ class BestOfKSingleTurnProbe(BaseProbe):
     description = (
         "Best-of-K non-adaptive baseline — sends K=5 pre-generated diverse "
         "prompt variants to the target independently, with no feedback loop. "
-        "Matched target-query budget with adaptive_single_turn for fair comparison."
+        "Matched maximum target-query cap with adaptive_single_turn for fair comparison."
     )
     tags = [
         "owasp:llm01",

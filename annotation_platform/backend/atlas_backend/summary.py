@@ -352,9 +352,17 @@ def _compute(session: Session, experiment_id: str) -> dict | None:
                 "adj_total": 0, "adj_passed": 0, "adj_failed": 0,
                 "false_positives": 0, "false_negatives": 0, "reviewed": 0,
                 "total_cost": 0.0, "target_tokens": 0, "attacker_tokens": 0,
+                "provider_filtered": 0,
             }
         ca = cond_agg[probe]
         ca["total"] += 1
+
+        # Detect provider-filtered / API-error cases:
+        # num_target_calls == 0 with zero tokens means the target model was
+        # never actually queried (e.g., OpenRouter PROHIBITED_CONTENT filter).
+        if f.get("num_target_calls", 0) == 0 and f.get("target_tokens", 0) == 0:
+            ca["provider_filtered"] += 1
+
         raw_passed = f.get("passed")
         if raw_passed:
             ca["passed"] += 1
@@ -424,6 +432,9 @@ def _compute(session: Session, experiment_id: str) -> dict | None:
             "cost_per_attack": round(ca["total_cost"] / max(1, ca["adj_failed"]), 8),
             "target_tokens": ca["target_tokens"],
             "attacker_tokens": ca["attacker_tokens"],
+            # Provider-filtered / API-error cases
+            "provider_filtered": ca["provider_filtered"],
+            "exclusion_rate": round(ca["provider_filtered"] / max(1, ca["total"]) * 100, 2),
         })
 
     # --- Refinement Ablation (RQ2): paired comparison single-query vs multi-query ---
@@ -598,9 +609,10 @@ def _compute(session: Session, experiment_id: str) -> dict | None:
                 det_cond_agg[name][probe] = {
                     "total": 0, "passed": 0, "failed": 0, "score_sum": 0.0,
                     "reviewed": 0,
-                    "confirmed": 0,       # human agrees with judge
-                    "false_positives": 0,  # judge said FAIL, human says PASS
-                    "false_negatives": 0,  # judge said PASS, human says FAIL
+                    "true_positives": 0,   # detector says unsafe, human says unsafe
+                    "true_negatives": 0,   # detector says safe, human says safe
+                    "false_positives": 0,  # detector says unsafe, human says safe
+                    "false_negatives": 0,  # detector says safe, human says unsafe
                 }
             dc = det_cond_agg[name][probe]
             dc["total"] += 1
@@ -613,39 +625,37 @@ def _compute(session: Session, experiment_id: str) -> dict | None:
                 dc["reviewed"] += 1
                 # Compare THIS detector's verdict against human truth.
                 # Human says safe → finding should pass; human says unsafe → should fail.
+                # Determine human ground truth: safe or unsafe
                 if verdict in ("confirmed_vulnerability", "confirmed_safe"):
-                    # Human confirmed the majority vote. Check if THIS detector
-                    # agreed with the confirmed truth.
                     human_says_safe = verdict == "confirmed_safe"
-                    detector_says_safe = ds["passed"]
-                    if detector_says_safe == human_says_safe:
-                        dc["confirmed"] += 1  # detector was correct
-                    elif detector_says_safe and not human_says_safe:
-                        dc["false_negatives"] += 1  # detector missed the attack
-                    else:
-                        dc["false_positives"] += 1  # detector over-flagged
                 elif verdict == "false_positive":
-                    # Human says model was actually safe (majority was wrong).
-                    if ds["passed"]:
-                        dc["confirmed"] += 1  # detector correctly said safe
-                    else:
-                        dc["false_positives"] += 1  # detector wrongly said unsafe
+                    human_says_safe = True   # human says model was actually safe
                 elif verdict == "false_negative":
-                    # Human says attack actually succeeded (majority was wrong).
-                    if not ds["passed"]:
-                        dc["confirmed"] += 1  # detector correctly said unsafe
-                    else:
-                        dc["false_negatives"] += 1  # detector missed it
+                    human_says_safe = False  # human says attack actually succeeded
+                else:
+                    continue  # unknown verdict, skip
+
+                detector_says_safe = ds["passed"]
+
+                if not detector_says_safe and not human_says_safe:
+                    dc["true_positives"] += 1   # detector says unsafe, human says unsafe
+                elif not detector_says_safe and human_says_safe:
+                    dc["false_positives"] += 1  # detector says unsafe, human says safe
+                elif detector_says_safe and not human_says_safe:
+                    dc["false_negatives"] += 1  # detector says safe, human says unsafe
+                else:
+                    dc["true_negatives"] += 1   # detector says safe, human says safe
 
     detector_by_condition = []
     for det_name, conds in det_cond_agg.items():
         by_cond = {}
         for cond, dc in conds.items():
             reviewed = dc["reviewed"]
-            judge_errors = dc["false_positives"] + dc["false_negatives"]
-            tp = dc["confirmed"]
+            tp = dc["true_positives"]
+            tn = dc["true_negatives"]
             fp = dc["false_positives"]
             fn = dc["false_negatives"]
+            judge_errors = fp + fn
             precision = round(tp / max(1, tp + fp) * 100, 2)
             recall = round(tp / max(1, tp + fn) * 100, 2)
             f1 = round(2 * precision * recall / max(0.01, precision + recall), 2)
@@ -657,11 +667,12 @@ def _compute(session: Session, experiment_id: str) -> dict | None:
                 "fail_rate": round(dc["failed"] / max(1, dc["total"]) * 100, 2),
                 "avg_score": round(dc["score_sum"] / max(1, dc["total"]), 4),
                 "reviewed": reviewed,
-                "confirmed": dc["confirmed"],
-                "false_positives": dc["false_positives"],
-                "false_negatives": dc["false_negatives"],
+                "true_positives": tp,
+                "true_negatives": tn,
+                "false_positives": fp,
+                "false_negatives": fn,
                 "judge_errors": judge_errors,
-                "accuracy": round(dc["confirmed"] / max(1, reviewed) * 100, 2),
+                "accuracy": round((tp + tn) / max(1, reviewed) * 100, 2),
                 "error_rate": round(judge_errors / max(1, reviewed) * 100, 2),
                 "precision": precision,
                 "recall": recall,

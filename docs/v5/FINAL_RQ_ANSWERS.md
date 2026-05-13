@@ -293,7 +293,7 @@ Automated safety detectors are highly sensitive to both attack sophistication an
 
 ### EU AI Act Compliance
 
-All 8 models were assessed against EU AI Act Articles 15(5) (Cyberattack Resilience) and 55(1)(d) (Adversarial Testing Requirements). **Every model was rated non-compliant across all conditions and all probes.** Even Claude Sonnet 4, the most robust model, fails because its 25.0% overall ASR produces critical-severity vulnerabilities.
+All 8 models were assessed against EU AI Act Articles 15(5) (Cyberattack Resilience) and 55(1)(d) (Adversarial Testing Requirements). ATLAS provides compliance-relevant adversarial testing evidence for AI assurance and governance. Under adversarial conditions, all 8 models exhibited vulnerabilities mapped to these articles, with even the most robust model (Claude Sonnet 4, 25.0% overall ASR) showing non-trivial attack surface.
 
 ### Practical Recommendations
 
@@ -303,7 +303,7 @@ All 8 models were assessed against EU AI Act Articles 15(5) (Cyberattack Resilie
 
 3. **For benchmark designers**: Always report detector-specific metrics (precision, recall, F1) alongside ASR. Use multi-detector consensus for multi-turn evaluations. Never rely on keyword or refusal detectors alone for adaptive attack benchmarks.
 
-4. **For EU AI Act compliance**: Current frontier models universally fail adversarial robustness requirements under adaptive attack. Compliance requires substantially stronger safety alignment, external guardrails, or regulatory threshold adjustment.
+4. **For EU AI Act compliance**: ATLAS provides compliance-relevant adversarial testing evidence that can inform regulatory assessments under EU AI Act adversarial robustness requirements.
 
 ---
 
