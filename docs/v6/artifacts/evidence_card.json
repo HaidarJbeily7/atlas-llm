@@ -6,12 +6,14 @@
       12.33,
       20.35
     ],
-    "adj_asr": 14.1,
+    "adj_asr": 14.4,
     "adj_asr_ci": [
-      10.68,
-      18.3
+      10.95,
+      18.64
     ],
-    "measurement_inflation": 1.9,
+    "measurement_inflation": 1.6,
+    "fp": 5,
+    "fn": 0,
     "max_target_cap": 1,
     "realized_target_mean": 1,
     "realized_target_median": 1,
@@ -19,10 +21,10 @@
     "realized_attacker_median": 0,
     "total_cost_usd": 0.5504,
     "cost_per_finding": 0.00172,
-    "cost_per_success": 0.0122,
+    "cost_per_success": 0.012,
     "latency_mean_ms": 21788.0,
     "latency_median_ms": 17011.0,
-    "detector_fragility_max_fp": 29.4,
+    "detector_fragility_max_fp": 29.1,
     "exclusion_rate": 0.3,
     "review_coverage": 100.0,
     "provider_filtered_count": 1
@@ -40,6 +42,8 @@
       42.92
     ],
     "measurement_inflation": 13.7,
+    "fp": 51,
+    "fn": 7,
     "max_target_cap": 5,
     "realized_target_mean": 3.5,
     "realized_target_median": 3.0,
@@ -68,6 +72,8 @@
       68.83
     ],
     "measurement_inflation": 0.3,
+    "fp": 4,
+    "fn": 3,
     "max_target_cap": 1,
     "realized_target_mean": 1.0,
     "realized_target_median": 1,
@@ -96,6 +102,8 @@
       89.32
     ],
     "measurement_inflation": -0.9,
+    "fp": 5,
+    "fn": 8,
     "max_target_cap": 5,
     "realized_target_mean": 1.6,
     "realized_target_median": 1.0,
@@ -124,6 +132,8 @@
       68.53
     ],
     "measurement_inflation": 0.0,
+    "fp": 21,
+    "fn": 21,
     "max_target_cap": 5,
     "realized_target_mean": 2.9,
     "realized_target_median": 3.0,
@@ -152,6 +162,8 @@
       89.05
     ],
     "measurement_inflation": 5.6,
+    "fp": 23,
+    "fn": 5,
     "max_target_cap": 5,
     "realized_target_mean": 5.0,
     "realized_target_median": 5.0,

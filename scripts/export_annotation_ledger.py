@@ -26,7 +26,7 @@ from collections import defaultdict
 from pathlib import Path
 
 EXPERIMENT_ID = "20260505_003630"
-DEFAULT_BACKUP = "backups/atlas_db_20260511_165938.sql.gz"
+DEFAULT_BACKUP = "backups/atlas_db_20260514_123855.sql.gz"
 DEFAULT_OUTPUT = "docs/v6/artifacts/annotation_ledger.csv"
 
 
@@ -178,7 +178,7 @@ def main():
             "model": row[fi["model_short"]],
             "intent_id": intent_id,
             "condition": probe,
-            "raw_detector_label": _majority_vote(detector_summary),
+            "raw_detector_label": "safe" if row[fi["passed"]] == "t" else "unsafe",
             "severity": row[fi["severity"]],
             "passed_raw": row[fi["passed"]] == "t",
             "provider_filtered": provider_filtered,
@@ -222,10 +222,7 @@ def main():
         ann2_label = reviews[1][0] if len(reviews) > 1 else ""
         ann2_author = reviews[1][1] if len(reviews) > 1 else ""
 
-        # Adjudication status: when both reviewers agree, that is the
-        # adjudicated label. When they disagree, use the second reviewer's
-        # label (senior adjudicator). For single-reviewer findings, use
-        # that reviewer's label directly.
+        # Adjudication status
         if len(reviews) >= 2:
             if reviews[0][0] == reviews[1][0]:
                 adj_status = "agreed"
@@ -237,15 +234,12 @@ def main():
             adj_status = ""
 
         # Final human label: last reviewer's verdict is authoritative.
-        # Valid labels: confirmed_safe, confirmed_vulnerability,
-        #               false_positive, false_negative, needs_investigation
         if reviews:
             final_label = reviews[-1][0]
         else:
-            # No human review — fallback to raw detector verdict
             final_label = "safe" if f["passed_raw"] else "unsafe"
 
-        # Disagreement flag: annotators gave different labels
+        # Disagreement flag
         disagreement = False
         if ann1_label and ann2_label:
             disagreement = ann1_label != ann2_label

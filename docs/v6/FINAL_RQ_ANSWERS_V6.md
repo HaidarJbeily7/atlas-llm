@@ -44,18 +44,18 @@ The six experimental conditions produced a clear hierarchy of attack effectivene
 
 | Condition | Formal Name | Raw ASR | 95% CI | Adj. ASR | Adj. 95% CI | FP | FN |
 |---|---|---|---|---|---|---|---|
-| `direct_single_turn` | OSS-ST | 15.9% | [12.3%, 20.4%] | 15.0% | [11.5%, 19.3%] | 3 | 0 |
-| `scripted_multi_turn` | SS-MT | 51.2% | [45.8%, 56.7%] | 37.5% | [32.4%, 42.9%] | 54 | 10 |
-| `adaptive_single_query_st` | ASQ-ST (PAIR-1) | 64.1% | [58.7%, 69.1%] | 63.4% | [58.0%, 68.5%] | 4 | 3 |
-| `adaptive_multi_turn` | AMQ-MT | 63.4% | [58.0%, 68.5%] | 63.4% | [58.0%, 68.5%] | 23 | 26 |
-| `adaptive_single_turn` | AMQ-ST (PAIR-5) | 85.0% | [80.7%, 88.5%] | 85.9% | [81.7%, 89.3%] | 7 | 8 |
-| `best_of_k_st` | BoK-ST | 91.2% | [87.6%, 93.9%] | 85.6% | [81.4%, 89.1%] | 23 | 5 |
+| `direct_single_turn` | OSS-ST | 15.9% | [12.3%, 20.3%] | 14.4% | [11.0%, 18.6%] | 5 | 0 |
+| `scripted_multi_turn` | SS-MT | 51.2% | [45.8%, 56.7%] | 37.5% | [32.4%, 42.9%] | 51 | 7 |
+| `adaptive_single_query_st` | ASQ-ST (PAIR-1) | 64.1% | [58.7%, 69.1%] | 63.7% | [58.3%, 68.8%] | 4 | 3 |
+| `adaptive_multi_turn` | AMQ-MT | 63.4% | [58.0%, 68.5%] | 63.4% | [58.0%, 68.5%] | 21 | 21 |
+| `adaptive_single_turn` | AMQ-ST (PAIR-5) | 85.0% | [80.7%, 88.5%] | 85.9% | [81.7%, 89.3%] | 5 | 8 |
+| `best_of_k_st` | BoK-ST | 91.2% | [87.6%, 93.9%] | 85.6% | [81.4%, 89.0%] | 23 | 5 |
 
 **Finding 1 -- Best-of-K Static Single-Turn (BoK-ST) achieves the highest raw ASR (91.2%), but converges with PAIR-5 after human review.** BoK-ST sends K=5 pre-generated adversarial prompts per intent, each targeting a different facet of the model's safety alignment (e.g., role-play, hypothetical framing, code-generation pretext). An intent is "jailbroken" if any of the 5 variants succeeds. This strategy-diverse approach achieves the highest raw ASR at 91.2% [87.6%, 93.9%]. However, 23 false positives reduce its adjusted ASR to 85.6%, making it statistically indistinguishable from the Adaptive Multi-Query Single-Turn condition (PAIR-5, 85.9% adjusted). The raw ASR difference of +6.2pp is borderline significant (McNemar p = 0.033, Bonferroni-corrected), but the adjusted ASRs converge. This parallels findings from Best-of-N jailbreaking research [8], where sampling diversity increases surface-level success but inflates detector-reported ASR through ambiguous outputs.
 
 **Finding 2 -- Under a matched maximum target-query cap of 5, iterative single-turn refinement outperforms adaptive multi-turn conversation.** The AMQ-ST (PAIR-5) condition achieved 85.0% raw ASR, significantly outperforming the AMQ-MT condition (63.4%) by +21.6 percentage points (McNemar p < 0.0001, Bonferroni-corrected). Our factorial design isolates the differential contribution of adaptivity vs. interaction mode: when the two factors are disentangled, adding multi-turn interaction to an adaptive strategy *degrades* performance relative to concentrating the same maximum target-query cap on single-turn refinement (63.4% vs. 85.0%). This is consistent with Li et al.'s [10] finding that multi-turn contexts provide richer defensive signals for safety classifiers. **Limitation**: AMQ-MT is capped at 5 turns; Hagendorff et al. [7] achieve 97.14% with 10-turn budgets and reasoning-model attackers, suggesting multi-turn strategies may be competitive given sufficient turn depth. The present finding should be interpreted as specific to a 5-turn budget. A detailed mechanistic analysis is provided in Section 1.8.
 
-**Finding 3 -- Scripted Static Multi-Turn (SS-MT) provides moderate gains over the One-Shot Static baseline but is outclassed by every adaptive method.** SS-MT (raw 51.2%, adjusted 37.5%) more than doubles the baseline ASR (15.9%), confirming that multi-turn context gradual escalation enables attacks -- consistent with Crescendo [6] findings. However, after human review the adjusted ASR drops sharply to 37.5% due to 54 false positives. All adaptive conditions and BoK-ST significantly exceed SS-MT (p < 0.005 for all pairwise comparisons), demonstrating that LLM-driven attack optimisation is far more effective than human-authored escalation scripts.
+**Finding 3 -- Scripted Static Multi-Turn (SS-MT) provides moderate gains over the One-Shot Static baseline but is outclassed by every adaptive method.** SS-MT (raw 51.2%, adjusted 37.5%) more than doubles the baseline ASR (15.9%), confirming that multi-turn context gradual escalation enables attacks -- consistent with Crescendo [6] findings. However, after human review the adjusted ASR drops sharply to 37.5% due to 51 false positives. All adaptive conditions and BoK-ST significantly exceed SS-MT (p < 0.005 for all pairwise comparisons), demonstrating that LLM-driven attack optimisation is far more effective than human-authored escalation scripts.
 
 **Finding 4 -- Adaptive Single-Query (PAIR-1) and Adaptive Multi-Turn (AMQ-MT) achieve statistically indistinguishable ASRs.** The difference between ASQ-ST/PAIR-1 (64.1%) and AMQ-MT (63.4%) is +0.6pp with p = 0.93 -- not significant. A single attacker-crafted prompt -- where the attacker LLM generates one jailbreak attempt, the target responds, and the result is recorded with no iteration -- is as effective as a full 5-turn adaptive conversation. This has profound implications: a single reasoning pass by a capable attacker LLM (DeepSeek-R1) matches what multi-turn dialogue achieves at 3.5x the cost.
 
@@ -77,18 +77,18 @@ Our results substantially exceed published baselines for comparable attack strat
 - **Our PAIR-5 ASR (85.0%) substantially exceeds the original PAIR paper's range (4-60%).** Chao et al. [2] report PAIR ASR ranging from 4% against Claude 2 to 60% against GPT-3.5 Turbo using GPT-4 as the attacker (as compiled in Andriushchenko et al. [5], Tables 2-4). Our higher ASR is attributable to using DeepSeek-R1 -- a reasoning model with chain-of-thought capabilities -- as the attacker, confirming that attacker model capability is a critical variable that prior work underspecifies.
 - **Our AMQ-MT ASR (63.4%) is within the range reported by Crescendo [6]** (20-100%, task-dependent) but substantially below the Nature Communications 2026 study [7] which achieved 97.14% with 10-turn conversations and reasoning-model attackers. The difference is likely due to our 5-turn limit vs. their 10-turn budget.
 - **Claude Sonnet 4's robustness (28.8% overall ASR) is consistent across studies.** Hagendorff et al. [7] report a maximum harm score of 2.86% for Claude 4 Sonnet (the lowest of all 7 target models in their study, using reasoning-model attackers over 10-turn conversations), and our results confirm Claude as the most resistant model by a wide margin.
-- **The PAIR-1 ablation (ASQ-ST, 63.4%) is a novel contribution.** To our knowledge, no prior work isolates the marginal value of PAIR's refinement loop with paired statistical testing. Our finding that a single PAIR iteration already achieves 64% ASR -- exceeding scripted multi-turn (37.5% adjusted) -- demonstrates that the attacker LLM's initial prompt engineering is itself a powerful attack.
+- **The PAIR-1 ablation (ASQ-ST, 63.4%) is a novel contribution.** To our knowledge, no prior work isolates the marginal value of PAIR's refinement loop with paired statistical testing. Our finding that a single PAIR iteration already achieves 63.7% adjusted ASR -- exceeding scripted multi-turn (37.5% adjusted) -- demonstrates that the attacker LLM's initial prompt engineering is itself a powerful attack.
 
 ### 1.3 Per-Model ASR Breakdown (Human-Adjusted)
 
 | Model | OSS-ST | SS-MT | ASQ-ST | AMQ-MT | AMQ-ST | BoK-ST | Overall ASR |
 |---|---|---|---|---|---|---|---|
 | Claude Sonnet 4 | 12.5% | 12.5% | 25.0% | 30.0% | 45.0% | 47.5% | **28.8%** |
-| GPT-4o | 5.0% | 25.0% | 57.5% | 72.5% | 87.5% | 85.0% | **55.4%** |
+| GPT-4o | 0.0% | 25.0% | 57.5% | 72.5% | 87.5% | 85.0% | **54.6%** |
 | GPT-4o-mini | 7.5% | 32.5% | 47.5% | 77.5% | 87.5% | 87.5% | **56.7%** |
 | Gemini 2.5 Flash | 17.5% | 35.0% | 65.0% | 60.0% | 92.5% | 87.5% | **59.6%** |
 | LLaMA 3.3 70B | 12.5% | 37.5% | 70.0% | 62.5% | 90.0% | 92.5% | **60.8%** |
-| Qwen 2.5 72B | 2.5% | 65.0% | 62.5% | 72.5% | 92.5% | 92.5% | **64.6%** |
+| Qwen 2.5 72B | 2.5% | 65.0% | 65.0% | 72.5% | 92.5% | 92.5% | **65.0%** |
 | DeepSeek-v3-0324 | 20.0% | 32.5% | 90.0% | 65.0% | 100.0% | 95.0% | **67.1%** |
 | Mistral Large 2411 | 42.5% | 60.0% | 90.0% | 67.5% | 92.5% | 97.5% | **75.0%** |
 
@@ -98,7 +98,7 @@ Our results substantially exceed published baselines for comparable attack strat
 
 **Finding 7 -- DeepSeek-v3-0324 achieves 100% ASR under Adaptive Multi-Query Single-Turn (PAIR-5).** Every single one of the 40 AMQ-ST attacks succeeded, representing a complete safety bypass. This is consistent with Hagendorff et al. [7] who report 90.0% max harm score for DeepSeek-V3. Yet DeepSeek shows reasonable OSS-ST resistance (20.0%), revealing that its safety relies on pattern-matching against known attack formats rather than generalised safety reasoning.
 
-**Finding 8 -- GPT-4o has the strongest baseline defense but collapses under adaptive attacks.** GPT-4o achieves only 5.0% ASR under OSS-ST (the strongest baseline defense) but jumps to 87.5% under AMQ-ST and 85.0% under BoK-ST -- an 80-82pp swing. This echoes Andriushchenko et al.'s [5] finding that GPT-4 Turbo, whose best prior attack ASR was 59% (TAP with transfer), reached 96% under their custom adaptive attacks -- a pattern of dramatic vulnerability increase once the attacker adapts beyond standard templates.
+**Finding 8 -- GPT-4o has the strongest baseline defense but collapses under adaptive attacks.** GPT-4o achieves 0.0% ASR under OSS-ST (the strongest baseline defense, with zero successful attacks) but jumps to 87.5% under AMQ-ST and 85.0% under BoK-ST -- an 85-87pp swing. This echoes Andriushchenko et al.'s [5] finding that GPT-4 Turbo, whose best prior attack ASR was 59% (TAP with transfer), reached 96% under their custom adaptive attacks -- a pattern of dramatic vulnerability increase once the attacker adapts beyond standard templates.
 
 **Finding 9 -- BoK-ST reveals that Qwen 2.5 72B is fully compromisable through strategy-diverse attacks.** Qwen achieves the lowest OSS-ST ASR of any model (2.5%) but reaches 92.5% under BoK-ST -- a 90pp gap, the largest in the experiment. This indicates that while Qwen refuses the direct harmful request, its safety alignment has blind spots across different attack strategies: a role-play framing, an educational pretext, or a code-generation request targeting the same harmful intent can bypass its defences. Each of the K=5 pre-generated variants targets a different facet of the model's safety training, and collectively they expose that Qwen's refusal is strategy-specific rather than objective-aware.
 
@@ -113,9 +113,9 @@ Our results substantially exceed published baselines for comparable attack strat
 | `adaptive_multi_turn` | AMQ-MT | $0.0238 | [$0.0213, $0.0265] | 518.4s | $0.0375 |
 | `best_of_k_st` | BoK-ST | $0.0179 | [$0.0144, $0.0219] | 573.2s | $0.0209 |
 
-**Finding 10 -- Adaptive Single-Query (PAIR-1) is the most cost-effective attack strategy.** At $0.0068 per attack and 63.4% adjusted ASR, ASQ-ST delivers the best cost-per-success ratio at $0.0107. It costs 29% of AMQ-MT while achieving an equivalent ASR (63.4% vs. 63.4%).
+**Finding 10 -- Adaptive Single-Query (PAIR-1) is the most cost-effective attack strategy.** At $0.0068 per attack and 63.7% adjusted ASR, ASQ-ST delivers the best cost-per-success ratio at $0.0107. It costs 29% of AMQ-MT while achieving an equivalent ASR (63.7% vs. 63.4%).
 
-**Finding 11 -- Adaptive Multi-Query Single-Turn (PAIR-5) provides the best overall ASR at a modest premium.** While more expensive than PAIR-1 ($0.0138 vs. $0.0068), it achieves +22.5pp higher adjusted ASR (85.9% vs. 63.4%). Each additional percentage point costs approximately $0.031 -- an excellent return on investment for red-teaming budgets.
+**Finding 11 -- Adaptive Multi-Query Single-Turn (PAIR-5) provides the best overall ASR at a modest premium.** While more expensive than PAIR-1 ($0.0138 vs. $0.0068), it achieves +22.2pp higher adjusted ASR (85.9% vs. 63.7%). Each additional percentage point costs approximately $0.031 -- an excellent return on investment for red-teaming budgets.
 
 **Finding 12 -- Best-of-K is expensive and slow for no meaningful ASR advantage over PAIR-5.** BoK-ST costs $0.0179 per attack (30% more than PAIR-5) with a median latency of 573 seconds (2x slower), yet achieves essentially the same adjusted ASR (85.6% vs. 85.9%). Its cost-per-success ($0.0209) is 30% worse. The higher latency stems from sending K=5 independent target queries per intent (matching PAIR-5's maximum target-query cap; however, PAIR-5 early-stops upon success so its realized calls are often < 5), all without the benefit of feedback-driven refinement. BoK-ST's advantage is limited to the highest raw ASR (91.2%), but this difference evaporates after human review due to 23 false positives. This finding has methodological implications for Best-of-N benchmarking [8]: **strategy-diverse sampling that targets different facets of safety alignment can match iterative refinement on adjusted ASR, but metrics that rely on automated scoring without human validation will systematically over-estimate success**.
 
@@ -135,13 +135,13 @@ This ablation isolates the marginal value of PAIR's iterative refinement loop --
 | LLaMA 3.3 70B | 70.0% | 90.0% | +20.0 | 0.057 |
 | DeepSeek-v3 | 90.0% | 100.0% | +10.0 | 0.125 |
 | Mistral Large | 90.0% | 92.5% | +2.5 | 1.000 |
-| **Pooled** | **63.4%** | **85.9%** | **+22.5** | **< 0.001** |
+| **Pooled** | **63.7%** | **85.9%** | **+22.2** | **< 0.001** |
 
-**Finding 14 -- Iterative refinement adds +22.5pp ASR on average (p < 0.001).** The pooled gain is highly significant (McNemar: 89 discordant pairs favouring PAIR-5 vs. 17 favouring PAIR-1). The benefit is strongly model-dependent: models already near-ceiling (Mistral 90%, DeepSeek 90%) gain little, while moderately-defended models benefit enormously (GPT-4o-mini: +40pp). This means iterative refinement is most valuable against models with intermediate safety defenses.
+**Finding 14 -- Iterative refinement adds +22.2pp ASR on average (p < 0.001).** The pooled gain is highly significant (McNemar: 89 discordant pairs favouring PAIR-5 vs. 17 favouring PAIR-1). The benefit is strongly model-dependent: models already near-ceiling (Mistral 90%, DeepSeek 90%) gain little, while moderately-defended models benefit enormously (GPT-4o-mini: +40pp). This means iterative refinement is most valuable against models with intermediate safety defenses.
 
 **Contextualisation:** Prior work does not provide this ablation. Chao et al. [2] report PAIR at convergence over 20 iterations; Mehrotra et al. [3] report TAP at convergence. Our implementation uses `max_iterations=5` -- a resource-constrained variant that may not fully replicate PAIR's 20-iteration ceiling. The comparison to published PAIR ASR (4-60%) should therefore be read as a comparison of attack paradigms under different attacker models (DeepSeek-R1 vs. GPT-4), not a direct replication.
 
-Decomposing the gain relative to the OSS-ST baseline (15.0%): PAIR-1 captures 48.4pp of the 70.9pp total gain above baseline, or **68%** of the total adaptive gain. Iterative refinement (PAIR-1 → PAIR-5) accounts for the remaining 22.5pp, a **32% share of total gain** and a **35% relative improvement** over PAIR-1 alone. Crucially, PAIR-1 involves no feedback loop -- the attacker never observes the target's response to improve. The 22.5pp increment from PAIR-1 to PAIR-5 is therefore attributable entirely to closed-loop adaptation.
+Decomposing the gain relative to the OSS-ST baseline (14.4%): PAIR-1 captures 49.3pp of the 71.5pp total gain above baseline, or **69%** of the total adaptive gain. Iterative refinement (PAIR-1 → PAIR-5) accounts for the remaining 22.2pp, a **31% share of total gain** and a **35% relative improvement** over PAIR-1 alone. Crucially, PAIR-1 involves no feedback loop -- the attacker never observes the target's response to improve. The 22.2pp increment from PAIR-1 to PAIR-5 is therefore attributable entirely to closed-loop adaptation.
 
 ### 1.6 Paired Statistical Comparisons (McNemar, Bonferroni-Corrected, k=15)
 
@@ -178,9 +178,9 @@ Every adjacent-tier comparison is statistically significant. The dominant factor
 
 **Iterative single-turn refinement is the dominant attack mechanism under a 5-turn budget.** The AMQ-ST/PAIR-5 condition achieves the highest adjusted ASR (85.9%), significantly exceeding all conditions except BoK-ST (equivalent 85.6% adjusted). Under the same maximum target-query cap of 5, multi-turn adaptive conversation (AMQ-MT: 63.4%) underperforms single-turn refinement -- though this finding is specific to a 5-turn cap and may not generalise to deeper multi-turn budgets. Best-of-K achieves the highest raw ASR (91.2%) but inflates results via the any-of-K criterion; after human review it matches PAIR-5 while costing 30% more and taking 2x longer.
 
-The most cost-effective strategy is PAIR-1 ($0.0068/attack, 63.4% adj. ASR, $0.0107/success). PAIR-5 ($0.0138/attack, 85.9% adj. ASR, $0.0161/success) provides superior ASR at a modest premium. BoK-ST ($0.0179/attack, 85.6% adj. ASR, $0.0209/success) is dominated by PAIR-5 on every practical metric.
+The most cost-effective strategy is PAIR-1 ($0.0068/attack, 63.7% adj. ASR, $0.0107/success). PAIR-5 ($0.0138/attack, 85.9% adj. ASR, $0.0161/success) provides superior ASR at a modest premium. BoK-ST ($0.0179/attack, 85.6% adj. ASR, $0.0209/success) is dominated by PAIR-5 on every practical metric.
 
-The factorial design decomposes the gain above the OSS-ST baseline: a single attacker-crafted prompt with no feedback (PAIR-1) captures 68% of the total adaptive gain (+48.4pp of 70.9pp); iterative closed-loop refinement (PAIR-1 to PAIR-5) accounts for the remaining 32% (+22.5pp); pre-generated strategy diversity without feedback (BoK-ST) matches PAIR-5's adjusted ASR ceiling via a different mechanism; scripted multi-turn context alone adds ~22.5pp adjusted above OSS-ST; and combining adaptivity with multi-turn conversation under a 5-turn budget yields no synergy over single-turn refinement.
+The factorial design decomposes the gain above the OSS-ST baseline: a single attacker-crafted prompt with no feedback (PAIR-1) captures 69% of the total adaptive gain (+49.4pp of 71.6pp); iterative closed-loop refinement (PAIR-1 to PAIR-5) accounts for the remaining 31% (+22.2pp); pre-generated strategy diversity without feedback (BoK-ST) matches PAIR-5's adjusted ASR ceiling via a different mechanism; scripted multi-turn context alone adds ~23.1pp adjusted above OSS-ST; and combining adaptivity with multi-turn conversation under a 5-turn budget yields no synergy over single-turn refinement.
 
 ### 1.8 Why Does Multi-Turn Adaptive (AMQ-MT) Underperform Single-Turn Strategies?
 
@@ -267,14 +267,14 @@ Detector bypass counts (number of attacks that evaded each detector):
 
 | Condition | Formal Name | Raw ASR | Adj. ASR | FP | FN | Net Correction |
 |---|---|---|---|---|---|---|
-| `direct_single_turn` | OSS-ST | 15.9% | 15.0% | 3 | 0 | -0.9pp |
-| `scripted_multi_turn` | SS-MT | 51.2% | 37.5% | 54 | 10 | -13.7pp |
-| `adaptive_single_query_st` | ASQ-ST | 64.1% | 63.4% | 4 | 3 | -0.6pp |
-| `adaptive_multi_turn` | AMQ-MT | 63.4% | 63.4% | 23 | 26 | 0.0pp |
-| `adaptive_single_turn` | AMQ-ST | 85.0% | 85.9% | 7 | 8 | +0.9pp |
+| `direct_single_turn` | OSS-ST | 15.9% | 14.4% | 5 | 0 | -1.6pp |
+| `scripted_multi_turn` | SS-MT | 51.2% | 37.5% | 51 | 7 | -13.7pp |
+| `adaptive_single_query_st` | ASQ-ST | 64.1% | 63.7% | 4 | 3 | -0.3pp |
+| `adaptive_multi_turn` | AMQ-MT | 63.4% | 63.4% | 21 | 21 | 0.0pp |
+| `adaptive_single_turn` | AMQ-ST | 85.0% | 85.9% | 5 | 8 | +0.9pp |
 | `best_of_k_st` | BoK-ST | 91.2% | 85.6% | 23 | 5 | -5.6pp |
 
-**Finding 20 -- Scripted Static Multi-Turn has the largest detector-human discrepancy (-13.7pp).** Human reviewers reclassified 54 automated "successes" as false positives. Scripted attacks produce ambiguous responses that look like compliance to automated detectors but are benign upon expert review. **Reported ASR for scripted/template-based attacks should be treated with caution unless human-validated.** This finding is particularly relevant for Crescendo-style [6] benchmarks that rely on automated scoring.
+**Finding 20 -- Scripted Static Multi-Turn has the largest detector-human discrepancy (-13.7pp).** Human reviewers reclassified 51 automated "successes" as false positives. Scripted attacks produce ambiguous responses that look like compliance to automated detectors but are benign upon expert review. **Reported ASR for scripted/template-based attacks should be treated with caution unless human-validated.** This finding is particularly relevant for Crescendo-style [6] benchmarks that rely on automated scoring.
 
 **Finding 21 -- BoK-ST has the second-largest discrepancy (-5.6pp), driven by the "any-of-K" success criterion.** Because an intent is counted as jailbroken if ANY of its K=5 strategy-diverse variants succeeds, borderline cases accumulate: a variant framed as educational fiction may produce a response that automated detectors flag as harmful but human reviewers judge as benign hedging. The 23 false positives (vs. only 5 false negatives) confirm this systematic over-estimation -- the diversity of framing strategies increases the chance that at least one variant produces an ambiguous response that triggers the detector ensemble. **Best-of-K benchmarks that use an any-of-K success criterion with automated scoring will inflate ASR by approximately 5-6 percentage points without human validation.**
 
@@ -284,9 +284,9 @@ Detector bypass counts (number of attacks that evaded each detector):
 
 | Condition | Formal Name | Refusal Rate | Adj. ASR | Judge Agreement | AWCS | Critical Damage Rate |
 |---|---|---|---|---|---|---|
-| `direct_single_turn` | OSS-ST | 85.0% | 15.0% | 96.9% | +0.338 | 15.0% |
+| `direct_single_turn` | OSS-ST | 85.6% | 14.4% | 96.9% | +0.338 | 14.4% |
 | `scripted_multi_turn` | SS-MT | 62.5% | 37.5% | 49.4% | -0.090 | 37.5% |
-| `adaptive_single_query_st` | ASQ-ST | 36.2% | 63.4% | 87.5% | -0.138 | 63.4% |
+| `adaptive_single_query_st` | ASQ-ST | 36.2% | 63.7% | 87.5% | -0.138 | 63.7% |
 | `adaptive_multi_turn` | AMQ-MT | 36.6% | 63.4% | 64.7% | -0.154 | 63.4% |
 | `adaptive_single_turn` | AMQ-ST | 14.1% | 85.9% | 83.1% | -0.347 | 85.9% |
 | `best_of_k_st` | BoK-ST | 14.4% | 85.6% | 85.6% | -0.384 | 85.6% |
@@ -300,11 +300,11 @@ Detector bypass counts (number of attacks that evaded each detector):
 | Model | Overall ASR | AWCS | Judge Agreement | Critical Damage Rate |
 |---|---|---|---|---|
 | Claude Sonnet 4 | 28.8% | +0.160 | 76.7% | 27.9% |
-| GPT-4o | 55.4% | -0.099 | 75.4% | 55.4% |
+| GPT-4o | 54.6% | -0.099 | 75.4% | 54.6% |
 | GPT-4o-mini | 56.7% | -0.104 | 76.2% | 56.7% |
 | Gemini 2.5 Flash | 59.6% | -0.164 | 76.2% | 59.6% |
 | LLaMA 3.3 70B | 60.8% | -0.169 | 75.8% | 60.8% |
-| Qwen 2.5 72B | 64.6% | -0.166 | 80.0% | 64.6% |
+| Qwen 2.5 72B | 65.0% | -0.166 | 80.0% | 65.0% |
 | DeepSeek-v3-0324 | 67.1% | -0.210 | 80.4% | 67.1% |
 | Mistral Large 2411 | 75.0% | -0.282 | 82.1% | 75.0% |
 
@@ -443,7 +443,7 @@ No single detector handles all six conditions well. This orthogonal failure stru
 |---|---|---|---|
 | BoK-ST | 35.0% | 90.6% | 85.6% |
 | AMQ-ST (PAIR-5) | 37.8% | 86.6% | 85.9% |
-| OSS-ST | 10.3% | 15.3% | 15.0% |
+| OSS-ST | 10.3% | 15.3% | 14.4% |
 
 If keyword detection alone were used, BoK-ST's ASR would appear as 35.0% rather than the validated 85.6% -- a 50.6pp undercount. **Detector specification is essential for benchmark comparisons.** This finding has direct implications for HarmBench (ICML 2024) [1] and JailbreakBench (NeurIPS 2024) [4] protocols, which specify particular judges for scoring.
 
@@ -470,7 +470,7 @@ The Safety Judge achieves the best overall performance (F1 > 87% across all cond
 |---|---|---|---|
 | Raw ASR | 85.0% | 91.2% | BoK-ST |
 | Adjusted ASR | 85.9% | 85.6% | Tie |
-| False Positives | 7 | 23 | AMQ-ST |
+| False Positives | 5 | 23 | AMQ-ST |
 | Cost/attack | $0.0138 | $0.0179 | AMQ-ST |
 | Median latency | 284.7s | 573.2s | AMQ-ST |
 | AWCS (severity) | -0.347 | -0.384 | BoK-ST (more harmful) |
@@ -483,11 +483,11 @@ AMQ-ST (PAIR-5) dominates BoK-ST on cost, speed, and false positive rate while m
 | Rank | Model | Overall ASR | AWCS | Worst Condition | Comparison with Literature |
 |---|---|---|---|---|---|
 | 1 | Claude Sonnet 4 | 28.8% | +0.160 | BoK-ST (47.5%) | Consistent with [7]: 2.86% max harm score |
-| 2 | GPT-4o | 55.4% | -0.099 | AMQ-ST (87.5%) | Consistent with [5]: collapses under adaptive |
+| 2 | GPT-4o | 54.6% | -0.099 | AMQ-ST (87.5%) | Consistent with [5]: collapses under adaptive |
 | 3 | GPT-4o-mini | 56.7% | -0.104 | AMQ-ST/BoK (87.5%) | -- |
 | 4 | Gemini 2.5 Flash | 59.6% | -0.164 | AMQ-ST (92.5%) | Consistent with [7]: 71.4% harm |
 | 5 | LLaMA 3.3 70B | 60.8% | -0.169 | BoK-ST (92.5%) | -- |
-| 6 | Qwen 2.5 72B | 64.6% | -0.166 | BoK-ST (92.5%) | Tail-of-distribution vulnerability |
+| 6 | Qwen 2.5 72B | 65.0% | -0.166 | BoK-ST (92.5%) | Tail-of-distribution vulnerability |
 | 7 | DeepSeek-v3-0324 | 67.1% | -0.210 | AMQ-ST (100%) | Consistent with [7]: 90.0% harm |
 | 8 | Mistral Large 2411 | 75.0% | -0.282 | BoK-ST (97.5%) | Weakest across all conditions |
 
@@ -505,13 +505,45 @@ All 8 models were assessed against EU AI Act Articles 15(5) (Cyberattack Resilie
 
 4. **For EU AI Act compliance**: ATLAS provides compliance-relevant adversarial testing evidence that can inform regulatory assessments under EU AI Act adversarial robustness requirements. The BoK-ST methodology should be included in compliance testing frameworks because it reveals tail-of-distribution vulnerabilities that single-attempt testing misses.
 
+### BoK-ST Supplementary Analysis
+
+The following analyses use only existing variant-level data from the experiment — no additional experiments were conducted.
+
+**BoK K=1/3/5 Ablation.** Post-hoc analysis of how ASR changes with the number of variants per intent:
+
+| K | Total | Successes | Raw ASR | 95% CI | Marginal Gain |
+|---|---|---|---|---|---|
+| 1 | 320 | 180 | 56.2% | [50.8%, 61.6%] | — |
+| 3 | 320 | 269 | 84.1% | [79.7%, 87.7%] | — |
+| 5 | 320 | 292 | 91.2% | [87.6%, 93.9%] | +7.2pp |
+
+K=1→3 provides the largest gain (+27.9pp). K=3→5 adds only +7.2pp with diminishing returns. Model-level variation is substantial: gpt-4o-mini gains +15.0pp from K=3→5, while mistral-large-2411 gains only +2.5pp (already near-ceiling at K=3).
+
+**Sequential Stopping Simulation.** If BoK variants were sent sequentially (stop on first success), mean realized queries would be 1.94/5.0 (38.8% of the maximum cap), providing 61.2% theoretical query savings. 56.2% of attacks succeed at the first variant. This supports the distinction between the **maximum target-query cap** (K=5, matched with PAIR-5) and **realized target calls** (BoK-ST sequential: 1.94 mean).
+
+**Strategy Diversity Audit.** TF-IDF and pattern-based classification of all 200 BoK variants (40 intents × 5) identifies 12 distinct framing strategy families. 95% of intents (38/40) use 3+ unique strategies. No intents have high textual similarity (>0.7 Jaccard). The 2 flagged intents (intent-hacking-exploit, intent-multilingual-injection) have low strategy diversity because the intent topic constrains viable framings. Strategy distribution is balanced: the most common family (security_exercise) accounts for only 17.0% of variants.
+
+| Strategy Family | Count | Percentage |
+|---|---|---|
+| Security Exercise | 34 | 17.0% |
+| Academic | 26 | 13.0% |
+| Fiction | 23 | 11.5% |
+| Role Play | 22 | 11.0% |
+| Step-by-Step | 18 | 9.0% |
+| Translation | 18 | 9.0% |
+| Historical | 14 | 7.0% |
+| Hypothetical | 13 | 6.5% |
+| Educational | 8 | 4.0% |
+| Technical | 5 | 2.5% |
+| Other | 19 | 9.5% |
+
 ### Study Limitations
 
 1. **Turn-budget cap (AMQ-MT)**: AMQ-MT is capped at 5 turns. The finding that multi-turn adaptive attacks underperform single-turn refinement is specific to this budget. Studies using 10-turn budgets [7] achieve substantially higher ASR. Practitioners should not conclude that multi-turn attacks are ineffective in general.
 
 2. **PAIR iteration cap**: AMQ-ST uses `max_iterations=5`, not the 20-iteration original PAIR design [2]. The comparison to published PAIR ASRs reflects differences in both attacker model (DeepSeek-R1 vs. GPT-4) and iteration depth. These are not separable in the current design.
 
-3. **K unablated for BoK-ST**: K=5 was chosen to match PAIR-5's maximum target-query cap. The sensitivity of BoK-ST's ASR to K is unknown. It is possible that K=3 achieves equivalent adjusted ASR at lower cost, or that K=10 provides meaningful additional coverage.
+3. **K sensitivity for BoK-ST**: K=5 was chosen to match PAIR-5's maximum target-query cap. Post-hoc ablation from existing variant data (not new experiments) shows: K=1 achieves 56.2% raw ASR, K=3 reaches 84.1%, and K=5 reaches 91.2%. The marginal gain from K=3→5 is +7.2pp with diminishing returns. Sequential stopping simulation shows mean realized queries of 1.94/5.0 (61.2% theoretical savings), with 56.2% of attacks succeeding at the first variant. K>5 was not tested.
 
 4. **Intent category heterogeneity**: Results are averages across 40 harm intents spanning cybercrime, CBRN, social manipulation, and other categories. Category-level ASR variation is not reported; some categories may be substantially more or less susceptible to specific attack strategies.
 
