@@ -1,0 +1,289 @@
+{
+  "model_results": {
+    "M0_null": {
+      "llf": -1303.373839492237,
+      "aic": 2608.747678984474,
+      "n": 1920
+    },
+    "M1_model_only": {
+      "llf": -1238.5418677848083,
+      "aic": 2493.0837355696167,
+      "pseudo_r2": 0.049741654882904274
+    },
+    "M2_intent_only": {
+      "llf": -1216.109350455134,
+      "aic": 2512.218700910268,
+      "pseudo_r2": 0.06695277010554324
+    },
+    "M3_model_intent": {
+      "llf": -1144.7277326271137,
+      "aic": 2383.4554652542274,
+      "pseudo_r2": 0.12171957274125433
+    },
+    "M4_primary": {
+      "llf": -855.0848337193479,
+      "aic": 1812.1696674386958,
+      "pseudo_r2": 0.3439450694725711,
+      "pseudo_r2_incremental": -0.2222254967313167,
+      "mechanisms": {
+        "attacker_llm": {
+          "label": "LLM-crafted prompt",
+          "coef_logit": 2.1165,
+          "se": 0.1895,
+          "odds_ratio": 8.302,
+          "or_ci": [
+            5.726,
+            12.036
+          ],
+          "p_value": 0.0,
+          "ame_pp": 36.57,
+          "significant": true
+        },
+        "feedback": {
+          "label": "Iterative refinement (target feedback)",
+          "coef_logit": 0.6805,
+          "se": 0.186,
+          "odds_ratio": 1.975,
+          "or_ci": [
+            1.371,
+            2.844
+          ],
+          "p_value": 0.000254,
+          "ame_pp": 10.15,
+          "significant": true
+        },
+        "multi_turn": {
+          "label": "Multi-turn memory",
+          "coef_logit": 0.021,
+          "se": 0.145,
+          "odds_ratio": 1.021,
+          "or_ci": [
+            0.769,
+            1.357
+          ],
+          "p_value": 0.884746,
+          "ame_pp": 0.3,
+          "significant": false
+        },
+        "diversity": {
+          "label": "Static diversity (K=5 variants)",
+          "coef_logit": 1.6067,
+          "se": 0.2288,
+          "odds_ratio": 4.986,
+          "or_ci": [
+            3.185,
+            7.808
+          ],
+          "p_value": 0.0,
+          "ame_pp": 22.41,
+          "significant": true
+        }
+      },
+      "n_params": 51,
+      "n_obs": 1920,
+      "converged": true
+    },
+    "M5_interaction": {
+      "llf": -796.8757486752777,
+      "aic": 1697.7514973505554,
+      "interaction_coef": -3.3228,
+      "interaction_se": 0.327,
+      "interaction_or": 0.036,
+      "interaction_p": 0.0,
+      "lr_test_vs_m4": 116.418,
+      "lr_p_value": 0.0,
+      "interaction_significant": true
+    },
+    "M6_gee": {
+      "mechanisms": {
+        "attacker_llm": {
+          "coef_logit": 1.872,
+          "robust_se": 0.2658,
+          "odds_ratio": 6.501,
+          "p_value": 0.0
+        },
+        "feedback": {
+          "coef_logit": 0.603,
+          "robust_se": 0.2091,
+          "odds_ratio": 1.828,
+          "p_value": 0.003927
+        },
+        "multi_turn": {
+          "coef_logit": 0.0187,
+          "robust_se": 0.2104,
+          "odds_ratio": 1.019,
+          "p_value": 0.929248
+        },
+        "diversity": {
+          "coef_logit": 1.4371,
+          "robust_se": 0.2971,
+          "odds_ratio": 4.209,
+          "p_value": 1e-06
+        }
+      },
+      "scale": 1.0,
+      "n_clusters": 8,
+      "note": "Population-averaged effects with exchangeable correlation within models; intent as fixed effects."
+    }
+  },
+  "variance_decomposition": {
+    "total_null_deviance": 2606.7,
+    "model_effect": {
+      "deviance_explained": 129.7,
+      "pseudo_r2": 4.97,
+      "interpretation": "Variance due to target model identity (robustness differences)"
+    },
+    "intent_effect": {
+      "deviance_explained": 174.5,
+      "pseudo_r2": 6.7,
+      "interpretation": "Variance due to harmful intent (some intents are inherently harder to defend)"
+    },
+    "model_given_intent": {
+      "deviance_explained": 142.8,
+      "pseudo_r2": 5.48
+    },
+    "intent_given_model": {
+      "deviance_explained": 187.6,
+      "pseudo_r2": 7.2
+    },
+    "mechanism_effect": {
+      "deviance_explained": 579.3,
+      "pseudo_r2": 22.22,
+      "interpretation": "Variance due to attack mechanism (feedback, diversity, etc.)"
+    },
+    "residual": {
+      "deviance": 1710.2,
+      "pseudo_r2": 65.61
+    }
+  },
+  "bootstrap_marginal_effects": {
+    "attacker_llm": {
+      "ame_mean": 36.57,
+      "ame_ci_95": [
+        28.18,
+        44.09
+      ],
+      "n_successful_boots": 2000
+    },
+    "feedback": {
+      "ame_mean": 10.2,
+      "ame_ci_95": [
+        2.95,
+        17.36
+      ],
+      "n_successful_boots": 2000
+    },
+    "multi_turn": {
+      "ame_mean": 0.22,
+      "ame_ci_95": [
+        -5.96,
+        7.55
+      ],
+      "n_successful_boots": 2000
+    },
+    "diversity": {
+      "ame_mean": 22.51,
+      "ame_ci_95": [
+        16.91,
+        27.76
+      ],
+      "n_successful_boots": 2000
+    }
+  },
+  "mcnemar_comparison": [
+    {
+      "contrast": "PAIR-1 vs Direct (attacker_llm effect)",
+      "mechanism": "attacker_llm",
+      "mcnemar_raw_diff_pp": 49.4,
+      "mcnemar_p": 0.0,
+      "mcnemar_note": "Pooled, ignores model/intent clustering",
+      "regression_ame_pp": 36.57,
+      "regression_or": 8.302,
+      "regression_p": 0.0,
+      "regression_note": "Controls for model + intent heterogeneity"
+    },
+    {
+      "contrast": "PAIR-5 vs PAIR-1 (feedback effect)",
+      "mechanism": "feedback",
+      "mcnemar_raw_diff_pp": 22.2,
+      "mcnemar_p": 0.0,
+      "mcnemar_note": "Pooled, ignores model/intent clustering",
+      "regression_ame_pp": 10.15,
+      "regression_or": 1.975,
+      "regression_p": 0.000254,
+      "regression_note": "Controls for model + intent heterogeneity"
+    },
+    {
+      "contrast": "Adaptive MT vs PAIR-5 (multi_turn effect)",
+      "mechanism": "multi_turn",
+      "mcnemar_raw_diff_pp": -22.5,
+      "mcnemar_p": 0.0,
+      "mcnemar_note": "Pooled, ignores model/intent clustering",
+      "regression_ame_pp": 0.3,
+      "regression_or": 1.021,
+      "regression_p": 0.884746,
+      "regression_note": "Controls for model + intent heterogeneity"
+    },
+    {
+      "contrast": "BoK vs PAIR-1 (diversity effect)",
+      "mechanism": "diversity",
+      "mcnemar_raw_diff_pp": 21.9,
+      "mcnemar_p": 0.0,
+      "mcnemar_note": "Pooled, ignores model/intent clustering",
+      "regression_ame_pp": 22.41,
+      "regression_or": 4.986,
+      "regression_p": 0.0,
+      "regression_note": "Controls for model + intent heterogeneity"
+    }
+  ],
+  "design": {
+    "mechanism_encoding": {
+      "direct_single_turn": {
+        "attacker_llm": 0,
+        "feedback": 0,
+        "multi_turn": 0,
+        "diversity": 0
+      },
+      "scripted_multi_turn": {
+        "attacker_llm": 0,
+        "feedback": 0,
+        "multi_turn": 1,
+        "diversity": 0
+      },
+      "adaptive_single_query_st": {
+        "attacker_llm": 1,
+        "feedback": 0,
+        "multi_turn": 0,
+        "diversity": 0
+      },
+      "adaptive_single_turn": {
+        "attacker_llm": 1,
+        "feedback": 1,
+        "multi_turn": 0,
+        "diversity": 0
+      },
+      "adaptive_multi_turn": {
+        "attacker_llm": 1,
+        "feedback": 1,
+        "multi_turn": 1,
+        "diversity": 0
+      },
+      "best_of_k_st": {
+        "attacker_llm": 1,
+        "feedback": 0,
+        "multi_turn": 0,
+        "diversity": 1
+      }
+    },
+    "mechanism_labels": {
+      "attacker_llm": "LLM-crafted prompt",
+      "feedback": "Iterative refinement (target feedback)",
+      "multi_turn": "Multi-turn memory",
+      "diversity": "Static diversity (K=5 variants)"
+    },
+    "n_obs": 1920,
+    "n_models": 8,
+    "n_intents": 40,
+    "n_conditions": 6
+  }
+}

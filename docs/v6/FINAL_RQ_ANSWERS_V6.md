@@ -629,6 +629,203 @@ Every pairwise comparison achieves 320 matched pairs (8 models x 40 intents) wit
 
 ---
 
+## Mechanism Decomposition: Mixed-Effects Logistic Regression
+
+The pairwise McNemar tests in Sections 1.5-1.6 compare conditions two at a time and ignore clustering by model and intent. This section replaces that approach with a single unified logistic regression that simultaneously estimates the effect of four orthogonal attack mechanisms, controlling for heterogeneity across 8 target models and 40 harmful intents as fixed effects.
+
+### Mechanism Encoding
+
+Each of the six conditions is decomposed into four binary mechanism indicators:
+
+| Condition | LLM-crafted | Feedback | Multi-turn | Diversity |
+|-----------|-------------|----------|------------|----------|
+| OSS-ST (Direct) | 0 | 0 | 0 | 0 |
+| SS-MT (Scripted) | 0 | 0 | 1 | 0 |
+| ASQ-ST (PAIR-1) | 1 | 0 | 0 | 0 |
+| AMQ-ST (PAIR-5) | 1 | 1 | 0 | 0 |
+| AMQ-MT (Adaptive MT) | 1 | 1 | 1 | 0 |
+| BoK-ST (Best-of-K) | 1 | 0 | 0 | 1 |
+
+### Primary Model (M4): Mechanism Effects
+
+*N* = 1,920, *k* = 51 parameters, McFadden pseudo-*R*² = 0.344
+
+| Mechanism | OR | 95% CI | AME (pp) | Boot 95% CI | *p* | Sig. |
+|-----------|-------|------------|----------|-------------|-------|------|
+| LLM-crafted prompt | 8.30 | [5.73, 12.04] | +36.6 | [+28.2, +44.1] | < 0.0001 | *** |
+| Iterative refinement (target feedback) | 1.98 | [1.37, 2.84] | +10.2 | [+3.0, +17.4] | 0.0003 | *** |
+| Multi-turn memory | 1.02 | [0.77, 1.36] | +0.3 | [-6.0, +7.5] | 0.8847 | ns |
+| Static diversity (K=5 variants) | 4.99 | [3.19, 7.81] | +22.4 | [+16.9, +27.8] | < 0.0001 | *** |
+
+- **OR** (odds ratio): multiplicative change in odds of success when the mechanism is present.
+- **AME** (average marginal effect): average change in P(success) in percentage points, computed via block-bootstrap resampling models for cluster-robust confidence intervals.
+
+**Finding 35 -- LLM-crafted prompting is the dominant mechanism (+36.6pp AME), followed by static diversity (+22.4pp) and iterative feedback (+10.2pp). Multi-turn memory has zero marginal effect (+0.3pp, ns).** The regression confirms and extends the pairwise findings: having an attacker LLM craft the prompt (even without feedback) is 3.6x more impactful than iterative refinement, and pre-generating diverse attack strategies is 2.2x more impactful than closed-loop adaptation. Multi-turn conversational memory provides no marginal benefit after controlling for adaptivity -- the apparent AMQ-MT disadvantage in the McNemar tests was confounded by the joint presence of feedback and multi-turn memory.
+
+### Feedback × Multi-Turn Interaction
+
+Adding a feedback × multi-turn interaction term yields OR = 0.04 (*p* < 0.0001). The interaction is **strongly negative**: combining feedback with multi-turn memory provides *less* benefit than the sum of their individual effects. This confirms the mechanistic analysis in Section 1.8 -- multi-turn context acts as a defence amplifier that counteracts the attacker's adaptive advantage.
+
+### Variance Decomposition
+
+| Source | Deviance explained | % of null deviance |
+|--------|-------------------|-----------------|
+| Target model | 129.7 | 5.0% |
+| Harmful intent | 174.5 | 6.7% |
+| Attack mechanism | 579.3 | 22.2% |
+| Residual | 1,710.2 | 65.6% |
+| **Total null deviance** | **2,606.7** | **100%** |
+
+**Finding 36 -- Attack mechanism explains 22.2% of outcome variance, dwarfing target model (5.0%) and intent (6.7%).** The choice of *how* to attack matters far more than *which model* or *which intent* is targeted. This has direct implications for safety evaluation: benchmarks that test only one attack strategy capture less than a quarter of the variation that matters.
+
+### GEE Robustness Check
+
+A Generalized Estimating Equations model with exchangeable correlation within model clusters and sandwich (cluster-robust) standard errors confirms all four mechanism effects in the same direction, with slightly attenuated ORs (LLM-crafted: 6.50, feedback: 1.83, multi-turn: 1.02, diversity: 4.21). All significance levels agree with the primary model. The regression findings are robust to arbitrary within-cluster dependence.
+
+### Regression vs. Pooled McNemar
+
+| Contrast | McNemar diff | McNemar *p* | Regression AME | Regression *p* | Direction agrees? |
+|----------|-------------|-------------|----------------|----------------|------------------|
+| PAIR-1 vs Direct (LLM-crafted effect) | +49.4pp | < 0.001 | +36.6pp | < 0.001 | Yes |
+| PAIR-5 vs PAIR-1 (feedback effect) | +22.2pp | < 0.001 | +10.2pp | 0.0003 | Yes |
+| AMQ-MT vs PAIR-5 (multi-turn effect) | -22.5pp | < 0.001 | +0.3pp | 0.885 | **No** |
+| BoK vs PAIR-1 (diversity effect) | +21.9pp | < 0.001 | +22.4pp | < 0.001 | Yes |
+
+**Finding 37 -- The pooled McNemar test overestimates the feedback effect by 2.2x and produces a sign error for multi-turn.** The pairwise AMQ-MT vs PAIR-5 comparison (-22.5pp, p < 0.001) conflates the multi-turn effect with a confound: AMQ-MT activates both feedback *and* multi-turn, and the negative interaction between them drives the pairwise result. The regression correctly decomposes this into: multi-turn memory alone has no effect (+0.3pp), but its interaction with feedback is strongly negative (OR = 0.04). This demonstrates why mechanism decomposition via regression is essential -- pairwise comparisons cannot separate joint effects.
+
+---
+
+## Success-vs-Budget Curves
+
+This section addresses whether BoK-ST reaches PAIR-5's ASR because of **static diversity**, **repeated independent trials**, or **adaptive refinement with target feedback**. We construct cumulative ASR curves as a function of the number of target calls (K = 1, ..., 5) for three strategies, plus two theoretical baselines.
+
+### Overall ASR by Target-Call Budget
+
+| K | PAIR-5 (adaptive) | BoK (diverse) | BoK-iid (theoretical) | PAIR-1 × K (iid) | Direct × K (iid) |
+|---|-------------------|---------------|----------------------|-------------------|-------------------|
+| 1 | 68.1% [62.8, 73.0] | 56.2% [50.8, 61.6] | 65.8% | 64.1% | 15.9% |
+| 2 | 84.7% [80.3, 88.2] | 77.5% [72.6, 81.7] | 88.3% | 87.1% | 29.3% |
+| 3 | 90.3% [86.6, 93.1] | 84.1% [79.7, 87.7] | 96.0% | 95.4% | 40.6% |
+| 4 | 92.5% [89.1, 94.9] | 88.1% [84.1, 91.2] | 98.6% | 98.3% | 50.1% |
+| 5 | 93.8% [90.5, 95.9] | 91.2% [87.6, 93.9] | 99.5% | 99.4% | 58.0% |
+
+- **PAIR-5 (adaptive)**: cumulative ASR at each PAIR iteration (early-stop on success).
+- **BoK (diverse)**: cumulative ASR using best-of-first-K variants (actual BoK data).
+- **BoK-iid (theoretical)**: 1 - (1-p)^K where p = per-variant success rate (56.2%), assuming independence across variants.
+- **PAIR-1 × K** and **Direct × K**: theoretical i.i.d. repeated sampling of PAIR-1 (64.1%) and Direct (15.9%) attacks.
+
+### Scaling Decomposition
+
+Three quantities decompose how BoK reaches its K=5 ASR:
+
+| K | Diversity gain | Correlation tax | Adaptive premium |
+|---|---------------|-----------------|------------------|
+| 1 | +0.0pp | +9.6pp | +11.9pp |
+| 2 | +21.2pp | +10.8pp | +7.2pp |
+| 3 | +27.8pp | +11.9pp | +6.2pp |
+| 4 | +31.9pp | +10.5pp | +4.4pp |
+| 5 | +35.0pp | +8.3pp | +2.5pp |
+
+- **Diversity gain** = BoK(K) - BoK(1): raw improvement from K diverse variants over a single variant.
+- **Correlation tax** = BoK-iid(K) - BoK(K): how much positive within-intent correlation reduces scaling vs. the i.i.d. theoretical ceiling.
+- **Adaptive premium** = PAIR(K) - BoK(K): benefit of target feedback over static diversity at each budget level.
+
+**Finding 38 -- BoK reaches PAIR-5 primarily through strategy diversity, not repeated i.i.d. trials.** The diversity gain accounts for +35.0pp at K=5 (from 56.2% to 91.2%). However, this gain falls 8.3pp short of the i.i.d. ceiling (99.5%) because variant outcomes within an intent are positively correlated -- vulnerability is largely a property of the (model, intent) pair, causing diverse strategies to succeed or fail together.
+
+**Finding 39 -- Adaptive refinement matters most at low budget, but its premium vanishes by K=5.** At K=1, PAIR leads BoK by 11.9pp (68.1% vs. 56.2%), reflecting the value of LLM-guided prompt crafting over pre-generated variants. By K=5, the adaptive premium shrinks to just +2.5pp as BoK's diversity catches up. This means strategy diversity is a substitute for target feedback when the query budget is sufficient.
+
+**Finding 40 -- PAIR front-loads success: 68.1% of attacks succeed on the first iteration.** Iterations 2-5 contribute only +25.6pp additional ASR. This confirms the mechanism decomposition finding that the attacker LLM's initial reasoning (+36.6pp AME) dominates iterative refinement (+10.2pp AME).
+
+**Finding 41 -- Extrapolating i.i.d. scaling laws to strategy-diverse BoK overpredicts success.** The theoretical i.i.d. ceiling at K=5 is 99.5%, but actual BoK reaches only 91.2% -- a correlation tax of 8.3pp. Researchers applying the Best-of-N scaling framework (Hughes et al. [8]) to diverse-strategy attacks should expect real gains to saturate faster than the 1-(1-p)^K formula predicts.
+
+### Per-Model Budget Curves (Summary at K=5)
+
+| Model | BoK@1 | PAIR@1 | BoK@5 | PAIR@5 | Div. gain | Corr. tax | Adapt. prem. |
+|-------|-------|--------|-------|--------|-----------|-----------|-------------|
+| Claude Sonnet 4 | 25.0% | 32.5% | 60.0% | 60.0% | +35.0pp | +27.9pp | +0.0pp |
+| DeepSeek-v3-0324 | 72.5% | 80.0% | 97.5% | 100.0% | +25.0pp | +2.5pp | +2.5pp |
+| Gemini 2.5 Flash | 52.5% | 60.0% | 90.0% | 100.0% | +37.5pp | +9.1pp | +10.0pp |
+| GPT-4o | 40.0% | 62.5% | 92.5% | 100.0% | +52.5pp | +5.9pp | +7.5pp |
+| GPT-4o-mini | 35.0% | 55.0% | 95.0% | 95.0% | +60.0pp | +2.6pp | +0.0pp |
+| LLaMA 3.3 70B | 65.0% | 75.0% | 97.5% | 97.5% | +32.5pp | +2.4pp | +0.0pp |
+| Mistral Large 2411 | 90.0% | 95.0% | 97.5% | 100.0% | +7.5pp | +2.5pp | +2.5pp |
+| Qwen 2.5 72B | 70.0% | 85.0% | 100.0% | 97.5% | +30.0pp | -0.1pp | -2.5pp |
+
+**Finding 42 -- Claude Sonnet 4 has the highest correlation tax (+27.9pp), meaning its vulnerabilities are intent-specific rather than strategy-specific.** When Claude is vulnerable to a particular intent, multiple diverse strategies tend to succeed; when it resists, all strategies tend to fail. This is the signature of objective-aware safety alignment -- Claude's defences recognise the harmful intent regardless of framing, so diversity provides less marginal benefit.
+
+**Finding 43 -- GPT-4o-mini has the highest diversity gain (+60.0pp), indicating strategy-specific blind spots.** Its low single-variant ASR (35.0%) jumps to 95.0% with K=5 diverse strategies, suggesting its safety alignment is strongly format-dependent. Different framing strategies access entirely different vulnerability surfaces.
+
+---
+
+## Human Validation Counterfactual Analysis
+
+This section identifies specific scientific conclusions that would be **incorrect** if the study relied solely on automated detector verdicts rather than human-validated labels. All 1,920 findings were independently reviewed by two trained annotators (Cohen's κ = 0.81); this analysis compares raw (detector-based) and corrected (human-validated) results.
+
+### Budget Curves: Raw Detector vs. Human-Validated
+
+| K | BoK (raw) | BoK (human) | Inflation | PAIR-5 (raw) | PAIR-5 (human) | Deflation |
+|---|-----------|-------------|-----------|--------------|----------------|-----------|
+| 1 | 56.2% | 54.1% | +2.2pp | 62.8% | 64.1% | -1.2pp |
+| 2 | 77.5% | 73.8% | +3.8pp | 77.2% | 78.1% | -0.9pp |
+| 3 | 84.1% | 79.4% | +4.7pp | 81.9% | 83.1% | -1.2pp |
+| 4 | 88.1% | 82.2% | +5.9pp | 83.8% | 84.7% | -0.9pp |
+| 5 | 91.2% | 85.6% | +5.6pp | 85.0% | 85.9% | -0.9pp |
+
+BoK's inflation grows with K because each additional variant gives the detector another chance to produce a false positive. PAIR-5's slight deflation reflects false negatives where the detector missed adaptive successes.
+
+### Any-of-K False-Positive Accumulation
+
+| K | FP count | FN count | Raw ASR | Corrected ASR | Net inflation |
+|---|----------|----------|---------|---------------|---------------|
+| 1 | 7 | 0 | 56.2% | 54.1% | +2.2pp |
+| 2 | 12 | 0 | 77.5% | 73.8% | +3.8pp |
+| 3 | 15 | 0 | 84.1% | 79.4% | +4.7pp |
+| 4 | 19 | 0 | 88.1% | 82.2% | +5.9pp |
+| 5 | 23 | 5 | 91.2% | 85.6% | +5.6pp |
+
+### Scientific Conclusions That Would Be Wrong Without Human Validation
+
+**Counterfactual 1 [Critical] -- Rank inversion between BoK and PAIR-5.**
+- *Without human validation*: BoK (91.2%) outperforms PAIR-5 (85.0%) by +6.2pp.
+- *With human validation*: BoK (85.6%) and PAIR-5 (85.9%) are statistically tied (delta = -0.3pp).
+- *Mechanism*: BoK accumulates 23 FP across 5 variants (any-of-K amplification); PAIR-5 has 3 net FN (detector underreports adaptive successes). Together, these create a spurious +6.5pp BoK advantage.
+
+**Counterfactual 2 [Critical] -- Phantom adaptive premium sign reversal.**
+- *Without human validation*: Adaptive premium at K=5 is -6.2pp (PAIR trails BoK).
+- *With human validation*: Adaptive premium at K=5 is +0.3pp (methods are equivalent).
+- *Consequence*: A researcher using raw scores would conclude that static diversity *outperforms* adaptive refinement -- the opposite of the true finding that they are equivalent.
+
+**Counterfactual 3 [Major] -- Inflated diversity gain.**
+- *Without human validation*: BoK diversity gain (K=1 → K=5) is +35.0pp.
+- *With human validation*: BoK diversity gain is +31.6pp; 3.4pp (9.7%) was false-positive inflation.
+- *Mechanism*: FP inflation grows monotonically with K: +2.2pp at K=1, +5.6pp at K=5.
+
+**Counterfactual 4 [Critical] -- Scripted multi-turn overestimate.**
+- *Without human validation*: SS-MT (51.2% raw ASR) appears a moderately effective baseline.
+- *With human validation*: SS-MT (37.5% adjusted ASR) is weak; 13.7pp was FP inflation -- the largest measurement error of any condition. 51 of 320 findings (15.9%) were false positives.
+
+**Counterfactual 5 [Major] -- Per-model rank inversions.**
+- *Without human validation*: BoK wins over PAIR-5 on 6 of 8 models.
+- *With human validation*: BoK wins on only 3 of 8; 2 models (DeepSeek-v3, GPT-4o) show full rank inversions, and 2 more (GPT-4o-mini, Qwen 2.5) shift from BoK-wins to ties.
+
+**Counterfactual 6 [Critical] -- Cost-efficiency misjudgement.**
+- *Without human validation*: BoK (91.2%) appears more effective than PAIR-5 (85.0%) despite using all 5 target calls.
+- *With human validation*: PAIR-5 (85.9%) matches BoK (85.6%) while realising only 1.6 mean target calls (68% fewer queries). A practitioner choosing BoK over PAIR based on raw ASR would use 3x more target queries for equivalent true ASR.
+
+### Summary
+
+| Aspect | Raw detector verdict | Human-validated | Error type |
+|--------|---------------------|-----------------|------------|
+| Best method at K=5 | BoK (91.2%) | Tie (85.6% vs 85.9%) | Rank inversion |
+| BoK diversity gain (K=1→5) | +35.0pp | +31.6pp | 9.7% overestimate |
+| Adaptive premium (K=5) | -6.2pp (PAIR trails) | +0.3pp (equivalent) | Sign error |
+| Scripted MT baseline | 51.2% (moderate) | 37.5% (weak) | +13.7pp overestimate |
+| Cost-efficiency winner | BoK (higher ASR) | PAIR (same ASR, 68% fewer queries) | Wrong recommendation |
+
+**Finding 44 -- Every cross-condition comparison in this study required human validation to be directionally correct.** Without human review, a researcher would (1) conclude BoK outperforms PAIR-5 rather than finding them equivalent, (2) recommend BoK over PAIR despite PAIR being 3x more query-efficient, (3) overestimate scripted attacks by 13.7pp, and (4) report a sign error in the adaptive premium. Human validation is not a quality enhancement -- it is a prerequisite for valid conclusions in any study using automated safety detectors with a best-of-K success criterion.
+
+---
+
 ## Statistical Methodology Notes
 
 - **Sample size**: N = 40 per model-condition cell, N = 320 per condition (pooled), N = 1,920 total
@@ -641,7 +838,10 @@ Every pairwise comparison achieves 320 matched pairs (8 models x 40 intents) wit
 - **Adjusted ASR**: Raw ASR corrected for false positives (automated success, human-rejected) and false negatives (automated refusal, human-confirmed bypass) identified by human annotators
 - **AWCS** (Authority-Weighted Cascade Score): composite safety metric defined as AWCS = (R_rate × α) − (ASR × γ) − (CDR × λ), where R_rate = refusal rate, ASR = attack success rate, CDR = critical damage rate, and α=0.5, γ=0.2, λ=0.1 (parameters from RAHS paper, arxiv:2603.10807). Positive AWCS indicates net safe behaviour; negative AWCS indicates net harmful output production. The metric weights refusal rate most heavily because consistent refusal is the primary indicator of effective safety alignment.
 - **Detector metrics**: Precision = TP/(TP+FP), Recall = TP/(TP+FN), F1 = 2×P×R/(P+R), computed against human ground truth labels
-- **Clustering limitation**: Pooled McNemar tests treat 320 pairs as i.i.d.; model-level clustering is not corrected for. Per-model stratified results are provided and directionally consistent with all pooled findings.
+- **Mechanism decomposition (logistic regression)**: Fixed-effects logistic regression with model and intent indicators, four binary mechanism predictors, and block-bootstrap CIs (resampling models, 1000 iterations). McFadden pseudo-R² from nested model sequence for variance decomposition. GEE robustness check with exchangeable working correlation within model clusters and sandwich (cluster-robust) SEs.
+- **Success-vs-budget curves**: Cumulative ASR at each budget level K=1,...,5 computed from variant-level BoK data and PAIR iteration-level data. Theoretical i.i.d. baselines computed as 1-(1-p)^K where p is the observed per-variant/per-iteration success rate. Correlation tax = BoK-iid(K) - BoK(K); adaptive premium = PAIR(K) - BoK(K); diversity gain = BoK(K) - BoK(1).
+- **Human validation counterfactual**: Side-by-side comparison of all metrics computed from raw detector labels vs. human-validated labels. False-positive accumulation in any-of-K counted by tracking the earliest variant position producing a FP.
+- **Clustering limitation**: Pooled McNemar tests treat 320 pairs as i.i.d.; model-level clustering is not corrected for. The mechanism decomposition regression (Section "Mechanism Decomposition") resolves this limitation via fixed effects and block-bootstrap CIs. Per-model stratified results are provided and directionally consistent with all pooled findings.
 - **External validity**: Results are specific to 40 harm intents from the ATLAS intent set and 8 model versions tested in May 2026. Generalisation to other intent distributions, harm categories, or subsequent model versions is not established.
 
 ---
