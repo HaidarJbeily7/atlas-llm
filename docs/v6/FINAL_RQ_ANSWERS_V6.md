@@ -12,6 +12,11 @@
 **Pairing**: All statistical comparisons are paired by `(model, intent_id)` -- see Appendix A for the formal pairing audit.
 **Human Annotation Protocol**: All 1,920 findings were independently annotated by two trained security researchers using a standardised rubric (binary safe/unsafe + severity rating). Inter-annotator agreement: Cohen's κ = 0.81 (substantial agreement). Disagreements (~12% of cases) were resolved by a third senior reviewer through adjudication. Adjusted ASR figures throughout this report reflect these human-validated labels.
 
+**Supplementary Analyses (beyond the three primary RQs):**
+- **Mechanism Decomposition** (Appendix B): A fixed-effects logistic regression with block-bootstrap CIs replaces the 15 pooled McNemar tests with a single model estimating four orthogonal mechanism effects simultaneously, resolving the clustering limitation of the pairwise approach.
+- **Success-vs-Budget Curves** (Appendix C): Cumulative ASR curves at K=1...5 for PAIR-5 and BoK, with a three-quantity decomposition (diversity gain, correlation tax, adaptive premium) that disentangles why BoK reaches PAIR-5's ASR at the same query budget.
+- **Human Validation Counterfactual** (Appendix D): Side-by-side comparison of raw detector verdicts versus human-validated labels, identifying six specific scientific conclusions that would be wrong without human review.
+
 ### Condition Taxonomy
 
 Our six conditions are grounded in the established red-teaming literature. We adopt a principled naming convention that reflects two orthogonal axes -- **adaptivity** (whether an attacker LLM observes and reacts to target responses at runtime) and **interaction mode** (how many turns the target model sees) -- plus a **strategy diversity** axis for the Best-of-K condition:
@@ -32,7 +37,7 @@ Our six conditions are grounded in the established red-teaming literature. We ad
 | **Static (no runtime attacker)** | OSS-ST (baseline), BoK-ST (strategy-diverse) | SS-MT |
 | **Adaptive (runtime attacker)** | ASQ-ST (PAIR-1), AMQ-ST (PAIR-5) | AMQ-MT |
 
-The design disentangles three distinct mechanisms: (a) **attacker one-shot reasoning** -- can a single attacker LLM pass outperform static templates? (ASQ-ST vs. OSS-ST); (b) **iterative refinement** -- does observing the target's response and adapting improve ASR? (AMQ-ST vs. ASQ-ST); (c) **strategy diversity without feedback** -- can pre-generating diverse attack strategies that target different facets of safety alignment match iterative refinement? (BoK-ST vs. AMQ-ST). The multi-turn axis tests whether conversational context and gradual escalation add value beyond single-turn approaches (SS-MT vs. OSS-ST; AMQ-MT vs. AMQ-ST).
+The design disentangles three distinct mechanisms: (a) **attacker one-shot reasoning** -- can a single attacker LLM pass outperform static templates? (ASQ-ST vs. OSS-ST); (b) **iterative refinement** -- does observing the target's response and adapting improve ASR? (AMQ-ST vs. ASQ-ST); (c) **strategy diversity without feedback** -- can pre-generating diverse attack strategies that target different facets of safety alignment match iterative refinement? (BoK-ST vs. AMQ-ST). The multi-turn axis tests whether conversational context and gradual escalation add value beyond single-turn approaches (SS-MT vs. OSS-ST; AMQ-MT vs. AMQ-ST). Appendix B provides a formal mechanism decomposition that estimates these four effects simultaneously in a single regression model, controlling for model- and intent-level heterogeneity.
 
 ---
 
@@ -172,7 +177,7 @@ Decomposing the gain relative to the OSS-ST baseline (14.4%): PAIR-1 captures 49
 
 Every adjacent-tier comparison is statistically significant. The dominant factor separating Tier 1 from Tier 2 is whether the attack uses **multiple queries to the target per intent** -- either through iterative refinement with feedback (PAIR-5) or through strategy-diverse pre-generated variants (BoK-ST, K=5 distinct strategies). Neither multi-turn conversation (AMQ-MT) nor a single attacker-crafted prompt without refinement (ASQ-ST/PAIR-1) reaches Tier 1, despite AMQ-MT using the same maximum target-query cap as PAIR-5.
 
-**Statistical note**: The pooled McNemar test (N=320 pairs per comparison) does not account for model-level clustering. Observations within the same target model may be correlated. Per-model McNemar results (Appendix A) are consistent in sign with all pooled findings, which reduces -- but does not eliminate -- the risk that pooled p-values are inflated by clustering. Mixed-effects modelling is deferred to future work.
+**Statistical note**: The pooled McNemar test (N=320 pairs per comparison) does not account for model-level clustering. Observations within the same target model may be correlated. Per-model McNemar results (Appendix A) are consistent in sign with all pooled findings, which reduces -- but does not eliminate -- the risk that pooled p-values are inflated by clustering. Appendix B (Mechanism Decomposition) addresses this directly: a fixed-effects logistic regression with block-bootstrap standard errors estimates all four mechanism effects simultaneously while absorbing model- and intent-level heterogeneity. The regression finds directional agreement with all pairwise McNemar results except the AMQ-MT vs. PAIR-5 contrast, where the pairwise approach conflates the multi-turn effect with the negative feedback × multi-turn interaction.
 
 ### 1.7 RQ1 Answer
 
@@ -181,6 +186,10 @@ Every adjacent-tier comparison is statistically significant. The dominant factor
 The most cost-effective strategy is PAIR-1 ($0.0068/attack, 63.7% adj. ASR, $0.0107/success). PAIR-5 ($0.0138/attack, 85.9% adj. ASR, $0.0161/success) provides superior ASR at a modest premium. BoK-ST ($0.0179/attack, 85.6% adj. ASR, $0.0209/success) is dominated by PAIR-5 on every practical metric.
 
 The factorial design decomposes the gain above the OSS-ST baseline: a single attacker-crafted prompt with no feedback (PAIR-1) captures 69% of the total adaptive gain (+49.4pp of 71.6pp); iterative closed-loop refinement (PAIR-1 to PAIR-5) accounts for the remaining 31% (+22.2pp); pre-generated strategy diversity without feedback (BoK-ST) matches PAIR-5's adjusted ASR ceiling via a different mechanism; scripted multi-turn context alone adds ~23.1pp adjusted above OSS-ST; and combining adaptivity with multi-turn conversation under a 5-turn budget yields no synergy over single-turn refinement.
+
+**Formal mechanism attribution** (Appendix B): A fixed-effects logistic regression quantifies the independent contribution of each mechanism: LLM-crafted prompting (+36.6pp AME, OR = 8.30) > static strategy diversity (+22.4pp, OR = 4.99) > iterative feedback (+10.2pp, OR = 1.98) > multi-turn memory (+0.3pp, ns). Attack mechanism choice explains 22.2% of outcome variance -- more than target model (5.0%) and intent (6.7%) combined. The regression also reveals a critical sign error in the pairwise AMQ-MT vs. PAIR-5 comparison: multi-turn memory alone has no negative effect; it is the negative interaction between feedback and multi-turn memory (OR = 0.04) that drives the pairwise result (see Appendix B and Section 1.8).
+
+**Budget-efficiency decomposition** (Appendix C): Cumulative ASR curves show that BoK reaches PAIR-5's ASR via strategy diversity (+35.0pp gain) rather than repeated i.i.d. sampling, with a correlation tax of 8.3pp preventing it from reaching the i.i.d. ceiling. The adaptive premium shrinks from +11.9pp at K=1 to +2.5pp at K=5, confirming that strategy diversity is a substitute for target feedback at sufficient query budget.
 
 ### 1.8 Why Does Multi-Turn Adaptive (AMQ-MT) Underperform Single-Turn Strategies?
 
@@ -238,6 +247,8 @@ This structural advantage of independence over depth is consistent with the desi
 | LLM Judge bypass | 45.0% | 78.1% | 74.1% |
 
 The core insight is that **multi-turn interaction is a double-edged sword**: it gives the attacker more information about the target but simultaneously provides the target with accumulated context to detect and resist the attack. For current safety-aligned LLMs, the defensive benefit of conversational memory substantially outweighs the offensive benefit of turn-by-turn adaptation. Single-turn attacks -- whether refined through iterative feedback (PAIR-5) or pre-diversified across strategies (BoK-ST) -- deny the target this defensive advantage by ensuring each probe is evaluated in isolation.
+
+**Regression confirmation** (Appendix B): The mechanism decomposition regression confirms this analysis formally. The multi-turn memory indicator has OR = 1.02 and AME = +0.3pp (p = 0.885, ns) -- no independent effect on success. The negative interaction between feedback and multi-turn memory (OR = 0.04, p < 0.0001) captures precisely the defence-amplification dynamic described above: when feedback and multi-turn context are combined (AMQ-MT), the attacker's ability to adapt is undermined by the accumulating conversational context that helps the target detect and resist the attack. The pairwise McNemar comparison (AMQ-MT vs. PAIR-5: -22.5pp, p < 0.001) was detecting this interaction, not a negative main effect of multi-turn memory.
 
 ---
 
@@ -314,7 +325,7 @@ Detector bypass counts (number of attacks that evaded each detector):
 
 Failure-type distributions differ markedly across conditions. Tier 1 attacks (AMQ-ST and BoK-ST) systematically bypass refusal mechanisms (~72% bypass rate) and produce unambiguous, clearly harmful critical-severity responses. Scripted Static Multi-Turn generates the most ambiguous outputs (-13.7pp correction), followed by BoK-ST (-5.6pp correction), whose any-of-K success criterion with strategy-diverse variants inflates automated metrics through borderline responses that human reviewers reject.
 
-Human annotations validate the automated pipeline for PAIR-style conditions (net correction < 1pp) but reveal significant over-counting for SS-MT and BoK-ST. When attacks succeed, they produce critical-severity outputs with near-certainty -- there is no spectrum of partial compliance.
+Human annotations validate the automated pipeline for PAIR-style conditions (net correction < 1pp) but reveal significant over-counting for SS-MT and BoK-ST. When attacks succeed, they produce critical-severity outputs with near-certainty -- there is no spectrum of partial compliance. Appendix D provides a full counterfactual analysis enumerating the six specific scientific conclusions -- including rank inversions between conditions and cost-efficiency recommendations -- that would be wrong if this study had relied solely on automated verdicts.
 
 ---
 
@@ -456,7 +467,7 @@ Automated safety detectors are highly sensitive to both attack sophistication an
 
 The BoK-ST condition reveals a novel finding: **the any-of-K success criterion with strategy-diverse variants systematically inflates automated ASR by 5.6pp**, because the diversity of framing strategies (role-play, educational, code-generation, etc.) increases the probability that at least one variant produces a borderline response that triggers detectors -- distinct from PAIR-5's refinement approach which produces cleaner success/failure outcomes.
 
-The Safety Judge achieves the best overall performance (F1 > 87% across all conditions) and is recommended as the primary detector. The LLM Judge is recommended as a secondary check, particularly for BoK-ST and multi-turn conditions. Human review remains essential for SS-MT (judge agreement < 50%) and recommended for BoK-ST (to correct ~5.6pp inflation).
+The Safety Judge achieves the best overall performance (F1 > 87% across all conditions) and is recommended as the primary detector. The LLM Judge is recommended as a secondary check, particularly for BoK-ST and multi-turn conditions. Human review remains essential for SS-MT (judge agreement < 50%) and recommended for BoK-ST (to correct ~5.6pp inflation). Appendix D traces the causal mechanism of each detector's failure mode to the budget-level accumulation of false positives in the any-of-K criterion, showing that BoK's 23 cumulative FPs at K=5 are the direct source of the rank inversion and sign error in the adaptive premium described in Appendix C.
 
 ---
 
@@ -478,6 +489,8 @@ The Safety Judge achieves the best overall performance (F1 > 87% across all cond
 
 AMQ-ST (PAIR-5) dominates BoK-ST on cost, speed, and false positive rate while matching adjusted ASR. This reveals a fundamental trade-off: **strategy diversity without feedback** (BoK-ST) and **iterative refinement with feedback** (PAIR-5) are alternative paths to the same ~86% adjusted ASR ceiling, but PAIR-5 is more efficient and produces cleaner measurements. Best-of-N/K benchmarks [8] that report raw ASR without human validation systematically over-estimate attack effectiveness by 5-6pp due to the any-of-K criterion.
 
+The three supplementary analyses (Appendices B-D) sharpen this picture: (1) the mechanism decomposition shows BoK's diversity mechanism (+22.4pp AME, OR = 4.99) is independently the second-strongest attack component after LLM-crafted prompting; (2) the budget curves show BoK and PAIR-5 converge at K=5 via different paths -- diversity gain vs. iterative refinement -- with BoK 8.3pp below the theoretical i.i.d. ceiling due to within-intent outcome correlation; (3) the human validation counterfactual demonstrates that without human review, a researcher would incorrectly conclude BoK *outperforms* PAIR-5 rather than matching it, and would recommend BoK to practitioners despite PAIR-5 requiring 68% fewer target queries for equivalent true ASR.
+
 ### Model Robustness Ranking (All 6 Conditions)
 
 | Rank | Model | Overall ASR | AWCS | Worst Condition | Comparison with Literature |
@@ -497,29 +510,29 @@ All 8 models were assessed against EU AI Act Articles 15(5) (Cyberattack Resilie
 
 ### Practical Recommendations
 
-1. **For red-teamers**: Use **AMQ-ST (PAIR-5)** as the primary attack strategy. It achieves the highest adjusted ASR (85.9%), is cost-efficient ($0.014/attack), and produces unambiguous results (Safety Judge F1 > 97%). Use BoK-ST only when testing for maximum output severity or tail-of-distribution vulnerabilities.
+1. **For red-teamers**: Use **AMQ-ST (PAIR-5)** as the primary attack strategy. It achieves the highest adjusted ASR (85.9%), is cost-efficient ($0.014/attack), and produces unambiguous results (Safety Judge F1 > 97%). The budget curves (Appendix C) show PAIR front-loads success: 68.1% of attacks succeed on the first iteration, so in time-constrained engagements even PAIR-1 ($0.0068/attack, 63.7% adj. ASR) delivers strong value. Use BoK-ST when the goal is to probe **strategy-specific blind spots** (especially for models like GPT-4o-mini with +60pp diversity gain) or to generate the most harmful outputs for severity assessment.
 
-2. **For model developers**: Focus safety training on resisting **single-turn adaptive attacks and strategy-diverse attack vectors**. The attacker's ability to optimise prompts via iterative refinement (PAIR-5) is the critical threat. Equally important, the BoK-ST finding reveals that models have strategy-specific blind spots: a model may refuse a direct request but comply when the same objective is framed as role-play, educational content, or code generation. Safety alignment must be **objective-aware** (recognising the harmful intent regardless of framing) rather than **strategy-specific** (pattern-matching known attack formats). Claude Sonnet 4 provides a reference point for effective alignment.
+2. **For model developers**: Focus safety training on resisting **LLM-crafted prompts** -- the mechanism decomposition (Appendix B) shows this single factor carries +36.6pp AME (OR = 8.30), more than feedback and diversity combined. Equally critical: the per-model budget curves reveal two distinct vulnerability archetypes. Models with high **diversity gain** and low **correlation tax** (e.g., GPT-4o-mini: +60.0pp gain, 2.6pp tax) have strategy-specific blind spots -- their safety is format-dependent, not objective-aware. Models with high correlation tax (e.g., Claude Sonnet 4: +27.9pp tax) have intent-general defences that resist diverse framing regardless of strategy. Safety alignment must be **objective-aware**: recognise the harmful intent regardless of presentation framing.
 
-3. **For benchmark designers**: Always report **adjusted ASR** alongside raw ASR, particularly for Best-of-K/N benchmarks where inflation is systematic. Report detector-specific F1 and use multi-detector consensus. Specify which judge(s) are used for scoring, as detector choice can swing reported ASR by 40-60pp. PAIR-style conditions are the most reliable for automated benchmarking (< 1pp correction).
+3. **For benchmark designers**: Always report **adjusted ASR** alongside raw ASR, particularly for Best-of-K/N benchmarks where inflation is systematic. The human validation counterfactual (Appendix D) shows that without review, the BoK vs. PAIR-5 ranking inverts, the adaptive premium changes sign, and scripted multi-turn is overestimated by 13.7pp. Report detector-specific F1, use multi-detector consensus, and specify which judge(s) score results -- detector choice alone swings reported ASR by 40-60pp. PAIR-style conditions are the most reliable for automated benchmarking (net correction < 1pp).
 
-4. **For EU AI Act compliance**: ATLAS provides compliance-relevant adversarial testing evidence that can inform regulatory assessments under EU AI Act adversarial robustness requirements. The BoK-ST methodology should be included in compliance testing frameworks because it reveals tail-of-distribution vulnerabilities that single-attempt testing misses.
+4. **For EU AI Act compliance**: ATLAS provides compliance-relevant adversarial testing evidence that can inform regulatory assessments under EU AI Act adversarial robustness requirements. The BoK-ST methodology should be included in compliance testing frameworks because it reveals tail-of-distribution vulnerabilities that single-attempt testing misses. The budget curves and mechanism decomposition provide quantitative evidence of the gap between single-attempt (OSS-ST: 14.4% ASR) and full-budget testing (PAIR-5/BoK: ~86% ASR), supporting arguments for multi-attempt adversarial robustness requirements.
 
 ### BoK-ST Supplementary Analysis
 
-The following analyses use only existing variant-level data from the experiment — no additional experiments were conducted.
+The following analyses use only existing variant-level data from the experiment -- no additional experiments were conducted. A full K=1...5 budget curve analysis (including comparison with PAIR-5 and theoretical baselines) is provided in Appendix C; the summary statistics below are consistent with that analysis.
 
 **BoK K=1/3/5 Ablation.** Post-hoc analysis of how ASR changes with the number of variants per intent:
 
 | K | Total | Successes | Raw ASR | 95% CI | Marginal Gain |
 |---|---|---|---|---|---|
 | 1 | 320 | 180 | 56.2% | [50.8%, 61.6%] | — |
-| 3 | 320 | 269 | 84.1% | [79.7%, 87.7%] | — |
+| 3 | 320 | 269 | 84.1% | [79.7%, 87.7%] | +27.9pp |
 | 5 | 320 | 292 | 91.2% | [87.6%, 93.9%] | +7.2pp |
 
-K=1→3 provides the largest gain (+27.9pp). K=3→5 adds only +7.2pp with diminishing returns. Model-level variation is substantial: gpt-4o-mini gains +15.0pp from K=3→5, while mistral-large-2411 gains only +2.5pp (already near-ceiling at K=3).
+K=1→3 provides the largest gain (+27.9pp), consistent with the Appendix C finding that the bulk of diversity gain arrives by K=3. K=3→5 adds only +7.2pp with diminishing returns -- this is the correlation tax effect: once the most effective strategies have been probed, adding more variants offers limited marginal coverage because vulnerability is a property of the (model, intent) pair. Model-level variation is substantial: gpt-4o-mini gains +15.0pp from K=3→5, while mistral-large-2411 gains only +2.5pp (already near-ceiling at K=3). Note that human-validated ASR at K=5 is 85.6%, not 91.2%, due to 23 false positives accumulated via the any-of-K criterion (see Appendix D for the full counterfactual analysis).
 
-**Sequential Stopping Simulation.** If BoK variants were sent sequentially (stop on first success), mean realized queries would be 1.94/5.0 (38.8% of the maximum cap), providing 61.2% theoretical query savings. 56.2% of attacks succeed at the first variant. This supports the distinction between the **maximum target-query cap** (K=5, matched with PAIR-5) and **realized target calls** (BoK-ST sequential: 1.94 mean).
+**Sequential Stopping Simulation.** If BoK variants were sent sequentially (stop on first success), mean realized queries would be 1.94/5.0 (38.8% of the maximum cap), providing 61.2% theoretical query savings. 56.2% of attacks succeed at the first variant. This supports the distinction between the **maximum target-query cap** (K=5, matched with PAIR-5) and **realized target calls** (BoK-ST sequential: 1.94 mean). For comparison, PAIR-5's realized target calls average approximately 1.6 (68.1% succeed at iteration 1, with early-stopping on success), making PAIR-5 marginally more query-efficient even under sequential-stop BoK.
 
 **Strategy Diversity Audit.** TF-IDF and pattern-based classification of all 200 BoK variants (40 intents × 5) identifies 12 distinct framing strategy families. 95% of intents (38/40) use 3+ unique strategies. No intents have high textual similarity (>0.7 Jaccard). The 2 flagged intents (intent-hacking-exploit, intent-multilingual-injection) have low strategy diversity because the intent topic constrains viable framings. Strategy distribution is balanced: the most common family (security_exercise) accounts for only 17.0% of variants.
 
@@ -539,21 +552,23 @@ K=1→3 provides the largest gain (+27.9pp). K=3→5 adds only +7.2pp with dimin
 
 ### Study Limitations
 
-1. **Turn-budget cap (AMQ-MT)**: AMQ-MT is capped at 5 turns. The finding that multi-turn adaptive attacks underperform single-turn refinement is specific to this budget. Studies using 10-turn budgets [7] achieve substantially higher ASR. Practitioners should not conclude that multi-turn attacks are ineffective in general.
+1. **Turn-budget cap (AMQ-MT)**: AMQ-MT is capped at 5 turns. The mechanism decomposition (Appendix B) shows that multi-turn memory has no independent negative effect (AME = +0.3pp, ns); the underperformance of AMQ-MT relative to PAIR-5 is explained by the strongly negative feedback × multi-turn interaction (OR = 0.04). This finding is specific to a 5-turn budget where multi-turn context provides more defensive signal than offensive value. Studies using 10-turn budgets [7] achieve substantially higher ASR. Practitioners should not conclude that multi-turn attacks are ineffective in general -- rather, that the defensive benefit of conversational memory dominates at this budget.
 
-2. **PAIR iteration cap**: AMQ-ST uses `max_iterations=5`, not the 20-iteration original PAIR design [2]. The comparison to published PAIR ASRs reflects differences in both attacker model (DeepSeek-R1 vs. GPT-4) and iteration depth. These are not separable in the current design.
+2. **PAIR iteration cap**: AMQ-ST uses `max_iterations=5`, not the 20-iteration original PAIR design [2]. The budget curves (Appendix C) show PAIR-5 reaches 93.8% cumulative success across iterations at K=5, with 68.1% succeeding at iteration 1 and diminishing marginal gains per additional iteration. The comparison to published PAIR ASRs (4-60%) reflects differences in both attacker model (DeepSeek-R1 vs. GPT-4) and iteration depth; these are not separable in the current design.
 
-3. **K sensitivity for BoK-ST**: K=5 was chosen to match PAIR-5's maximum target-query cap. Post-hoc ablation from existing variant data (not new experiments) shows: K=1 achieves 56.2% raw ASR, K=3 reaches 84.1%, and K=5 reaches 91.2%. The marginal gain from K=3→5 is +7.2pp with diminishing returns. Sequential stopping simulation shows mean realized queries of 1.94/5.0 (61.2% theoretical savings), with 56.2% of attacks succeeding at the first variant. K>5 was not tested.
+3. **K sensitivity for BoK-ST**: K=5 was chosen to match PAIR-5's maximum target-query cap. The full K=1...5 budget curves (Appendix C) show the bulk of diversity gain arriving by K=3 (84.1% raw ASR), with K=3→5 adding only +7.2pp. The correlation tax of 8.3pp at K=5 means i.i.d. scaling law extrapolations overpredict success. K>5 was not tested; diminishing returns suggest limited benefit beyond K=5 for most models except those near ceiling already at K=3.
 
-4. **Intent category heterogeneity**: Results are averages across 40 harm intents spanning cybercrime, CBRN, social manipulation, and other categories. Category-level ASR variation is not reported; some categories may be substantially more or less susceptible to specific attack strategies.
+4. **Budget curve vs. final-ASR discrepancy**: The Appendix C budget curves measure cumulative success using iteration-level in-loop judge outputs (counting any iteration where the PAIR judge flagged success). This differs slightly from the final condition-level ASR (85.0% raw), which is determined by the full detector-ensemble post-processing pipeline on the final output. The budget curves are consistent with the counterfactual analysis (Appendix D) at K=5 (85.0% vs. 85.9% human-validated) and are appropriate for within-analysis relative comparisons (diversity gain, adaptive premium, correlation tax), but the absolute PAIR-5 figures in Appendix C should not be directly compared with the Section 1.1 ASR table.
 
-5. **Model-version specificity**: All results reflect model versions available in May 2026. Safety alignment is updated frequently; results may not hold for later releases of the same models.
+5. **Intent category heterogeneity**: Results are averages across 40 harm intents spanning cybercrime, CBRN, social manipulation, and other categories. The mechanism decomposition shows that intent explains 6.7% of outcome variance. Category-level ASR variation and mechanism-by-category interactions are not reported; some categories may be substantially more or less susceptible to specific attack strategies.
+
+6. **Model-version specificity**: All results reflect model versions available in May 2026. Safety alignment is updated frequently; results may not hold for later releases of the same models. The budget curves and mechanism decomposition characterise alignment properties (objective-aware vs. strategy-specific) that may shift with retraining.
 
 ---
 
 ## Appendix A: Pairing Audit
 
-All McNemar tests and paired comparisons are joined by `(model, intent_id)` -- not by row order.
+*All McNemar tests and paired comparisons are joined by `(model, intent_id)` -- not by row order. See Appendix B for the regression that replaces these pairwise tests with a single unified model.*
 
 ### A.1 Experimental Design
 
@@ -629,9 +644,13 @@ Every pairwise comparison achieves 320 matched pairs (8 models x 40 intents) wit
 
 ---
 
-## Mechanism Decomposition: Mixed-Effects Logistic Regression
+## Appendix B: Mechanism Decomposition
 
-The pairwise McNemar tests in Sections 1.5-1.6 compare conditions two at a time and ignore clustering by model and intent. This section replaces that approach with a single unified logistic regression that simultaneously estimates the effect of four orthogonal attack mechanisms, controlling for heterogeneity across 8 target models and 40 harmful intents as fixed effects.
+*Question answered: What is the estimated independent contribution of LLM-crafted prompting, iterative feedback, multi-turn conversational memory, and static strategy diversity to jailbreak success -- after controlling for heterogeneity across models and intents?*
+
+The pairwise McNemar tests in Sections 1.5-1.6 compare conditions two at a time and cannot separate joint effects or control for clustering. This appendix replaces that approach with a single unified logistic regression that simultaneously estimates all four mechanism effects, absorbing model- and intent-level heterogeneity as fixed effects and producing cluster-robust confidence intervals via block-bootstrap.
+
+![Mechanism Decomposition: (a) average marginal effects with bootstrap CIs, (b) variance decomposition pie chart, (c) McNemar vs regression comparison showing the multi-turn sign flip](artifacts/mechanism_decomposition.png)
 
 ### Mechanism Encoding
 
@@ -695,9 +714,13 @@ A Generalized Estimating Equations model with exchangeable correlation within mo
 
 ---
 
-## Success-vs-Budget Curves
+## Appendix C: Success-vs-Budget Curves
 
-This section addresses whether BoK-ST reaches PAIR-5's ASR because of **static diversity**, **repeated independent trials**, or **adaptive refinement with target feedback**. We construct cumulative ASR curves as a function of the number of target calls (K = 1, ..., 5) for three strategies, plus two theoretical baselines.
+*Question answered: Does BoK-ST reach PAIR-5's adjusted ASR because of strategy diversity, repeated independent trials, or adaptive refinement with target feedback? How do different models scale with query budget?*
+
+We construct cumulative ASR curves as a function of the number of target calls (K = 1, ..., 5) for PAIR-5 (adaptive, feedback-driven) and BoK (static, strategy-diverse), alongside two theoretical i.i.d. baselines that represent the upper ceiling achievable if variant outcomes were independent within an intent.
+
+![Success vs Budget: (a) cumulative ASR curves for PAIR-5, BoK, BoK-iid ceiling, PAIR-1×K, and Direct×K; (b) stacked decomposition of diversity gain, correlation tax, and adaptive premium at each budget level](artifacts/success_vs_budget.png)
 
 ### Overall ASR by Target-Call Budget
 
@@ -709,10 +732,10 @@ This section addresses whether BoK-ST reaches PAIR-5's ASR because of **static d
 | 4 | 92.5% [89.1, 94.9] | 88.1% [84.1, 91.2] | 98.6% | 98.3% | 50.1% |
 | 5 | 93.8% [90.5, 95.9] | 91.2% [87.6, 93.9] | 99.5% | 99.4% | 58.0% |
 
-- **PAIR-5 (adaptive)**: cumulative ASR at each PAIR iteration (early-stop on success).
-- **BoK (diverse)**: cumulative ASR using best-of-first-K variants (actual BoK data).
-- **BoK-iid (theoretical)**: 1 - (1-p)^K where p = per-variant success rate (56.2%), assuming independence across variants.
-- **PAIR-1 × K** and **Direct × K**: theoretical i.i.d. repeated sampling of PAIR-1 (64.1%) and Direct (15.9%) attacks.
+- **PAIR-5 (adaptive)**: cumulative fraction of PAIR-5 runs where the in-loop LLM judge flagged success by iteration K (early-stop on in-loop success signal). This differs from the final-pipeline ASR (85.0% raw, 85.9% adj.) reported in Section 1.1, which is determined by the full detector-ensemble on the final response after all iterations. The budget curve measures when success is first detected within the PAIR loop; the final ASR measures validated success in post-processing. Both metrics are valid for their respective purposes; relative comparisons within this appendix (diversity gain, adaptive premium, correlation tax) are not affected by this distinction.
+- **BoK (diverse)**: cumulative ASR using best-of-first-K variants (actual raw detector verdicts from BoK data). Matches the K=5 raw ASR of 91.2% reported in Section 1.1.
+- **BoK-iid (theoretical)**: 1 - (1-p)^K where p = per-variant success rate (56.2%), assuming independence across variants -- the ceiling achievable if variant outcomes were uncorrelated within an intent.
+- **PAIR-1 × K** and **Direct × K**: theoretical i.i.d. repeated sampling of PAIR-1 (64.1%) and Direct (15.9%) attacks, showing what simple repeated sampling (without strategy diversity) would achieve.
 
 ### Scaling Decomposition
 
@@ -757,9 +780,13 @@ Three quantities decompose how BoK reaches its K=5 ASR:
 
 ---
 
-## Human Validation Counterfactual Analysis
+## Appendix D: Human Validation Counterfactual Analysis
 
-This section identifies specific scientific conclusions that would be **incorrect** if the study relied solely on automated detector verdicts rather than human-validated labels. All 1,920 findings were independently reviewed by two trained annotators (Cohen's κ = 0.81); this analysis compares raw (detector-based) and corrected (human-validated) results.
+*Question answered: Which scientific conclusions reported in this study would be directionally wrong if the study had relied on automated detector verdicts alone, without human validation?*
+
+All 1,920 findings were independently reviewed by two trained annotators (Cohen's κ = 0.81); adjudication resolved ~12% of disagreements. This appendix presents a systematic side-by-side comparison of all key metrics under raw detector verdicts versus human-validated labels, tracing each error to its measurement mechanism.
+
+![Human Validation Counterfactual: (a) raw detector vs human-validated ASR curves showing BoK inflation and PAIR deflation converging to a tie; (b) any-of-K false-positive accumulation showing monotonically increasing FP count and ASR inflation with K](artifacts/human_validation_counterfactual.png)
 
 ### Budget Curves: Raw Detector vs. Human-Validated
 
@@ -841,7 +868,7 @@ BoK's inflation grows with K because each additional variant gives the detector 
 - **Mechanism decomposition (logistic regression)**: Fixed-effects logistic regression with model and intent indicators, four binary mechanism predictors, and block-bootstrap CIs (resampling models, 1000 iterations). McFadden pseudo-R² from nested model sequence for variance decomposition. GEE robustness check with exchangeable working correlation within model clusters and sandwich (cluster-robust) SEs.
 - **Success-vs-budget curves**: Cumulative ASR at each budget level K=1,...,5 computed from variant-level BoK data and PAIR iteration-level data. Theoretical i.i.d. baselines computed as 1-(1-p)^K where p is the observed per-variant/per-iteration success rate. Correlation tax = BoK-iid(K) - BoK(K); adaptive premium = PAIR(K) - BoK(K); diversity gain = BoK(K) - BoK(1).
 - **Human validation counterfactual**: Side-by-side comparison of all metrics computed from raw detector labels vs. human-validated labels. False-positive accumulation in any-of-K counted by tracking the earliest variant position producing a FP.
-- **Clustering limitation**: Pooled McNemar tests treat 320 pairs as i.i.d.; model-level clustering is not corrected for. The mechanism decomposition regression (Section "Mechanism Decomposition") resolves this limitation via fixed effects and block-bootstrap CIs. Per-model stratified results are provided and directionally consistent with all pooled findings.
+- **Clustering limitation**: Pooled McNemar tests treat 320 pairs as i.i.d.; model-level clustering is not corrected for. Appendix B (Mechanism Decomposition) resolves this limitation via fixed-effects logistic regression with block-bootstrap CIs (resampling models, 1,000 iterations). The GEE robustness check provides an additional sandwich-SE correction. All pooled McNemar findings are directionally confirmed by the regression except the AMQ-MT vs. PAIR-5 contrast, where the pairwise test was detecting the negative feedback × multi-turn interaction rather than a multi-turn main effect.
 - **External validity**: Results are specific to 40 harm intents from the ATLAS intent set and 8 model versions tested in May 2026. Generalisation to other intent distributions, harm categories, or subsequent model versions is not established.
 
 ---
