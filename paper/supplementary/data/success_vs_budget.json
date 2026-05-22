@@ -1,0 +1,1747 @@
+{
+  "bok_curve": {
+    "overall": {
+      "1": {
+        "asr": 56.25,
+        "ci": [
+          50.77,
+          61.58
+        ],
+        "n": 320,
+        "successes": 180
+      },
+      "2": {
+        "asr": 77.5,
+        "ci": [
+          72.61,
+          81.73
+        ],
+        "n": 320,
+        "successes": 248
+      },
+      "3": {
+        "asr": 84.06,
+        "ci": [
+          79.65,
+          87.67
+        ],
+        "n": 320,
+        "successes": 269
+      },
+      "4": {
+        "asr": 88.12,
+        "ci": [
+          84.12,
+          91.22
+        ],
+        "n": 320,
+        "successes": 282
+      },
+      "5": {
+        "asr": 91.25,
+        "ci": [
+          87.64,
+          93.88
+        ],
+        "n": 320,
+        "successes": 292
+      }
+    },
+    "per_model": {
+      "claude-sonnet-4": {
+        "1": {
+          "asr": 25.0,
+          "ci": [
+            14.19,
+            40.19
+          ],
+          "n": 40,
+          "successes": 10
+        },
+        "2": {
+          "asr": 42.5,
+          "ci": [
+            28.51,
+            57.81
+          ],
+          "n": 40,
+          "successes": 17
+        },
+        "3": {
+          "asr": 52.5,
+          "ci": [
+            37.5,
+            67.06
+          ],
+          "n": 40,
+          "successes": 21
+        },
+        "4": {
+          "asr": 57.5,
+          "ci": [
+            42.19,
+            71.49
+          ],
+          "n": 40,
+          "successes": 23
+        },
+        "5": {
+          "asr": 60.0,
+          "ci": [
+            44.6,
+            73.65
+          ],
+          "n": 40,
+          "successes": 24
+        }
+      },
+      "gpt-4o": {
+        "1": {
+          "asr": 40.0,
+          "ci": [
+            26.35,
+            55.4
+          ],
+          "n": 40,
+          "successes": 16
+        },
+        "2": {
+          "asr": 72.5,
+          "ci": [
+            57.16,
+            83.89
+          ],
+          "n": 40,
+          "successes": 29
+        },
+        "3": {
+          "asr": 85.0,
+          "ci": [
+            70.93,
+            92.94
+          ],
+          "n": 40,
+          "successes": 34
+        },
+        "4": {
+          "asr": 87.5,
+          "ci": [
+            73.89,
+            94.54
+          ],
+          "n": 40,
+          "successes": 35
+        },
+        "5": {
+          "asr": 92.5,
+          "ci": [
+            80.14,
+            97.42
+          ],
+          "n": 40,
+          "successes": 37
+        }
+      },
+      "llama-3.3-70b-instruct": {
+        "1": {
+          "asr": 65.0,
+          "ci": [
+            49.51,
+            77.87
+          ],
+          "n": 40,
+          "successes": 26
+        },
+        "2": {
+          "asr": 87.5,
+          "ci": [
+            73.89,
+            94.54
+          ],
+          "n": 40,
+          "successes": 35
+        },
+        "3": {
+          "asr": 95.0,
+          "ci": [
+            83.5,
+            98.62
+          ],
+          "n": 40,
+          "successes": 38
+        },
+        "4": {
+          "asr": 97.5,
+          "ci": [
+            87.12,
+            99.56
+          ],
+          "n": 40,
+          "successes": 39
+        },
+        "5": {
+          "asr": 97.5,
+          "ci": [
+            87.12,
+            99.56
+          ],
+          "n": 40,
+          "successes": 39
+        }
+      },
+      "gemini-2.5-flash": {
+        "1": {
+          "asr": 52.5,
+          "ci": [
+            37.5,
+            67.06
+          ],
+          "n": 40,
+          "successes": 21
+        },
+        "2": {
+          "asr": 77.5,
+          "ci": [
+            62.5,
+            87.68
+          ],
+          "n": 40,
+          "successes": 31
+        },
+        "3": {
+          "asr": 82.5,
+          "ci": [
+            68.05,
+            91.25
+          ],
+          "n": 40,
+          "successes": 33
+        },
+        "4": {
+          "asr": 87.5,
+          "ci": [
+            73.89,
+            94.54
+          ],
+          "n": 40,
+          "successes": 35
+        },
+        "5": {
+          "asr": 90.0,
+          "ci": [
+            76.95,
+            96.04
+          ],
+          "n": 40,
+          "successes": 36
+        }
+      },
+      "gpt-4o-mini": {
+        "1": {
+          "asr": 35.0,
+          "ci": [
+            22.13,
+            50.49
+          ],
+          "n": 40,
+          "successes": 14
+        },
+        "2": {
+          "asr": 67.5,
+          "ci": [
+            52.02,
+            79.92
+          ],
+          "n": 40,
+          "successes": 27
+        },
+        "3": {
+          "asr": 80.0,
+          "ci": [
+            65.24,
+            89.5
+          ],
+          "n": 40,
+          "successes": 32
+        },
+        "4": {
+          "asr": 87.5,
+          "ci": [
+            73.89,
+            94.54
+          ],
+          "n": 40,
+          "successes": 35
+        },
+        "5": {
+          "asr": 95.0,
+          "ci": [
+            83.5,
+            98.62
+          ],
+          "n": 40,
+          "successes": 38
+        }
+      },
+      "qwen-2.5-72b-instruct": {
+        "1": {
+          "asr": 70.0,
+          "ci": [
+            54.57,
+            81.93
+          ],
+          "n": 40,
+          "successes": 28
+        },
+        "2": {
+          "asr": 87.5,
+          "ci": [
+            73.89,
+            94.54
+          ],
+          "n": 40,
+          "successes": 35
+        },
+        "3": {
+          "asr": 90.0,
+          "ci": [
+            76.95,
+            96.04
+          ],
+          "n": 40,
+          "successes": 36
+        },
+        "4": {
+          "asr": 95.0,
+          "ci": [
+            83.5,
+            98.62
+          ],
+          "n": 40,
+          "successes": 38
+        },
+        "5": {
+          "asr": 100.0,
+          "ci": [
+            91.24,
+            100.0
+          ],
+          "n": 40,
+          "successes": 40
+        }
+      },
+      "deepseek-chat-v3-0324": {
+        "1": {
+          "asr": 72.5,
+          "ci": [
+            57.16,
+            83.89
+          ],
+          "n": 40,
+          "successes": 29
+        },
+        "2": {
+          "asr": 90.0,
+          "ci": [
+            76.95,
+            96.04
+          ],
+          "n": 40,
+          "successes": 36
+        },
+        "3": {
+          "asr": 92.5,
+          "ci": [
+            80.14,
+            97.42
+          ],
+          "n": 40,
+          "successes": 37
+        },
+        "4": {
+          "asr": 97.5,
+          "ci": [
+            87.12,
+            99.56
+          ],
+          "n": 40,
+          "successes": 39
+        },
+        "5": {
+          "asr": 97.5,
+          "ci": [
+            87.12,
+            99.56
+          ],
+          "n": 40,
+          "successes": 39
+        }
+      },
+      "mistral-large-2411": {
+        "1": {
+          "asr": 90.0,
+          "ci": [
+            76.95,
+            96.04
+          ],
+          "n": 40,
+          "successes": 36
+        },
+        "2": {
+          "asr": 95.0,
+          "ci": [
+            83.5,
+            98.62
+          ],
+          "n": 40,
+          "successes": 38
+        },
+        "3": {
+          "asr": 95.0,
+          "ci": [
+            83.5,
+            98.62
+          ],
+          "n": 40,
+          "successes": 38
+        },
+        "4": {
+          "asr": 95.0,
+          "ci": [
+            83.5,
+            98.62
+          ],
+          "n": 40,
+          "successes": 38
+        },
+        "5": {
+          "asr": 97.5,
+          "ci": [
+            87.12,
+            99.56
+          ],
+          "n": 40,
+          "successes": 39
+        }
+      }
+    }
+  },
+  "pair5_curve": {
+    "overall": {
+      "1": {
+        "asr": 68.12,
+        "ci": [
+          62.83,
+          72.99
+        ],
+        "n": 320,
+        "successes": 218
+      },
+      "2": {
+        "asr": 84.69,
+        "ci": [
+          80.33,
+          88.22
+        ],
+        "n": 320,
+        "successes": 271
+      },
+      "3": {
+        "asr": 90.31,
+        "ci": [
+          86.58,
+          93.09
+        ],
+        "n": 320,
+        "successes": 289
+      },
+      "4": {
+        "asr": 92.5,
+        "ci": [
+          89.08,
+          94.91
+        ],
+        "n": 320,
+        "successes": 296
+      },
+      "5": {
+        "asr": 93.75,
+        "ci": [
+          90.54,
+          95.92
+        ],
+        "n": 320,
+        "successes": 300
+      }
+    },
+    "per_model": {
+      "claude-sonnet-4": {
+        "1": {
+          "asr": 32.5,
+          "ci": [
+            20.08,
+            47.98
+          ],
+          "n": 40,
+          "successes": 13
+        },
+        "2": {
+          "asr": 42.5,
+          "ci": [
+            28.51,
+            57.81
+          ],
+          "n": 40,
+          "successes": 17
+        },
+        "3": {
+          "asr": 52.5,
+          "ci": [
+            37.5,
+            67.06
+          ],
+          "n": 40,
+          "successes": 21
+        },
+        "4": {
+          "asr": 57.5,
+          "ci": [
+            42.19,
+            71.49
+          ],
+          "n": 40,
+          "successes": 23
+        },
+        "5": {
+          "asr": 60.0,
+          "ci": [
+            44.6,
+            73.65
+          ],
+          "n": 40,
+          "successes": 24
+        }
+      },
+      "gpt-4o": {
+        "1": {
+          "asr": 62.5,
+          "ci": [
+            47.03,
+            75.78
+          ],
+          "n": 40,
+          "successes": 25
+        },
+        "2": {
+          "asr": 87.5,
+          "ci": [
+            73.89,
+            94.54
+          ],
+          "n": 40,
+          "successes": 35
+        },
+        "3": {
+          "asr": 95.0,
+          "ci": [
+            83.5,
+            98.62
+          ],
+          "n": 40,
+          "successes": 38
+        },
+        "4": {
+          "asr": 97.5,
+          "ci": [
+            87.12,
+            99.56
+          ],
+          "n": 40,
+          "successes": 39
+        },
+        "5": {
+          "asr": 100.0,
+          "ci": [
+            91.24,
+            100.0
+          ],
+          "n": 40,
+          "successes": 40
+        }
+      },
+      "llama-3.3-70b-instruct": {
+        "1": {
+          "asr": 75.0,
+          "ci": [
+            59.81,
+            85.81
+          ],
+          "n": 40,
+          "successes": 30
+        },
+        "2": {
+          "asr": 92.5,
+          "ci": [
+            80.14,
+            97.42
+          ],
+          "n": 40,
+          "successes": 37
+        },
+        "3": {
+          "asr": 97.5,
+          "ci": [
+            87.12,
+            99.56
+          ],
+          "n": 40,
+          "successes": 39
+        },
+        "4": {
+          "asr": 97.5,
+          "ci": [
+            87.12,
+            99.56
+          ],
+          "n": 40,
+          "successes": 39
+        },
+        "5": {
+          "asr": 97.5,
+          "ci": [
+            87.12,
+            99.56
+          ],
+          "n": 40,
+          "successes": 39
+        }
+      },
+      "gemini-2.5-flash": {
+        "1": {
+          "asr": 60.0,
+          "ci": [
+            44.6,
+            73.65
+          ],
+          "n": 40,
+          "successes": 24
+        },
+        "2": {
+          "asr": 90.0,
+          "ci": [
+            76.95,
+            96.04
+          ],
+          "n": 40,
+          "successes": 36
+        },
+        "3": {
+          "asr": 92.5,
+          "ci": [
+            80.14,
+            97.42
+          ],
+          "n": 40,
+          "successes": 37
+        },
+        "4": {
+          "asr": 97.5,
+          "ci": [
+            87.12,
+            99.56
+          ],
+          "n": 40,
+          "successes": 39
+        },
+        "5": {
+          "asr": 100.0,
+          "ci": [
+            91.24,
+            100.0
+          ],
+          "n": 40,
+          "successes": 40
+        }
+      },
+      "gpt-4o-mini": {
+        "1": {
+          "asr": 55.0,
+          "ci": [
+            39.83,
+            69.29
+          ],
+          "n": 40,
+          "successes": 22
+        },
+        "2": {
+          "asr": 77.5,
+          "ci": [
+            62.5,
+            87.68
+          ],
+          "n": 40,
+          "successes": 31
+        },
+        "3": {
+          "asr": 90.0,
+          "ci": [
+            76.95,
+            96.04
+          ],
+          "n": 40,
+          "successes": 36
+        },
+        "4": {
+          "asr": 95.0,
+          "ci": [
+            83.5,
+            98.62
+          ],
+          "n": 40,
+          "successes": 38
+        },
+        "5": {
+          "asr": 95.0,
+          "ci": [
+            83.5,
+            98.62
+          ],
+          "n": 40,
+          "successes": 38
+        }
+      },
+      "qwen-2.5-72b-instruct": {
+        "1": {
+          "asr": 85.0,
+          "ci": [
+            70.93,
+            92.94
+          ],
+          "n": 40,
+          "successes": 34
+        },
+        "2": {
+          "asr": 95.0,
+          "ci": [
+            83.5,
+            98.62
+          ],
+          "n": 40,
+          "successes": 38
+        },
+        "3": {
+          "asr": 95.0,
+          "ci": [
+            83.5,
+            98.62
+          ],
+          "n": 40,
+          "successes": 38
+        },
+        "4": {
+          "asr": 95.0,
+          "ci": [
+            83.5,
+            98.62
+          ],
+          "n": 40,
+          "successes": 38
+        },
+        "5": {
+          "asr": 97.5,
+          "ci": [
+            87.12,
+            99.56
+          ],
+          "n": 40,
+          "successes": 39
+        }
+      },
+      "deepseek-chat-v3-0324": {
+        "1": {
+          "asr": 80.0,
+          "ci": [
+            65.24,
+            89.5
+          ],
+          "n": 40,
+          "successes": 32
+        },
+        "2": {
+          "asr": 92.5,
+          "ci": [
+            80.14,
+            97.42
+          ],
+          "n": 40,
+          "successes": 37
+        },
+        "3": {
+          "asr": 100.0,
+          "ci": [
+            91.24,
+            100.0
+          ],
+          "n": 40,
+          "successes": 40
+        },
+        "4": {
+          "asr": 100.0,
+          "ci": [
+            91.24,
+            100.0
+          ],
+          "n": 40,
+          "successes": 40
+        },
+        "5": {
+          "asr": 100.0,
+          "ci": [
+            91.24,
+            100.0
+          ],
+          "n": 40,
+          "successes": 40
+        }
+      },
+      "mistral-large-2411": {
+        "1": {
+          "asr": 95.0,
+          "ci": [
+            83.5,
+            98.62
+          ],
+          "n": 40,
+          "successes": 38
+        },
+        "2": {
+          "asr": 100.0,
+          "ci": [
+            91.24,
+            100.0
+          ],
+          "n": 40,
+          "successes": 40
+        },
+        "3": {
+          "asr": 100.0,
+          "ci": [
+            91.24,
+            100.0
+          ],
+          "n": 40,
+          "successes": 40
+        },
+        "4": {
+          "asr": 100.0,
+          "ci": [
+            91.24,
+            100.0
+          ],
+          "n": 40,
+          "successes": 40
+        },
+        "5": {
+          "asr": 100.0,
+          "ci": [
+            91.24,
+            100.0
+          ],
+          "n": 40,
+          "successes": 40
+        }
+      }
+    }
+  },
+  "iid_curves": {
+    "bok_iid": {
+      "overall": {
+        "1": {
+          "asr": 65.81,
+          "p1": 65.81
+        },
+        "2": {
+          "asr": 88.31,
+          "p1": 65.81
+        },
+        "3": {
+          "asr": 96.0,
+          "p1": 65.81
+        },
+        "4": {
+          "asr": 98.63,
+          "p1": 65.81
+        },
+        "5": {
+          "asr": 99.53,
+          "p1": 65.81
+        }
+      },
+      "per_model": {
+        "claude-sonnet-4": {
+          "1": {
+            "asr": 34.5,
+            "p_avg": 34.5
+          },
+          "2": {
+            "asr": 57.1,
+            "p_avg": 34.5
+          },
+          "3": {
+            "asr": 71.9,
+            "p_avg": 34.5
+          },
+          "4": {
+            "asr": 81.59,
+            "p_avg": 34.5
+          },
+          "5": {
+            "asr": 87.94,
+            "p_avg": 34.5
+          }
+        },
+        "gpt-4o": {
+          "1": {
+            "asr": 56.5,
+            "p_avg": 56.5
+          },
+          "2": {
+            "asr": 81.08,
+            "p_avg": 56.5
+          },
+          "3": {
+            "asr": 91.77,
+            "p_avg": 56.5
+          },
+          "4": {
+            "asr": 96.42,
+            "p_avg": 56.5
+          },
+          "5": {
+            "asr": 98.44,
+            "p_avg": 56.5
+          }
+        },
+        "llama-3.3-70b-instruct": {
+          "1": {
+            "asr": 75.0,
+            "p_avg": 75.0
+          },
+          "2": {
+            "asr": 93.75,
+            "p_avg": 75.0
+          },
+          "3": {
+            "asr": 98.44,
+            "p_avg": 75.0
+          },
+          "4": {
+            "asr": 99.61,
+            "p_avg": 75.0
+          },
+          "5": {
+            "asr": 99.9,
+            "p_avg": 75.0
+          }
+        },
+        "gemini-2.5-flash": {
+          "1": {
+            "asr": 61.0,
+            "p_avg": 61.0
+          },
+          "2": {
+            "asr": 84.79,
+            "p_avg": 61.0
+          },
+          "3": {
+            "asr": 94.07,
+            "p_avg": 61.0
+          },
+          "4": {
+            "asr": 97.69,
+            "p_avg": 61.0
+          },
+          "5": {
+            "asr": 99.1,
+            "p_avg": 61.0
+          }
+        },
+        "gpt-4o-mini": {
+          "1": {
+            "asr": 52.5,
+            "p_avg": 52.5
+          },
+          "2": {
+            "asr": 77.44,
+            "p_avg": 52.5
+          },
+          "3": {
+            "asr": 89.28,
+            "p_avg": 52.5
+          },
+          "4": {
+            "asr": 94.91,
+            "p_avg": 52.5
+          },
+          "5": {
+            "asr": 97.58,
+            "p_avg": 52.5
+          }
+        },
+        "qwen-2.5-72b-instruct": {
+          "1": {
+            "asr": 75.5,
+            "p_avg": 75.5
+          },
+          "2": {
+            "asr": 94.0,
+            "p_avg": 75.5
+          },
+          "3": {
+            "asr": 98.53,
+            "p_avg": 75.5
+          },
+          "4": {
+            "asr": 99.64,
+            "p_avg": 75.5
+          },
+          "5": {
+            "asr": 99.91,
+            "p_avg": 75.5
+          }
+        },
+        "deepseek-chat-v3-0324": {
+          "1": {
+            "asr": 80.5,
+            "p_avg": 80.5
+          },
+          "2": {
+            "asr": 96.2,
+            "p_avg": 80.5
+          },
+          "3": {
+            "asr": 99.26,
+            "p_avg": 80.5
+          },
+          "4": {
+            "asr": 99.86,
+            "p_avg": 80.5
+          },
+          "5": {
+            "asr": 99.97,
+            "p_avg": 80.5
+          }
+        },
+        "mistral-large-2411": {
+          "1": {
+            "asr": 91.0,
+            "p_avg": 91.0
+          },
+          "2": {
+            "asr": 99.19,
+            "p_avg": 91.0
+          },
+          "3": {
+            "asr": 99.93,
+            "p_avg": 91.0
+          },
+          "4": {
+            "asr": 99.99,
+            "p_avg": 91.0
+          },
+          "5": {
+            "asr": 100.0,
+            "p_avg": 91.0
+          }
+        }
+      }
+    },
+    "pair1_iid": {
+      "overall": {
+        "1": {
+          "asr": 64.06,
+          "p1": 64.06
+        },
+        "2": {
+          "asr": 87.08,
+          "p1": 64.06
+        },
+        "3": {
+          "asr": 95.36,
+          "p1": 64.06
+        },
+        "4": {
+          "asr": 98.33,
+          "p1": 64.06
+        },
+        "5": {
+          "asr": 99.4,
+          "p1": 64.06
+        }
+      },
+      "per_model": {
+        "claude-sonnet-4": {
+          "1": {
+            "asr": 27.5,
+            "p1": 27.5
+          },
+          "2": {
+            "asr": 47.44,
+            "p1": 27.5
+          },
+          "3": {
+            "asr": 61.89,
+            "p1": 27.5
+          },
+          "4": {
+            "asr": 72.37,
+            "p1": 27.5
+          },
+          "5": {
+            "asr": 79.97,
+            "p1": 27.5
+          }
+        },
+        "gpt-4o": {
+          "1": {
+            "asr": 57.5,
+            "p1": 57.5
+          },
+          "2": {
+            "asr": 81.94,
+            "p1": 57.5
+          },
+          "3": {
+            "asr": 92.32,
+            "p1": 57.5
+          },
+          "4": {
+            "asr": 96.74,
+            "p1": 57.5
+          },
+          "5": {
+            "asr": 98.61,
+            "p1": 57.5
+          }
+        },
+        "llama-3.3-70b-instruct": {
+          "1": {
+            "asr": 72.5,
+            "p1": 72.5
+          },
+          "2": {
+            "asr": 92.44,
+            "p1": 72.5
+          },
+          "3": {
+            "asr": 97.92,
+            "p1": 72.5
+          },
+          "4": {
+            "asr": 99.43,
+            "p1": 72.5
+          },
+          "5": {
+            "asr": 99.84,
+            "p1": 72.5
+          }
+        },
+        "gemini-2.5-flash": {
+          "1": {
+            "asr": 67.5,
+            "p1": 67.5
+          },
+          "2": {
+            "asr": 89.44,
+            "p1": 67.5
+          },
+          "3": {
+            "asr": 96.57,
+            "p1": 67.5
+          },
+          "4": {
+            "asr": 98.88,
+            "p1": 67.5
+          },
+          "5": {
+            "asr": 99.64,
+            "p1": 67.5
+          }
+        },
+        "gpt-4o-mini": {
+          "1": {
+            "asr": 47.5,
+            "p1": 47.5
+          },
+          "2": {
+            "asr": 72.44,
+            "p1": 47.5
+          },
+          "3": {
+            "asr": 85.53,
+            "p1": 47.5
+          },
+          "4": {
+            "asr": 92.4,
+            "p1": 47.5
+          },
+          "5": {
+            "asr": 96.01,
+            "p1": 47.5
+          }
+        },
+        "qwen-2.5-72b-instruct": {
+          "1": {
+            "asr": 62.5,
+            "p1": 62.5
+          },
+          "2": {
+            "asr": 85.94,
+            "p1": 62.5
+          },
+          "3": {
+            "asr": 94.73,
+            "p1": 62.5
+          },
+          "4": {
+            "asr": 98.02,
+            "p1": 62.5
+          },
+          "5": {
+            "asr": 99.26,
+            "p1": 62.5
+          }
+        },
+        "deepseek-chat-v3-0324": {
+          "1": {
+            "asr": 87.5,
+            "p1": 87.5
+          },
+          "2": {
+            "asr": 98.44,
+            "p1": 87.5
+          },
+          "3": {
+            "asr": 99.8,
+            "p1": 87.5
+          },
+          "4": {
+            "asr": 99.98,
+            "p1": 87.5
+          },
+          "5": {
+            "asr": 100.0,
+            "p1": 87.5
+          }
+        },
+        "mistral-large-2411": {
+          "1": {
+            "asr": 90.0,
+            "p1": 90.0
+          },
+          "2": {
+            "asr": 99.0,
+            "p1": 90.0
+          },
+          "3": {
+            "asr": 99.9,
+            "p1": 90.0
+          },
+          "4": {
+            "asr": 99.99,
+            "p1": 90.0
+          },
+          "5": {
+            "asr": 100.0,
+            "p1": 90.0
+          }
+        }
+      }
+    },
+    "direct_iid": {
+      "overall": {
+        "1": {
+          "asr": 15.94,
+          "p1": 15.94
+        },
+        "2": {
+          "asr": 29.33,
+          "p1": 15.94
+        },
+        "3": {
+          "asr": 40.6,
+          "p1": 15.94
+        },
+        "4": {
+          "asr": 50.06,
+          "p1": 15.94
+        },
+        "5": {
+          "asr": 58.02,
+          "p1": 15.94
+        }
+      },
+      "per_model": {
+        "claude-sonnet-4": {
+          "1": {
+            "asr": 12.5,
+            "p1": 12.5
+          },
+          "2": {
+            "asr": 23.44,
+            "p1": 12.5
+          },
+          "3": {
+            "asr": 33.01,
+            "p1": 12.5
+          },
+          "4": {
+            "asr": 41.38,
+            "p1": 12.5
+          },
+          "5": {
+            "asr": 48.71,
+            "p1": 12.5
+          }
+        },
+        "gpt-4o": {
+          "1": {
+            "asr": 5.0,
+            "p1": 5.0
+          },
+          "2": {
+            "asr": 9.75,
+            "p1": 5.0
+          },
+          "3": {
+            "asr": 14.26,
+            "p1": 5.0
+          },
+          "4": {
+            "asr": 18.55,
+            "p1": 5.0
+          },
+          "5": {
+            "asr": 22.62,
+            "p1": 5.0
+          }
+        },
+        "llama-3.3-70b-instruct": {
+          "1": {
+            "asr": 12.5,
+            "p1": 12.5
+          },
+          "2": {
+            "asr": 23.44,
+            "p1": 12.5
+          },
+          "3": {
+            "asr": 33.01,
+            "p1": 12.5
+          },
+          "4": {
+            "asr": 41.38,
+            "p1": 12.5
+          },
+          "5": {
+            "asr": 48.71,
+            "p1": 12.5
+          }
+        },
+        "gemini-2.5-flash": {
+          "1": {
+            "asr": 20.0,
+            "p1": 20.0
+          },
+          "2": {
+            "asr": 36.0,
+            "p1": 20.0
+          },
+          "3": {
+            "asr": 48.8,
+            "p1": 20.0
+          },
+          "4": {
+            "asr": 59.04,
+            "p1": 20.0
+          },
+          "5": {
+            "asr": 67.23,
+            "p1": 20.0
+          }
+        },
+        "gpt-4o-mini": {
+          "1": {
+            "asr": 7.5,
+            "p1": 7.5
+          },
+          "2": {
+            "asr": 14.44,
+            "p1": 7.5
+          },
+          "3": {
+            "asr": 20.85,
+            "p1": 7.5
+          },
+          "4": {
+            "asr": 26.79,
+            "p1": 7.5
+          },
+          "5": {
+            "asr": 32.28,
+            "p1": 7.5
+          }
+        },
+        "qwen-2.5-72b-instruct": {
+          "1": {
+            "asr": 2.5,
+            "p1": 2.5
+          },
+          "2": {
+            "asr": 4.94,
+            "p1": 2.5
+          },
+          "3": {
+            "asr": 7.31,
+            "p1": 2.5
+          },
+          "4": {
+            "asr": 9.63,
+            "p1": 2.5
+          },
+          "5": {
+            "asr": 11.89,
+            "p1": 2.5
+          }
+        },
+        "deepseek-chat-v3-0324": {
+          "1": {
+            "asr": 20.0,
+            "p1": 20.0
+          },
+          "2": {
+            "asr": 36.0,
+            "p1": 20.0
+          },
+          "3": {
+            "asr": 48.8,
+            "p1": 20.0
+          },
+          "4": {
+            "asr": 59.04,
+            "p1": 20.0
+          },
+          "5": {
+            "asr": 67.23,
+            "p1": 20.0
+          }
+        },
+        "mistral-large-2411": {
+          "1": {
+            "asr": 47.5,
+            "p1": 47.5
+          },
+          "2": {
+            "asr": 72.44,
+            "p1": 47.5
+          },
+          "3": {
+            "asr": 85.53,
+            "p1": 47.5
+          },
+          "4": {
+            "asr": 92.4,
+            "p1": 47.5
+          },
+          "5": {
+            "asr": 96.01,
+            "p1": 47.5
+          }
+        }
+      }
+    }
+  },
+  "decomposition": {
+    "overall": {
+      "1": {
+        "diversity_gain": 0.0,
+        "correlation_tax": 9.56,
+        "adaptive_premium": 11.87,
+        "bok_iid_ceiling": 65.81
+      },
+      "2": {
+        "diversity_gain": 21.25,
+        "correlation_tax": 10.81,
+        "adaptive_premium": 7.19,
+        "bok_iid_ceiling": 88.31
+      },
+      "3": {
+        "diversity_gain": 27.81,
+        "correlation_tax": 11.94,
+        "adaptive_premium": 6.25,
+        "bok_iid_ceiling": 96.0
+      },
+      "4": {
+        "diversity_gain": 31.87,
+        "correlation_tax": 10.51,
+        "adaptive_premium": 4.38,
+        "bok_iid_ceiling": 98.63
+      },
+      "5": {
+        "diversity_gain": 35.0,
+        "correlation_tax": 8.28,
+        "adaptive_premium": 2.5,
+        "bok_iid_ceiling": 99.53
+      }
+    },
+    "per_model": {
+      "claude-sonnet-4": {
+        "1": {
+          "diversity_gain": 0.0,
+          "correlation_tax": 9.5,
+          "adaptive_premium": 7.5
+        },
+        "2": {
+          "diversity_gain": 17.5,
+          "correlation_tax": 14.6,
+          "adaptive_premium": 0.0
+        },
+        "3": {
+          "diversity_gain": 27.5,
+          "correlation_tax": 19.4,
+          "adaptive_premium": 0.0
+        },
+        "4": {
+          "diversity_gain": 32.5,
+          "correlation_tax": 24.09,
+          "adaptive_premium": 0.0
+        },
+        "5": {
+          "diversity_gain": 35.0,
+          "correlation_tax": 27.94,
+          "adaptive_premium": 0.0
+        }
+      },
+      "deepseek-chat-v3-0324": {
+        "1": {
+          "diversity_gain": 0.0,
+          "correlation_tax": 8.0,
+          "adaptive_premium": 7.5
+        },
+        "2": {
+          "diversity_gain": 17.5,
+          "correlation_tax": 6.2,
+          "adaptive_premium": 2.5
+        },
+        "3": {
+          "diversity_gain": 20.0,
+          "correlation_tax": 6.76,
+          "adaptive_premium": 7.5
+        },
+        "4": {
+          "diversity_gain": 25.0,
+          "correlation_tax": 2.36,
+          "adaptive_premium": 2.5
+        },
+        "5": {
+          "diversity_gain": 25.0,
+          "correlation_tax": 2.47,
+          "adaptive_premium": 2.5
+        }
+      },
+      "gemini-2.5-flash": {
+        "1": {
+          "diversity_gain": 0.0,
+          "correlation_tax": 8.5,
+          "adaptive_premium": 7.5
+        },
+        "2": {
+          "diversity_gain": 25.0,
+          "correlation_tax": 7.29,
+          "adaptive_premium": 12.5
+        },
+        "3": {
+          "diversity_gain": 30.0,
+          "correlation_tax": 11.57,
+          "adaptive_premium": 10.0
+        },
+        "4": {
+          "diversity_gain": 35.0,
+          "correlation_tax": 10.19,
+          "adaptive_premium": 10.0
+        },
+        "5": {
+          "diversity_gain": 37.5,
+          "correlation_tax": 9.1,
+          "adaptive_premium": 10.0
+        }
+      },
+      "gpt-4o": {
+        "1": {
+          "diversity_gain": 0.0,
+          "correlation_tax": 16.5,
+          "adaptive_premium": 22.5
+        },
+        "2": {
+          "diversity_gain": 32.5,
+          "correlation_tax": 8.58,
+          "adaptive_premium": 15.0
+        },
+        "3": {
+          "diversity_gain": 45.0,
+          "correlation_tax": 6.77,
+          "adaptive_premium": 10.0
+        },
+        "4": {
+          "diversity_gain": 47.5,
+          "correlation_tax": 8.92,
+          "adaptive_premium": 10.0
+        },
+        "5": {
+          "diversity_gain": 52.5,
+          "correlation_tax": 5.94,
+          "adaptive_premium": 7.5
+        }
+      },
+      "gpt-4o-mini": {
+        "1": {
+          "diversity_gain": 0.0,
+          "correlation_tax": 17.5,
+          "adaptive_premium": 20.0
+        },
+        "2": {
+          "diversity_gain": 32.5,
+          "correlation_tax": 9.94,
+          "adaptive_premium": 10.0
+        },
+        "3": {
+          "diversity_gain": 45.0,
+          "correlation_tax": 9.28,
+          "adaptive_premium": 10.0
+        },
+        "4": {
+          "diversity_gain": 52.5,
+          "correlation_tax": 7.41,
+          "adaptive_premium": 7.5
+        },
+        "5": {
+          "diversity_gain": 60.0,
+          "correlation_tax": 2.58,
+          "adaptive_premium": 0.0
+        }
+      },
+      "llama-3.3-70b-instruct": {
+        "1": {
+          "diversity_gain": 0.0,
+          "correlation_tax": 10.0,
+          "adaptive_premium": 10.0
+        },
+        "2": {
+          "diversity_gain": 22.5,
+          "correlation_tax": 6.25,
+          "adaptive_premium": 5.0
+        },
+        "3": {
+          "diversity_gain": 30.0,
+          "correlation_tax": 3.44,
+          "adaptive_premium": 2.5
+        },
+        "4": {
+          "diversity_gain": 32.5,
+          "correlation_tax": 2.11,
+          "adaptive_premium": 0.0
+        },
+        "5": {
+          "diversity_gain": 32.5,
+          "correlation_tax": 2.4,
+          "adaptive_premium": 0.0
+        }
+      },
+      "mistral-large-2411": {
+        "1": {
+          "diversity_gain": 0.0,
+          "correlation_tax": 1.0,
+          "adaptive_premium": 5.0
+        },
+        "2": {
+          "diversity_gain": 5.0,
+          "correlation_tax": 4.19,
+          "adaptive_premium": 5.0
+        },
+        "3": {
+          "diversity_gain": 5.0,
+          "correlation_tax": 4.93,
+          "adaptive_premium": 5.0
+        },
+        "4": {
+          "diversity_gain": 5.0,
+          "correlation_tax": 4.99,
+          "adaptive_premium": 5.0
+        },
+        "5": {
+          "diversity_gain": 7.5,
+          "correlation_tax": 2.5,
+          "adaptive_premium": 2.5
+        }
+      },
+      "qwen-2.5-72b-instruct": {
+        "1": {
+          "diversity_gain": 0.0,
+          "correlation_tax": 5.5,
+          "adaptive_premium": 15.0
+        },
+        "2": {
+          "diversity_gain": 17.5,
+          "correlation_tax": 6.5,
+          "adaptive_premium": 7.5
+        },
+        "3": {
+          "diversity_gain": 20.0,
+          "correlation_tax": 8.53,
+          "adaptive_premium": 5.0
+        },
+        "4": {
+          "diversity_gain": 25.0,
+          "correlation_tax": 4.64,
+          "adaptive_premium": 0.0
+        },
+        "5": {
+          "diversity_gain": 30.0,
+          "correlation_tax": -0.09,
+          "adaptive_premium": -2.5
+        }
+      }
+    }
+  },
+  "metadata": {
+    "budgets": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "bok_models": [
+      "claude-sonnet-4",
+      "deepseek-chat-v3-0324",
+      "gemini-2.5-flash",
+      "gpt-4o",
+      "gpt-4o-mini",
+      "llama-3.3-70b-instruct",
+      "mistral-large-2411",
+      "qwen-2.5-72b-instruct"
+    ],
+    "pair5_models": [
+      "claude-sonnet-4",
+      "deepseek-chat-v3-0324",
+      "gemini-2.5-flash",
+      "gpt-4o",
+      "gpt-4o-mini",
+      "llama-3.3-70b-instruct",
+      "mistral-large-2411",
+      "qwen-2.5-72b-instruct"
+    ],
+    "n_intents_per_model": 40,
+    "description": "Success-vs-budget curves comparing BoK (static diverse), PAIR-5 (adaptive refinement), and theoretical i.i.d. baselines. Decomposes scaling into i.i.d. gain, diversity premium, and adaptive premium."
+  }
+}

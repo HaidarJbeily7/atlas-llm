@@ -1,0 +1,222 @@
+\begin{thebibliography}{26}
+\providecommand{\natexlab}[1]{#1}
+
+\bibitem[{Andriushchenko et~al.(2025)Andriushchenko, Croce, and
+  Flammarion}]{andriushchenko2024jailbreaking}
+Maksym Andriushchenko, Francesco Croce, and Nicolas Flammarion. 2025.
+\newblock \href {https://doi.org/10.48550/arXiv.2404.02151} {Jailbreaking
+  leading safety-aligned {LLM}s with simple adaptive attacks}.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}.
+\newblock \url{https://arxiv.org/abs/2404.02151}.
+
+\bibitem[{Anil et~al.(2024)Anil, Grosse, Ziegler, Askell, Chowdhery, Ndousse
+  et~al.}]{anil2024manyshot}
+Cem Anil, Roger Grosse, Dawn Ziegler, Amanda Askell, Aakanksha Chowdhery, Kamal
+  Ndousse, and 1 others. 2024.
+\newblock Many-shot jailbreaking.
+\newblock Technical report, Anthropic.
+\newblock \url{https://www.anthropic.com/research/many-shot-jailbreaking}.
+
+\bibitem[{{Anthropic}(2025)}]{anthropic2025claude}
+{Anthropic}. 2025.
+\newblock Claude sonnet 4 model card.
+\newblock \url{https://docs.anthropic.com/en/docs/about-claude/models}.
+
+\bibitem[{Chao et~al.(2024)Chao, Debenedetti, Robey, Andriushchenko, Croce,
+  Sehwag, Dobriban, Flammarion, Pappas, Tramer, Hassani, and
+  Wong}]{chao2024jailbreakbench}
+Patrick Chao, Edoardo Debenedetti, Alexander Robey, Maksym Andriushchenko,
+  Francesco Croce, Vikash Sehwag, Edgar Dobriban, Nicolas Flammarion, George~J
+  Pappas, Florian Tramer, Hamed Hassani, and Eric Wong. 2024.
+\newblock \href {https://doi.org/10.48550/arXiv.2404.01318} {{JailbreakBench}:
+  An open robustness benchmark for jailbreaking large language models}.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}.
+\newblock \url{https://arxiv.org/abs/2404.01318}.
+
+\bibitem[{Chao et~al.(2023)Chao, Robey, Dobriban, Hassani, Pappas, and
+  Wong}]{chao2023jailbreaking}
+Patrick Chao, Alexander Robey, Edgar Dobriban, Hamed Hassani, George~J Pappas,
+  and Eric Wong. 2023.
+\newblock \href {https://doi.org/10.48550/arXiv.2310.08419} {Jailbreaking black
+  box large language models in twenty queries}.
+\newblock In \emph{NeurIPS 2023 SoLaR Workshop}.
+\newblock \url{https://arxiv.org/abs/2310.08419}.
+
+\bibitem[{{DeepSeek-AI}(2025{\natexlab{a}})}]{deepseek2025r1}
+{DeepSeek-AI}. 2025{\natexlab{a}}.
+\newblock \href {https://doi.org/10.48550/arXiv.2501.12948} {{DeepSeek-R1}:
+  Incentivizing reasoning capability in {LLM}s via reinforcement learning}.
+\newblock \emph{arXiv preprint arXiv:2501.12948}.
+\newblock \url{https://arxiv.org/abs/2501.12948}.
+
+\bibitem[{{DeepSeek-AI}(2025{\natexlab{b}})}]{deepseek2025v3}
+{DeepSeek-AI}. 2025{\natexlab{b}}.
+\newblock \href {https://doi.org/10.48550/arXiv.2412.19437} {{DeepSeek-V3}
+  technical report}.
+\newblock \emph{arXiv preprint arXiv:2412.19437}.
+\newblock \url{https://arxiv.org/abs/2412.19437}.
+
+\bibitem[{Ganguli et~al.(2022)Ganguli, Lovitt, Kernion, Askell, Bai, Kadavath,
+  Mann, Perez, Schiefer, Ndousse et~al.}]{ganguli2022red}
+Deep Ganguli, Liane Lovitt, Jackson Kernion, Amanda Askell, Yuntao Bai, Saurav
+  Kadavath, Ben Mann, Ethan Perez, Nicholas Schiefer, Kamal Ndousse, and 1
+  others. 2022.
+\newblock \href {https://doi.org/10.48550/arXiv.2209.07858} {Red teaming
+  language models to reduce harms: Methods, scaling behaviors, and lessons
+  learned}.
+\newblock \emph{arXiv preprint arXiv:2209.07858}.
+\newblock \url{https://arxiv.org/abs/2209.07858}.
+
+\bibitem[{{Google DeepMind}(2025)}]{google2025gemini}
+{Google DeepMind}. 2025.
+\newblock Gemini 2.5 technical report.
+\newblock \url{https://deepmind.google/technologies/gemini/}.
+
+\bibitem[{Grattafiori et~al.(2024)}]{meta2024llama3}
+Aaron Grattafiori and 1 others. 2024.
+\newblock \href {https://doi.org/10.48550/arXiv.2407.21783} {The {Llama} 3 herd
+  of models}.
+\newblock \emph{arXiv preprint arXiv:2407.21783}.
+\newblock \url{https://arxiv.org/abs/2407.21783}.
+
+\bibitem[{Hagendorff et~al.(2026)Hagendorff, Derner, and
+  Oliver}]{hagendorff2026reasoning}
+Thilo Hagendorff, Erik Derner, and Nuria Oliver. 2026.
+\newblock \href {https://doi.org/10.1038/s41467-026-69010-1} {Large reasoning
+  models are autonomous jailbreak agents}.
+\newblock \emph{Nature Communications}, 17:1435.
+
+\bibitem[{Hughes et~al.(2024)Hughes, Price, Lynch, Schaeffer, Barez, Koyejo,
+  Sleight, Jones, Perez, and Sharma}]{hughes2024bestofn}
+John Hughes, Sara Price, Aengus Lynch, Rylan Schaeffer, Fazl Barez, Sanmi
+  Koyejo, Henry Sleight, Erik Jones, Ethan Perez, and Mrinank Sharma. 2024.
+\newblock \href {https://doi.org/10.48550/arXiv.2412.03556} {Best-of-{N}
+  jailbreaking}.
+\newblock \emph{arXiv preprint arXiv:2412.03556}.
+\newblock \url{https://arxiv.org/abs/2412.03556}.
+
+\bibitem[{Jiang et~al.(2024)Jiang, Rao, Han, Ettinger, Brahman, Kumar,
+  Mireshghallah, Lu, Sap, Choi, and Dziri}]{jiang2024wildteaming}
+Liwei Jiang, Kavel Rao, Seungju Han, Allyson Ettinger, Faeze Brahman, Sachin
+  Kumar, Niloofar Mireshghallah, Ximing Lu, Maarten Sap, Yejin Choi, and Nouha
+  Dziri. 2024.
+\newblock \href {https://doi.org/10.48550/arXiv.2406.18510} {{WildTeaming} at
+  scale: From in-the-wild jailbreaks to (adversarially) safer language models}.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}.
+\newblock \url{https://arxiv.org/abs/2406.18510}.
+
+\bibitem[{Li et~al.(2024)Li, Han, Steneker, Primack, Goodside, Zhang, Wang,
+  Menghini, and Yue}]{li2024multiturn}
+Nathaniel Li, Ziwen Han, Ian Steneker, Willow Primack, Riley Goodside, Hugh
+  Zhang, Zifan Wang, Cristina Menghini, and Summer Yue. 2024.
+\newblock \href {https://doi.org/10.48550/arXiv.2408.15221} {{LLM} defenses are
+  not robust to multi-turn human jailbreaks yet}.
+\newblock \emph{arXiv preprint arXiv:2408.15221}.
+\newblock \url{https://arxiv.org/abs/2408.15221}.
+
+\bibitem[{Liao and Sun(2024)}]{liao2024amplecgc}
+Zeyi Liao and Huan Sun. 2024.
+\newblock \href {https://doi.org/10.48550/arXiv.2404.07921} {{AmpleGCG}:
+  Learning a universal and transferable generative model of adversarial
+  suffixes for jailbreaking both open and closed {LLM}s}.
+\newblock \emph{arXiv preprint arXiv:2404.07921}.
+\newblock \url{https://arxiv.org/abs/2404.07921}.
+
+\bibitem[{Mazeika et~al.(2024)Mazeika, Phan, Yin, Zou, Wang, Mu, Sakhaee, Li,
+  Basart, Li, Forsyth, and Hendrycks}]{mazeika2024harmbench}
+Mantas Mazeika, Long Phan, Xuwang Yin, Andy Zou, Zifan Wang, Norman Mu, Elham
+  Sakhaee, Nathaniel Li, Steven Basart, Bo~Li, David Forsyth, and Dan
+  Hendrycks. 2024.
+\newblock \href {https://doi.org/10.48550/arXiv.2402.04249} {{HarmBench}: A
+  standardized evaluation framework for automated red teaming and robust
+  refusal}.
+\newblock In \emph{International Conference on Machine Learning (ICML)}.
+\newblock \url{https://arxiv.org/abs/2402.04249}.
+
+\bibitem[{Mehrotra et~al.(2024)Mehrotra, Zampetakis, Kassianik, Nelson,
+  Anderson, Singer, and Karbasi}]{mehrotra2023tree}
+Anay Mehrotra, Manolis Zampetakis, Paul Kassianik, Blaise Nelson, Hyrum
+  Anderson, Yaron Singer, and Amin Karbasi. 2024.
+\newblock \href {https://doi.org/10.48550/arXiv.2312.02119} {Tree of attacks:
+  Jailbreaking black-box {LLM}s with auto-regressive pruning}.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}.
+\newblock \url{https://arxiv.org/abs/2312.02119}.
+
+\bibitem[{{Mistral AI}(2024)}]{mistral2024large}
+{Mistral AI}. 2024.
+\newblock Mistral large 2.
+\newblock \url{https://mistral.ai/news/mistral-large-2407}.
+
+\bibitem[{{OpenAI}(2024)}]{openai2024gpt4o}
+{OpenAI}. 2024.
+\newblock {GPT-4o} system card.
+\newblock \url{https://openai.com/index/gpt-4o-system-card/}.
+
+\bibitem[{Perez et~al.(2022)Perez, Huang, Song, Cai, Ring, Aslanides, Glaese,
+  McAleese, and Irving}]{perez2022red}
+Ethan Perez, Saffron Huang, Francis Song, Trevor Cai, Roman Ring, John
+  Aslanides, Amelia Glaese, Nat McAleese, and Geoffrey Irving. 2022.
+\newblock \href {https://doi.org/10.48550/arXiv.2202.03286} {Red teaming
+  language models with language models}.
+\newblock \emph{arXiv preprint arXiv:2202.03286}.
+\newblock \url{https://arxiv.org/abs/2202.03286}.
+
+\bibitem[{{Qwen Team}(2024)}]{qwen2024qwen25}
+{Qwen Team}. 2024.
+\newblock \href {https://doi.org/10.48550/arXiv.2412.15115} {Qwen2.5 technical
+  report}.
+\newblock \emph{arXiv preprint arXiv:2412.15115}.
+\newblock \url{https://arxiv.org/abs/2412.15115}.
+
+\bibitem[{Russinovich et~al.(2025)Russinovich, Salem, and
+  Eldan}]{russinovich2024crescendo}
+Mark Russinovich, Ahmed Salem, and Ronen Eldan. 2025.
+\newblock \href {https://doi.org/10.48550/arXiv.2404.01833} {Great, now write
+  an article about that: The {Crescendo} multi-turn {LLM} jailbreak attack}.
+\newblock In \emph{USENIX Security Symposium}.
+\newblock \url{https://arxiv.org/abs/2404.01833}.
+
+\bibitem[{Souly et~al.(2024)Souly, Lu, Bowen, Trinh, Hsieh, Pandey, Abbeel,
+  Svegliato, Emmons, Watkins, and Toyer}]{souly2024strongreject}
+Alexandra Souly, Qingyuan Lu, Dillon Bowen, Tu~Trinh, Elvis Hsieh, Sana Pandey,
+  Pieter Abbeel, Justin Svegliato, Scott Emmons, Olivia Watkins, and Sam Toyer.
+  2024.
+\newblock \href {https://doi.org/10.48550/arXiv.2402.10260} {A {StrongREJECT}
+  for empty jailbreaks}.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}.
+\newblock \url{https://arxiv.org/abs/2402.10260}.
+
+\bibitem[{Yang et~al.(2024)Yang, Tang, Hu, and Han}]{yang2024chain}
+Xikang Yang, Xuehai Tang, Songlin Hu, and Jizhong Han. 2024.
+\newblock \href {https://doi.org/10.48550/arXiv.2405.05610} {Chain of attack: a
+  semantic-driven contextual multi-turn attacker for {LLM}}.
+\newblock \emph{arXiv preprint arXiv:2405.05610}.
+\newblock \url{https://arxiv.org/abs/2405.05610}.
+
+\bibitem[{Zeng et~al.(2024)Zeng, Lin, Zhang, Yang, Jia, and
+  Shi}]{zeng2024persuade}
+Yi~Zeng, Hongpeng Lin, Jingwen Zhang, Diyi Yang, Ruoxi Jia, and Weiyan Shi.
+  2024.
+\newblock \href {https://doi.org/10.48550/arXiv.2401.06373} {How {J}ohnny can
+  persuade {LLM}s to jailbreak them: Rethinking persuasion to challenge {AI}
+  safety by humanizing {LLM}s}.
+\newblock In \emph{Proceedings of the Association for Computational Linguistics
+  (ACL)}.
+\newblock \url{https://arxiv.org/abs/2401.06373}.
+
+\bibitem[{Zou et~al.(2024)Zou, Wang, Carlini, Nasr, Kolter, and
+  Fredrikson}]{zou2023gcg}
+Andy Zou, Zifan Wang, Nicholas Carlini, Milad Nasr, J~Zico Kolter, and Matt
+  Fredrikson. 2024.
+\newblock \href {https://doi.org/10.48550/arXiv.2307.15043} {Universal and
+  transferable adversarial attacks on aligned language models}.
+\newblock In \emph{International Conference on Machine Learning (ICML)}.
+\newblock ArXiv:2307.15043 (2023); published ICML 2024.
+  \url{https://arxiv.org/abs/2307.15043}.
+
+\end{thebibliography}

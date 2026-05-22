@@ -1,0 +1,182 @@
+{
+  "direct_single_turn": {
+    "total_findings": 320,
+    "raw_asr": 15.9,
+    "raw_asr_ci": [
+      12.33,
+      20.35
+    ],
+    "adj_asr": 14.4,
+    "adj_asr_ci": [
+      10.95,
+      18.64
+    ],
+    "measurement_inflation": 1.6,
+    "fp": 5,
+    "fn": 0,
+    "max_target_cap": 1,
+    "realized_target_mean": 1,
+    "realized_target_median": 1,
+    "realized_attacker_mean": 0,
+    "realized_attacker_median": 0,
+    "total_cost_usd": 0.5504,
+    "cost_per_finding": 0.00172,
+    "cost_per_success": 0.012,
+    "latency_mean_ms": 21788.0,
+    "latency_median_ms": 17011.0,
+    "detector_fragility_max_fp": 29.1,
+    "exclusion_rate": 0.3,
+    "review_coverage": 100.0,
+    "provider_filtered_count": 1
+  },
+  "scripted_multi_turn": {
+    "total_findings": 320,
+    "raw_asr": 51.2,
+    "raw_asr_ci": [
+      45.79,
+      56.68
+    ],
+    "adj_asr": 37.5,
+    "adj_asr_ci": [
+      32.37,
+      42.92
+    ],
+    "measurement_inflation": 13.7,
+    "fp": 51,
+    "fn": 7,
+    "max_target_cap": 5,
+    "realized_target_mean": 3.5,
+    "realized_target_median": 3.0,
+    "realized_attacker_mean": 0,
+    "realized_attacker_median": 0,
+    "total_cost_usd": 3.3188,
+    "cost_per_finding": 0.010371,
+    "cost_per_success": 0.0277,
+    "latency_mean_ms": 153357.0,
+    "latency_median_ms": 117196.0,
+    "detector_fragility_max_fp": 37.2,
+    "exclusion_rate": 0.0,
+    "review_coverage": 100.0,
+    "provider_filtered_count": 0
+  },
+  "adaptive_single_query_st": {
+    "total_findings": 320,
+    "raw_asr": 64.1,
+    "raw_asr_ci": [
+      58.67,
+      69.12
+    ],
+    "adj_asr": 63.7,
+    "adj_asr_ci": [
+      58.35,
+      68.83
+    ],
+    "measurement_inflation": 0.3,
+    "fp": 4,
+    "fn": 3,
+    "max_target_cap": 1,
+    "realized_target_mean": 1.0,
+    "realized_target_median": 1,
+    "realized_attacker_mean": 2.0,
+    "realized_attacker_median": 2.0,
+    "total_cost_usd": 2.1708,
+    "cost_per_finding": 0.006784,
+    "cost_per_success": 0.0106,
+    "latency_mean_ms": 193011.0,
+    "latency_median_ms": 181476.0,
+    "detector_fragility_max_fp": 16.2,
+    "exclusion_rate": 0.3,
+    "review_coverage": 100.0,
+    "provider_filtered_count": 1
+  },
+  "adaptive_single_turn": {
+    "total_findings": 320,
+    "raw_asr": 85.0,
+    "raw_asr_ci": [
+      80.67,
+      88.5
+    ],
+    "adj_asr": 85.9,
+    "adj_asr_ci": [
+      81.7,
+      89.32
+    ],
+    "measurement_inflation": -0.9,
+    "fp": 5,
+    "fn": 8,
+    "max_target_cap": 5,
+    "realized_target_mean": 1.6,
+    "realized_target_median": 1.0,
+    "realized_attacker_mean": 3.3,
+    "realized_attacker_median": 2.0,
+    "total_cost_usd": 4.4141,
+    "cost_per_finding": 0.013794,
+    "cost_per_success": 0.0161,
+    "latency_mean_ms": 319198.0,
+    "latency_median_ms": 284748.0,
+    "detector_fragility_max_fp": 10.0,
+    "exclusion_rate": 0.0,
+    "review_coverage": 100.0,
+    "provider_filtered_count": 0
+  },
+  "adaptive_multi_turn": {
+    "total_findings": 320,
+    "raw_asr": 63.4,
+    "raw_asr_ci": [
+      58.03,
+      68.53
+    ],
+    "adj_asr": 63.4,
+    "adj_asr_ci": [
+      58.03,
+      68.53
+    ],
+    "measurement_inflation": 0.0,
+    "fp": 21,
+    "fn": 21,
+    "max_target_cap": 5,
+    "realized_target_mean": 2.9,
+    "realized_target_median": 3.0,
+    "realized_attacker_mean": 5.9,
+    "realized_attacker_median": 6.0,
+    "total_cost_usd": 7.6004,
+    "cost_per_finding": 0.023751,
+    "cost_per_success": 0.0374,
+    "latency_mean_ms": 540015.0,
+    "latency_median_ms": 518430.0,
+    "detector_fragility_max_fp": 31.6,
+    "exclusion_rate": 0.0,
+    "review_coverage": 100.0,
+    "provider_filtered_count": 0
+  },
+  "best_of_k_st": {
+    "total_findings": 320,
+    "raw_asr": 91.2,
+    "raw_asr_ci": [
+      87.64,
+      93.88
+    ],
+    "adj_asr": 85.6,
+    "adj_asr_ci": [
+      81.36,
+      89.05
+    ],
+    "measurement_inflation": 5.6,
+    "fp": 23,
+    "fn": 5,
+    "max_target_cap": 5,
+    "realized_target_mean": 5.0,
+    "realized_target_median": 5.0,
+    "realized_attacker_mean": 0,
+    "realized_attacker_median": 0,
+    "total_cost_usd": 5.7296,
+    "cost_per_finding": 0.017905,
+    "cost_per_success": 0.0209,
+    "latency_mean_ms": 840771.0,
+    "latency_median_ms": 573166.0,
+    "detector_fragility_max_fp": 9.7,
+    "exclusion_rate": 0.0,
+    "review_coverage": 100.0,
+    "provider_filtered_count": 0
+  }
+}
