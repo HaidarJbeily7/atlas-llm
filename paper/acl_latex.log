@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.10.16)  21 MAY 2026 11:30
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.10.16)  24 MAY 2026 20:09
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -705,7 +705,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 148--149
 rse-
  []
 
-<figures/fig_panel_a.pdf, id=236, 561.7587pt x 244.86732pt>
+<figures/fig_panel_a.pdf, id=240, 561.7587pt x 244.86732pt>
 File: figures/fig_panel_a.pdf Graphic file (type pdf)
 <use figures/fig_panel_a.pdf>
 Package pdftex.def Info: figures/fig_panel_a.pdf  used on input line 156.
@@ -744,43 +744,38 @@ See the caption package documentation for explanation.
 
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
-(caption)                particular \caption on input line 300.
+(caption)                particular \caption on input line 301.
 See the caption package documentation for explanation.
 
-
-Overfull \hbox (14.70473pt too wide) in paragraph at lines 303--315
- [][] 
- []
-
-<figures/fig_panel_b.pdf, id=336, 502.71928pt x 249.3037pt>
+<figures/fig_panel_b.pdf, id=338, 502.71928pt x 249.3037pt>
 File: figures/fig_panel_b.pdf Graphic file (type pdf)
 <use figures/fig_panel_b.pdf>
-Package pdftex.def Info: figures/fig_panel_b.pdf  used on input line 321.
+Package pdftex.def Info: figures/fig_panel_b.pdf  used on input line 322.
 (pdftex.def)             Requested size: 219.08614pt x 108.64783pt.
 
 
 [5 <./figures/fig_panel_b.pdf>]
 
 LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 3
-45.
+46.
 (/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 )
-<figures/fig_budget.pdf, id=378, 932.3081pt x 318.06142pt>
+<figures/fig_budget.pdf, id=380, 932.3081pt x 318.06142pt>
 File: figures/fig_budget.pdf Graphic file (type pdf)
 <use figures/fig_budget.pdf>
-Package pdftex.def Info: figures/fig_budget.pdf  used on input line 352.
+Package pdftex.def Info: figures/fig_budget.pdf  used on input line 353.
 (pdftex.def)             Requested size: 219.08614pt x 74.73958pt.
 
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
-(caption)                particular \caption on input line 368.
+(caption)                particular \caption on input line 369.
 See the caption package documentation for explanation.
 
-<figures/fig_panel_c.pdf, id=381, 445.86577pt x 273.11736pt>
+<figures/fig_panel_c.pdf, id=383, 445.86577pt x 273.11736pt>
 File: figures/fig_panel_c.pdf Graphic file (type pdf)
 <use figures/fig_panel_c.pdf>
-Package pdftex.def Info: figures/fig_panel_c.pdf  used on input line 389.
+Package pdftex.def Info: figures/fig_panel_c.pdf  used on input line 390.
 (pdftex.def)             Requested size: 219.08614pt x 134.20374pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -790,7 +785,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 [6 <./figures/fig_budget.pdf>]
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 416--417
+Underfull \hbox (badness 10000) in paragraph at lines 417--418
 []\T1/ptm/b/n/10.95 (+20) PAIR it-er-a-tion cap. \T1/ptm/m/n/10.95 (+20) AMQ-ST
  uses
  []
@@ -798,52 +793,36 @@ Underfull \hbox (badness 10000) in paragraph at lines 416--417
 
 
 [7 <./figures/fig_panel_c.pdf>] (./acl_latex.bbl
-Underfull \hbox (badness 1701) in paragraph at lines 22--25
-[]\T1/ptm/m/n/10 (+20) Anthropic. 2025.  Claude son-net 4 model card.
+Underfull \hbox (badness 1946) in paragraph at lines 16--26
+\T1/ptm/m/n/10 (+20) Mosconi, Ra-jashree Agrawal, Ry-lan Scha-ef-fer,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 22--25
-[][]$\T1/pcr/m/n/10 https : / / docs . anthropic . com / en /
- []
-
-
-Underfull \hbox (badness 1253) in paragraph at lines 29--37
+Underfull \hbox (badness 1253) in paragraph at lines 37--43
 \T1/ptm/m/n/10 (+20) Se-hwag, Edgar Do-briban, Nico-las Flam-mar-ion,
  []
 
 
-Underfull \hbox (badness 1199) in paragraph at lines 40--46
+Underfull \hbox (badness 1199) in paragraph at lines 46--51
 []\T1/ptm/m/n/10 (+20) Patrick Chao, Alexan-der Robey, Edgar Do-briban,
  []
 
 
-Underfull \hbox (badness 3792) in paragraph at lines 73--76
-[]\T1/ptm/m/n/10 (+20) Google Deep-Mind. 2025.  Gem-ini 2.5 tech-ni-
- []
 
 
-Underfull \hbox (badness 3407) in paragraph at lines 73--76
-\T1/ptm/m/n/10 (+20) cal re-port.  [][]$\T1/pcr/m/n/10 https : / / deepmind . g
-oogle /
- []
-
-
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 155--158
-[]\T1/ptm/m/n/10 (+20) OpenAI. 2024.  GPT-4o sys-tem card.
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 155--158
-[][]$\T1/pcr/m/n/10 https : / / openai . com / index /
+Underfull \hbox (badness 1024) in paragraph at lines 641--647
+\T1/ptm/m/n/10 (+20) Adam Perel-man, Aditya Ramesh, Aidan Clark,
  []
 
 
 
 [8]
-Underfull \hbox (badness 4084) in paragraph at lines 185--193
+Underfull \hbox (badness 1867) in paragraph at lines 660--666
+\T1/ptm/m/n/10 (+20) Yang, Ji-axi Yang, Jin-gren Zhou, and 25 oth-
+ []
+
+
+Underfull \hbox (badness 4084) in paragraph at lines 676--682
 []\T1/ptm/m/n/10 (+20) Alexandra Souly, Qingyuan Lu, Dil-lon Bowen,
  []
 
@@ -854,18 +833,18 @@ Underfull \hbox (badness 4084) in paragraph at lines 185--193
 [9
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 449--450
+Underfull \hbox (badness 10000) in paragraph at lines 450--451
 \T1/ptm/m/n/10.95 (+20) All Mc-Ne-mar tests pair ob-ser-va-tions by
  []
 
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
-(caption)                particular \caption on input line 462.
+(caption)                particular \caption on input line 463.
 See the caption package documentation for explanation.
 
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
-(caption)                particular \caption on input line 506.
+(caption)                particular \caption on input line 507.
 See the caption package documentation for explanation.
 
 
@@ -875,12 +854,12 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
-(caption)                particular \caption on input line 536.
+(caption)                particular \caption on input line 537.
 See the caption package documentation for explanation.
 
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
-(caption)                particular \caption on input line 560.
+(caption)                particular \caption on input line 561.
 See the caption package documentation for explanation.
 
 
@@ -890,11 +869,11 @@ See the caption package documentation for explanation.
 ]
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
-(caption)                particular \caption on input line 598.
+(caption)                particular \caption on input line 599.
 See the caption package documentation for explanation.
 
 
-Underfull \hbox (badness 1838) in paragraph at lines 627--628
+Underfull \hbox (badness 1838) in paragraph at lines 628--629
  []\T1/ptm/b/n/10.95 (+20) SS-MT script au-thor-ing.[] \T1/ptm/m/n/10.95 (+20) 
 Es-ca-la-tion scripts
  []
@@ -903,71 +882,13 @@ Es-ca-la-tion scripts
 
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
-(caption)                particular \caption on input line 653.
+(caption)                particular \caption on input line 654.
 See the caption package documentation for explanation.
 
-! Extra alignment tab has been changed to \cr.
-<recently read> \endtemplate 
-                             
-l.658 ...extbf{ASQ} & \textbf{MT} & \textbf{AMQ} &
-                                                   \textbf{BoK} \\
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
 
-! Extra alignment tab has been changed to \cr.
-<recently read> \endtemplate 
-                             
-l.660 ... & 6 & 16.7 & 35.4 & 66.7 & 64.6 & 89.6 &
-                                                   87.5 \\
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<recently read> \endtemplate 
-                             
-l.661 ... & 6 & 10.4 & 27.1 & 45.8 & 52.1 & 75.0 &
-                                                   72.9 \\
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<recently read> \endtemplate 
-                             
-l.662 ... & 8 & 17.2 & 42.2 & 70.3 & 68.8 & 90.6 &
-                                                   89.1 \\
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<recently read> \endtemplate 
-                             
-l.663 ...y & 4 & 9.4 & 31.2 & 56.2 & 59.4 & 81.2 &
-                                                   84.4 \\
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<recently read> \endtemplate 
-                             
-l.664 ...& 11 & 18.2 & 45.5 & 72.7 & 70.5 & 90.9 &
-                                                   93.2 \\
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<recently read> \endtemplate 
-                             
-l.665 ... & 5 & 10.0 & 35.0 & 62.5 & 60.0 & 82.5 &
-                                                   85.0 \\
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
+Overfull \hbox (1.67651pt too wide) in paragraph at lines 657--669
+ [][] 
+ []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -975,25 +896,25 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 [11]
-Underfull \hbox (badness 10000) in paragraph at lines 683--684
+Underfull \hbox (badness 10000) in paragraph at lines 684--685
 []\T1/ptm/b/n/10.95 (+20) Experiment con-fig\T1/ptm/m/n/10.95 (+20) : Ex-per-i-
 ment ID
  []
 
 
-Underfull \hbox (badness 4366) in paragraph at lines 683--684
+Underfull \hbox (badness 4366) in paragraph at lines 684--685
 \T1/pcr/m/n/10.95 20260505_003630\T1/ptm/m/n/10.95 (+20) ; 8 tar-get mod-els $\
 OMS/cmsy/m/n/10.95 ^^B$
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 685--686
+Underfull \hbox (badness 10000) in paragraph at lines 686--687
 \T1/ptm/m/n/10.95 (+20) (\T1/pcr/m/n/10.95 annotation_ledger.csv\T1/ptm/m/n/10.
 95 (+20) ) with per-
  []
 
 
-Underfull \hbox (badness 2521) in paragraph at lines 685--686
+Underfull \hbox (badness 2521) in paragraph at lines 686--687
 \T1/ptm/m/n/10.95 (+20) (\T1/pcr/m/n/10.95 compute_kappa.py\T1/ptm/m/n/10.95 (+
 20) ) con-firms all 1,920
  []
@@ -1001,41 +922,23 @@ Underfull \hbox (badness 2521) in paragraph at lines 685--686
 
 
 
-Package lineno Warning: Line number reference failed, re-run to get it right.
 
-
-
-[12] (./acl_latex.aux
-
-Package natbib Warning: Citation(s) may have changed.
-(natbib)                Rerun to get citations correct.
-
-)
+[12] (./acl_latex.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-
-Package rerunfilecheck Warning: File `acl_latex.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `acl_latex.out':
-(rerunfilecheck)             Before: 681E0AE92014E53952052CEF473A62F8;4336
-(rerunfilecheck)             After:  6C5455DE27C25CB84C460EEC815FE0C6;4336.
+Package rerunfilecheck Info: File `acl_latex.out' has not changed.
+(rerunfilecheck)             Checksum: 6C5455DE27C25CB84C460EEC815FE0C6;4336.
  ) 
 Here is how much of TeX's memory you used:
- 16618 strings out of 473190
- 261955 string characters out of 5715799
- 728812 words of memory out of 5000000
- 39054 multiletter control sequences out of 15000+600000
- 639282 words of font info for 403 fonts, out of 8000000 for 9000
+ 16603 strings out of 473190
+ 261800 string characters out of 5715799
+ 894615 words of memory out of 5000000
+ 39052 multiletter control sequences out of 15000+600000
+ 637476 words of font info for 393 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 84i,14n,93p,1053b,648s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 84i,14n,93p,25434b,642s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
 ></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><
 /usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></u
@@ -1053,10 +956,10 @@ fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/type
 1/urw/times/utmbi8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/urw/tim
 es/utmr8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/urw/times/utmri8a
 .pfb>
-Output written on acl_latex.pdf (12 pages, 482534 bytes).
+Output written on acl_latex.pdf (12 pages, 478094 bytes).
 PDF statistics:
- 776 PDF objects out of 1000 (max. 8388607)
- 662 compressed objects within 7 object streams
+ 716 PDF objects out of 1000 (max. 8388607)
+ 602 compressed objects within 7 object streams
  125 named destinations out of 1000 (max. 500000)
- 73445 words of extra memory for PDF output out of 74296 (max. 10000000)
+ 72933 words of extra memory for PDF output out of 74296 (max. 10000000)
 
