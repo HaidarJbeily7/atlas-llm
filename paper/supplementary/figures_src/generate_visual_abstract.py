@@ -4,11 +4,16 @@ Generate three standalone ATLAS figures for inline placement in the paper.
   fig_panel_a.pdf — Conditions & mechanism encoding  → Section 3 (Design)
   fig_panel_b.pdf — Mechanism effects (AME bars)     → Section 5 (Decomposition)
   fig_panel_c.pdf — Automated vs validated ASR + FP  → Section 6 (Paradox)
+
+All numerical values are loaded from the aggregate JSON files in
+`supplementary/data/`. No paper number is hard-coded.
 """
+import json
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
+from pathlib import Path
 
 # ── Global style ──────────────────────────────────────────────
 plt.rcParams.update({
@@ -24,36 +29,78 @@ plt.rcParams.update({
 })
 
 # ── Colours ───────────────────────────────────────────────────
-C_BLUE   = '#2166ac'
+C_BLUE = '#2166ac'
 C_ORANGE = '#d95f02'
-C_GREEN  = '#1b9e77'
-C_PINK   = '#c994c7'
-C_GREY   = '#999999'
+C_GREEN = '#1b9e77'
+C_PINK = '#c994c7'
+C_GREY = '#999999'
 C_DKGREY = '#4a4a4a'
 
 OUTDIR = 'figures'
+DATA = Path(__file__).resolve().parent.parent / 'data'
+
 
 # ══════════════════════════════════════════════════════════════
-#  DATA
+#  DATA LOADING — every number comes from data/*.json
 # ══════════════════════════════════════════════════════════════
-conditions = [
-    # (group, label, llm, fb, mt, div, asr)
-    ('baselines', 'OSS-ST',            0, 0, 0, 0, 14.4),
-    ('baselines', 'SS-MT',             0, 0, 1, 0, 37.5),
-    ('PAIR',      'ASQ-ST (PAIR-1)',   1, 0, 0, 0, 63.7),
-    ('PAIR',      'AMQ-ST (PAIR-5)',   1, 1, 0, 0, 85.9),
-    ('PAIR',      'AMQ-MT',            1, 1, 1, 0, 63.4),
-    ('BoK',       'BoK-ST',            1, 0, 0, 1, 85.6),
-]
+def _round1(x):
+    """Round to one decimal place using Python's float-aware banker's rounding.
+    Note: due to IEEE 754 representation, values like 2.95 round to 2.9 (not 3.0).
+    This matches the paper's printed values everywhere *except* a small number
+    of mechanism-CI bounds, which the paper rounded with half-up convention."""
+    return round(float(x), 1)
 
-mechanisms_b = ['LLM-crafted\nprompting', 'Strategy\ndiversity',
-                'Iterative\nfeedback', 'Multi-turn\nmemory']
-ame      = [36.6, 22.4, 10.2, 0.3]
-ci_lo    = [28.2, 16.9,  3.0, -6.0]
-ci_hi    = [44.1, 27.8, 17.4,  7.5]
-sig      = [True, True, True, False]
-bar_colors_b  = [C_BLUE, C_ORANGE, C_ORANGE, C_GREEN]
-bar_hatches_b = ['',     'xxxx',   '////',   '']
+
+def load_panel_data():
+    ec = json.loads((DATA / 'evidence_card.json').read_text())
+    md = json.loads((DATA / 'mechanism_decomposition.json').read_text())
+
+    # Panel A: conditions × mechanism encoding × adjusted ASR
+    # The (llm, fb, mt, div) encoding mirrors Table 1 in the paper.
+    conditions_meta = [
+        ('baselines', 'OSS-ST',          'direct_single_turn',       0, 0, 0, 0),
+        ('baselines', 'SS-MT',           'scripted_multi_turn',      0, 0, 1, 0),
+        ('PAIR',      'ASQ-ST (PAIR-1)', 'adaptive_single_query_st', 1, 0, 0, 0),
+        ('PAIR',      'AMQ-ST (PAIR-5)', 'adaptive_single_turn',     1, 1, 0, 0),
+        ('PAIR',      'AMQ-MT',          'adaptive_multi_turn',      1, 1, 1, 0),
+        ('BoK',       'BoK-ST',          'best_of_k_st',             1, 0, 0, 1),
+    ]
+    conditions = [
+        (grp, lbl, llm, fb, mt, div, _round1(ec[key]['adj_asr']))
+        for grp, lbl, key, llm, fb, mt, div in conditions_meta
+    ]
+
+    # Panel B: mechanism AMEs + CIs.
+    # Point estimate (ame_pp) from M4 primary; CI from 2000-boot resamples.
+    m4 = md['model_results']['M4_primary']['mechanisms']
+    boot = md['bootstrap_marginal_effects']
+    mech_order = ['attacker_llm', 'diversity', 'feedback', 'multi_turn']
+    panel_b = {
+        'labels': ['LLM-crafted\nprompting', 'Strategy\ndiversity',
+                   'Iterative\nfeedback', 'Multi-turn\nmemory'],
+        'ame':   [_round1(m4[m]['ame_pp']) for m in mech_order],
+        'ci_lo': [_round1(boot[m]['ame_ci_95'][0]) for m in mech_order],
+        'ci_hi': [_round1(boot[m]['ame_ci_95'][1]) for m in mech_order],
+        'sig':   [m4[m]['significant'] for m in mech_order],
+    }
+    m5 = md['model_results'].get('M5_interaction', {})
+    panel_b['interaction_or'] = m5.get('interaction_or')
+    panel_b['interaction_p'] = m5.get('interaction_p')
+
+    # Panel C: BoK vs PAIR-5, raw vs validated; FP counts.
+    panel_c = {
+        'bok_raw':   _round1(ec['best_of_k_st']['raw_asr']),
+        'bok_val':   _round1(ec['best_of_k_st']['adj_asr']),
+        'pair_raw':  _round1(ec['adaptive_single_turn']['raw_asr']),
+        'pair_val':  _round1(ec['adaptive_single_turn']['adj_asr']),
+        'fp_bok':    ec['best_of_k_st']['fp'],
+        'fp_pair':   ec['adaptive_single_turn']['fp'],
+    }
+
+    return conditions, panel_b, panel_c
+
+
+CONDITIONS, PANEL_B, PANEL_C = load_panel_data()
 
 
 # ══════════════════════════════════════════════════════════════
@@ -62,10 +109,9 @@ bar_hatches_b = ['',     'xxxx',   '////',   '']
 def make_panel_a():
     fig, ax = plt.subplots(figsize=(7.5, 3.4))
     ax.set_xlim(0, 1)
-    ax.set_ylim(-0.7, len(conditions) + 0.1)
+    ax.set_ylim(-0.7, len(CONDITIONS) + 0.1)
     ax.axis('off')
 
-    # Column positions — spread mechanism columns wider
     col_group = 0.00
     col_cond  = 0.08
     col_llm   = 0.32
@@ -78,10 +124,10 @@ def make_panel_a():
     col_headers = ['LLM-\ncrafted', 'feed-\nback', 'multi-\nturn', 'diver-\nsity']
 
     marker_styles = [('o', 10), ('^', 10), ('s', 9), ('D', 9)]
-    mech_colors   = [C_BLUE, C_ORANGE, C_GREEN, C_PINK]
+    mech_colors = [C_BLUE, C_ORANGE, C_GREEN, C_PINK]
 
-    # ── Header row
-    header_y = len(conditions) - 0.1
+    # Header row
+    header_y = len(CONDITIONS) - 0.1
     ax.text(col_cond, header_y, 'condition', fontsize=10,
             fontweight='bold', va='center')
     for cx, hdr in zip(cols_mech, col_headers):
@@ -94,14 +140,13 @@ def make_panel_a():
             [header_y - 0.35, header_y - 0.35],
             color='black', lw=0.8)
 
-    # ── Bar colours / hatches per row
+    # Bar colours / hatches per row (visual style — not data)
     bar_col = [C_DKGREY, C_DKGREY, C_BLUE, C_BLUE, C_BLUE, C_ORANGE]
     bar_hat = ['', '', '////', '////', '////', 'xxxx']
 
-    # ── Rows (reversed so first condition is at top)
     prev_grp = None
     for idx, (grp, label, llm, fb, mt, div, asr) in enumerate(
-            reversed(conditions)):
+            reversed(CONDITIONS)):
         y = idx
         if grp != prev_grp:
             ax.text(col_group, y, grp, fontsize=9.5, fontstyle='italic',
@@ -119,7 +164,7 @@ def make_panel_a():
                     markerfacecolor=fc, markeredgecolor=ec,
                     markeredgewidth=1.3, clip_on=False, zorder=5)
 
-        ri = len(conditions) - 1 - idx
+        ri = len(CONDITIONS) - 1 - idx
         blen = (asr / 100.0) * (col_bar_e - col_bar_s)
         rect = plt.Rectangle(
             (col_bar_s, y - 0.16), blen, 0.32,
@@ -129,12 +174,10 @@ def make_panel_a():
         ax.text(col_bar_s + blen + 0.008, y, f'{asr}',
                 fontsize=10.5, va='center', fontweight='bold')
 
-    # ── Group separator lines
     for yb in [1.5, 4.5]:
         ax.plot([col_cond - 0.02, col_bar_e + 0.01], [yb, yb],
                 color='#cccccc', lw=0.6)
 
-    # ── Legend
     ax.plot(0.32, -0.55, 'o', ms=7, markerfacecolor=C_DKGREY,
             markeredgecolor=C_DKGREY, clip_on=False)
     ax.text(0.34, -0.55, 'present', fontsize=9, va='center')
@@ -159,24 +202,26 @@ def make_panel_a():
 def make_panel_b():
     fig, ax = plt.subplots(figsize=(7.0, 3.5))
 
-    n = len(mechanisms_b)
+    mechanisms = PANEL_B['labels']
+    ame, ci_lo, ci_hi, sig = (
+        PANEL_B['ame'], PANEL_B['ci_lo'], PANEL_B['ci_hi'], PANEL_B['sig'])
+    n = len(mechanisms)
     y_pos = np.arange(n)
+    bar_colors = [C_BLUE, C_ORANGE, C_ORANGE, C_GREEN]
+    bar_hatches = ['', 'xxxx', '////', '']
 
     for i in range(n):
-        # CI whisker
         ax.plot([ci_lo[i], ci_hi[i]], [y_pos[i]] * 2,
                 color='black', lw=1.5, zorder=3)
         ax.plot(ci_hi[i], y_pos[i], 'o', color='black', ms=5, zorder=4)
         ax.plot(ci_lo[i], y_pos[i], '|', color='black', ms=8,
                 markeredgewidth=1.5, zorder=4)
 
-        # Bar
-        fc = bar_colors_b[i] if sig[i] else C_GREEN
+        fc = bar_colors[i] if sig[i] else C_GREEN
         ax.barh(y_pos[i], ame[i], height=0.55, left=0,
                 color=fc, edgecolor='black', lw=0.6,
-                hatch=bar_hatches_b[i], alpha=0.85, zorder=2)
+                hatch=bar_hatches[i], alpha=0.85, zorder=2)
 
-        # Value + CI label
         ns = '' if sig[i] else ' (ns)'
         ax.text(ci_hi[i] + 1.5, y_pos[i],
                 f'+{ame[i]} [{ci_lo[i]}, {ci_hi[i]}]{ns}',
@@ -184,21 +229,26 @@ def make_panel_b():
 
     ax.axvline(x=0, color='black', lw=0.9)
     ax.set_yticks(y_pos)
-    ax.set_yticklabels(mechanisms_b, fontsize=11)
+    ax.set_yticklabels(mechanisms, fontsize=11)
     ax.set_xlabel('Average marginal effect on ASR (pp)', fontsize=11)
     ax.set_xlim(-12, 55)
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
     ax.invert_yaxis()
 
-    # Interaction-term note
-    ax.text(0.02, 0.02,
-            'Interaction term  feedback $\\times$ multi-turn:'
-            ' negative interaction\nOR=0.04, p<.001',
-            fontsize=9, fontstyle='italic', color=C_DKGREY,
-            transform=ax.transAxes, va='bottom',
-            bbox=dict(boxstyle='round,pad=0.4', fc='#f0f0f0',
-                      ec='#cccccc', alpha=0.9))
+    # Interaction-term note — values from M5_interaction in JSON
+    ior = PANEL_B['interaction_or']
+    ip = PANEL_B['interaction_p']
+    if ior is not None and ip is not None:
+        or_str = f'{ior:.2f}'
+        p_str = '<.001' if ip < 0.001 else f'={ip:.3f}'
+        ax.text(0.02, 0.02,
+                f'Interaction term  feedback $\\times$ multi-turn:'
+                f' negative interaction\nOR={or_str}, p{p_str}',
+                fontsize=9, fontstyle='italic', color=C_DKGREY,
+                transform=ax.transAxes, va='bottom',
+                bbox=dict(boxstyle='round,pad=0.4', fc='#f0f0f0',
+                          ec='#cccccc', alpha=0.9))
 
     fig.tight_layout()
     fig.savefig(f'{OUTDIR}/fig_panel_b.pdf')
@@ -216,10 +266,9 @@ def make_panel_c():
     ax1 = fig.add_subplot(gs[0])
     ax2 = fig.add_subplot(gs[1])
 
-    # ── Slope chart (ax1) ──
     x_raw, x_val = 0, 1
-    bok_raw, bok_val   = 91.2, 85.6
-    pair_raw, pair_val = 85.0, 85.9
+    bok_raw, bok_val = PANEL_C['bok_raw'], PANEL_C['bok_val']
+    pair_raw, pair_val = PANEL_C['pair_raw'], PANEL_C['pair_val']
 
     ax1.plot([x_raw, x_val], [bok_raw, bok_val], 's--', color=C_ORANGE,
              lw=2.5, ms=10, markeredgecolor='black', markeredgewidth=0.8,
@@ -228,7 +277,6 @@ def make_panel_c():
              lw=2.5, ms=10, markeredgecolor='black', markeredgewidth=0.8,
              zorder=5)
 
-    # Endpoint labels
     ax1.text(x_raw - 0.08, bok_raw, f'BoK {bok_raw}', fontsize=10.5,
              fontweight='bold', color=C_ORANGE, ha='right', va='center')
     ax1.text(x_raw - 0.08, pair_raw, f'PAIR-5 {pair_raw}', fontsize=10.5,
@@ -240,16 +288,18 @@ def make_panel_c():
              fontsize=10.5, fontweight='bold', color=C_ORANGE, ha='left',
              va='top')
 
-    # Gap annotations
     mid_raw = (bok_raw + pair_raw) / 2
+    raw_lead = _round1(bok_raw - pair_raw)
+    val_delta = _round1(bok_val - pair_val)
     ax1.annotate('', xy=(x_raw + 0.06, bok_raw - 0.3),
                  xytext=(x_raw + 0.06, pair_raw + 0.3),
                  arrowprops=dict(arrowstyle='<->', color=C_DKGREY, lw=1.2))
-    ax1.text(x_raw + 0.14, mid_raw, '+6.2 pp\nraw lead',
+    ax1.text(x_raw + 0.14, mid_raw, f'+{raw_lead} pp\nraw lead',
              fontsize=10, color=C_DKGREY, va='center')
 
+    delta_sign = '$-$' if val_delta < 0 else '+'
     ax1.text(x_val + 0.40, (pair_val + bok_val) / 2,
-             r'validated $\approx$ tie' + '\n($-$0.3 pp)',
+             r'validated $\approx$ tie' + f'\n({delta_sign}{abs(val_delta)} pp)',
              fontsize=10, color='black', fontweight='bold', va='center')
 
     ax1.set_xlim(-0.45, 1.75)
@@ -261,8 +311,7 @@ def make_panel_c():
     ax1.spines['right'].set_visible(False)
     ax1.grid(axis='y', alpha=0.2)
 
-    # ── FP bar chart (ax2) ──
-    fp_pair, fp_bok = 5, 23
+    fp_pair, fp_bok = PANEL_C['fp_pair'], PANEL_C['fp_bok']
     ax2.bar(['PAIR-5', 'BoK'], [fp_pair, fp_bok],
             color=[C_BLUE, C_ORANGE], edgecolor='black', lw=0.8,
             width=0.6, hatch=['////', 'xxxx'], alpha=0.8)

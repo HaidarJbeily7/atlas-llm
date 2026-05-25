@@ -47,7 +47,7 @@ import numpy as np
 import pandas as pd
 
 EXPERIMENT_DIR = "docs/experiment/20260505_003630"
-LEDGER_PATH = "docs/v6/artifacts/annotation_ledger.csv"
+LEDGER_PATH = str(Path(__file__).resolve().parent.parent / "data" / "annotation_ledger.csv")
 
 # Condition → mechanism feature encoding
 MECHANISM_ENCODING = {
@@ -721,7 +721,11 @@ def generate_figure(
 def main():
     parser = argparse.ArgumentParser(description="Mechanism decomposition regression")
     parser.add_argument("--ledger", default=LEDGER_PATH)
-    parser.add_argument("--output", default="docs/v6/artifacts/mechanism_decomposition")
+    parser.add_argument(
+        "--output",
+        default=str(Path(__file__).resolve().parent.parent / "data" / "mechanism_decomposition"),
+        help="Output file prefix (default: supplementary/data/mechanism_decomposition)",
+    )
     parser.add_argument("--n-boot", type=int, default=2000,
                         help="Bootstrap iterations for AME CIs")
     args = parser.parse_args()

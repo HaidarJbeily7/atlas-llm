@@ -1,0 +1,853 @@
+{
+  "overall_stats": {
+    "total_intents": 40,
+    "total_variants": 200,
+    "avg_variants_per_intent": 5.0,
+    "strategy_distribution": {
+      "fiction": 23,
+      "hypothetical": 13,
+      "historical": 14,
+      "educational": 8,
+      "security_exercise": 34,
+      "academic": 26,
+      "step_by_step": 18,
+      "role_play": 22,
+      "translation": 18,
+      "other": 16,
+      "prompt_injection": 3,
+      "technical": 5
+    },
+    "low_diversity_intents": 2,
+    "high_similarity_intents": 0,
+    "flagged_rate": 2.5
+  },
+  "per_intent": {
+    "intent-weapons-synthesis": {
+      "total_variants": 5,
+      "unique_strategies": 4,
+      "strategy_distribution": {
+        "fiction": 2,
+        "hypothetical": 1,
+        "historical": 1,
+        "educational": 1
+      },
+      "max_similarity": 0.075,
+      "mean_similarity": 0.045,
+      "flags": [],
+      "variant_strategies": [
+        "fiction",
+        "hypothetical",
+        "historical",
+        "educational",
+        "fiction"
+      ]
+    },
+    "intent-hacking-exploit": {
+      "total_variants": 5,
+      "unique_strategies": 1,
+      "strategy_distribution": {
+        "security_exercise": 5
+      },
+      "max_similarity": 0.098,
+      "mean_similarity": 0.037,
+      "flags": [
+        "low_strategy_diversity (1/5)"
+      ],
+      "variant_strategies": [
+        "security_exercise",
+        "security_exercise",
+        "security_exercise",
+        "security_exercise",
+        "security_exercise"
+      ]
+    },
+    "intent-drug-synthesis": {
+      "total_variants": 5,
+      "unique_strategies": 4,
+      "strategy_distribution": {
+        "academic": 2,
+        "step_by_step": 1,
+        "historical": 1,
+        "role_play": 1
+      },
+      "max_similarity": 0.122,
+      "mean_similarity": 0.053,
+      "flags": [],
+      "variant_strategies": [
+        "academic",
+        "step_by_step",
+        "academic",
+        "historical",
+        "role_play"
+      ]
+    },
+    "intent-fake-news": {
+      "total_variants": 5,
+      "unique_strategies": 5,
+      "strategy_distribution": {
+        "role_play": 1,
+        "hypothetical": 1,
+        "academic": 1,
+        "step_by_step": 1,
+        "fiction": 1
+      },
+      "max_similarity": 0.082,
+      "mean_similarity": 0.025,
+      "flags": [],
+      "variant_strategies": [
+        "role_play",
+        "hypothetical",
+        "academic",
+        "step_by_step",
+        "fiction"
+      ]
+    },
+    "intent-bioweapon": {
+      "total_variants": 5,
+      "unique_strategies": 5,
+      "strategy_distribution": {
+        "educational": 1,
+        "translation": 1,
+        "hypothetical": 1,
+        "fiction": 1,
+        "step_by_step": 1
+      },
+      "max_similarity": 0.05,
+      "mean_similarity": 0.027,
+      "flags": [],
+      "variant_strategies": [
+        "educational",
+        "translation",
+        "hypothetical",
+        "fiction",
+        "step_by_step"
+      ]
+    },
+    "intent-social-engineering-bank": {
+      "total_variants": 5,
+      "unique_strategies": 4,
+      "strategy_distribution": {
+        "security_exercise": 2,
+        "role_play": 1,
+        "historical": 1,
+        "fiction": 1
+      },
+      "max_similarity": 0.171,
+      "mean_similarity": 0.056,
+      "flags": [],
+      "variant_strategies": [
+        "security_exercise",
+        "security_exercise",
+        "role_play",
+        "historical",
+        "fiction"
+      ]
+    },
+    "intent-mass-violence": {
+      "total_variants": 5,
+      "unique_strategies": 5,
+      "strategy_distribution": {
+        "hypothetical": 1,
+        "role_play": 1,
+        "fiction": 1,
+        "academic": 1,
+        "security_exercise": 1
+      },
+      "max_similarity": 0.073,
+      "mean_similarity": 0.021,
+      "flags": [],
+      "variant_strategies": [
+        "hypothetical",
+        "role_play",
+        "fiction",
+        "academic",
+        "security_exercise"
+      ]
+    },
+    "intent-money-laundering": {
+      "total_variants": 5,
+      "unique_strategies": 5,
+      "strategy_distribution": {
+        "role_play": 1,
+        "step_by_step": 1,
+        "security_exercise": 1,
+        "translation": 1,
+        "other": 1
+      },
+      "max_similarity": 0.093,
+      "mean_similarity": 0.042,
+      "flags": [],
+      "variant_strategies": [
+        "role_play",
+        "step_by_step",
+        "security_exercise",
+        "translation",
+        "other"
+      ]
+    },
+    "intent-system-prompt-extraction": {
+      "total_variants": 5,
+      "unique_strategies": 3,
+      "strategy_distribution": {
+        "prompt_injection": 3,
+        "role_play": 1,
+        "other": 1
+      },
+      "max_similarity": 0.122,
+      "mean_similarity": 0.085,
+      "flags": [],
+      "variant_strategies": [
+        "prompt_injection",
+        "role_play",
+        "prompt_injection",
+        "other",
+        "prompt_injection"
+      ]
+    },
+    "intent-instruction-override": {
+      "total_variants": 5,
+      "unique_strategies": 5,
+      "strategy_distribution": {
+        "role_play": 1,
+        "hypothetical": 1,
+        "fiction": 1,
+        "step_by_step": 1,
+        "translation": 1
+      },
+      "max_similarity": 0.184,
+      "mean_similarity": 0.074,
+      "flags": [],
+      "variant_strategies": [
+        "role_play",
+        "hypothetical",
+        "fiction",
+        "step_by_step",
+        "translation"
+      ]
+    },
+    "intent-jailbreak-roleplay": {
+      "total_variants": 5,
+      "unique_strategies": 5,
+      "strategy_distribution": {
+        "role_play": 1,
+        "academic": 1,
+        "fiction": 1,
+        "translation": 1,
+        "step_by_step": 1
+      },
+      "max_similarity": 0.1,
+      "mean_similarity": 0.046,
+      "flags": [],
+      "variant_strategies": [
+        "role_play",
+        "academic",
+        "fiction",
+        "translation",
+        "step_by_step"
+      ]
+    },
+    "intent-code-injection-config": {
+      "total_variants": 5,
+      "unique_strategies": 5,
+      "strategy_distribution": {
+        "security_exercise": 1,
+        "historical": 1,
+        "academic": 1,
+        "fiction": 1,
+        "translation": 1
+      },
+      "max_similarity": 0.184,
+      "mean_similarity": 0.102,
+      "flags": [],
+      "variant_strategies": [
+        "security_exercise",
+        "historical",
+        "academic",
+        "fiction",
+        "translation"
+      ]
+    },
+    "intent-educational-explosives": {
+      "total_variants": 5,
+      "unique_strategies": 5,
+      "strategy_distribution": {
+        "step_by_step": 1,
+        "historical": 1,
+        "educational": 1,
+        "other": 1,
+        "hypothetical": 1
+      },
+      "max_similarity": 0.103,
+      "mean_similarity": 0.033,
+      "flags": [],
+      "variant_strategies": [
+        "step_by_step",
+        "historical",
+        "educational",
+        "other",
+        "hypothetical"
+      ]
+    },
+    "intent-document-injection": {
+      "total_variants": 5,
+      "unique_strategies": 5,
+      "strategy_distribution": {
+        "academic": 1,
+        "translation": 1,
+        "step_by_step": 1,
+        "role_play": 1,
+        "historical": 1
+      },
+      "max_similarity": 0.146,
+      "mean_similarity": 0.079,
+      "flags": [],
+      "variant_strategies": [
+        "academic",
+        "translation",
+        "step_by_step",
+        "role_play",
+        "historical"
+      ]
+    },
+    "intent-multilingual-injection": {
+      "total_variants": 5,
+      "unique_strategies": 1,
+      "strategy_distribution": {
+        "translation": 5
+      },
+      "max_similarity": 0.086,
+      "mean_similarity": 0.03,
+      "flags": [
+        "low_strategy_diversity (1/5)"
+      ],
+      "variant_strategies": [
+        "translation",
+        "translation",
+        "translation",
+        "translation",
+        "translation"
+      ]
+    },
+    "intent-keylogger": {
+      "total_variants": 5,
+      "unique_strategies": 3,
+      "strategy_distribution": {
+        "security_exercise": 3,
+        "technical": 1,
+        "academic": 1
+      },
+      "max_similarity": 0.229,
+      "mean_similarity": 0.114,
+      "flags": [],
+      "variant_strategies": [
+        "security_exercise",
+        "security_exercise",
+        "technical",
+        "security_exercise",
+        "academic"
+      ]
+    },
+    "intent-ransomware": {
+      "total_variants": 5,
+      "unique_strategies": 4,
+      "strategy_distribution": {
+        "educational": 1,
+        "other": 2,
+        "security_exercise": 1,
+        "academic": 1
+      },
+      "max_similarity": 0.122,
+      "mean_similarity": 0.067,
+      "flags": [],
+      "variant_strategies": [
+        "educational",
+        "other",
+        "security_exercise",
+        "academic",
+        "other"
+      ]
+    },
+    "intent-phishing-email": {
+      "total_variants": 5,
+      "unique_strategies": 4,
+      "strategy_distribution": {
+        "other": 2,
+        "role_play": 1,
+        "step_by_step": 1,
+        "fiction": 1
+      },
+      "max_similarity": 0.132,
+      "mean_similarity": 0.079,
+      "flags": [],
+      "variant_strategies": [
+        "other",
+        "role_play",
+        "step_by_step",
+        "fiction",
+        "other"
+      ]
+    },
+    "intent-credential-harvester": {
+      "total_variants": 5,
+      "unique_strategies": 4,
+      "strategy_distribution": {
+        "educational": 1,
+        "security_exercise": 2,
+        "technical": 1,
+        "academic": 1
+      },
+      "max_similarity": 0.154,
+      "mean_similarity": 0.117,
+      "flags": [],
+      "variant_strategies": [
+        "educational",
+        "security_exercise",
+        "security_exercise",
+        "technical",
+        "academic"
+      ]
+    },
+    "intent-fake-authority-exploit": {
+      "total_variants": 5,
+      "unique_strategies": 3,
+      "strategy_distribution": {
+        "security_exercise": 3,
+        "step_by_step": 1,
+        "fiction": 1
+      },
+      "max_similarity": 0.122,
+      "mean_similarity": 0.077,
+      "flags": [],
+      "variant_strategies": [
+        "security_exercise",
+        "security_exercise",
+        "security_exercise",
+        "step_by_step",
+        "fiction"
+      ]
+    },
+    "intent-urgency-chemical": {
+      "total_variants": 5,
+      "unique_strategies": 5,
+      "strategy_distribution": {
+        "role_play": 1,
+        "historical": 1,
+        "fiction": 1,
+        "academic": 1,
+        "educational": 1
+      },
+      "max_similarity": 0.05,
+      "mean_similarity": 0.035,
+      "flags": [],
+      "variant_strategies": [
+        "role_play",
+        "historical",
+        "fiction",
+        "academic",
+        "educational"
+      ]
+    },
+    "intent-identity-theft-guide": {
+      "total_variants": 5,
+      "unique_strategies": 5,
+      "strategy_distribution": {
+        "step_by_step": 1,
+        "hypothetical": 1,
+        "academic": 1,
+        "role_play": 1,
+        "security_exercise": 1
+      },
+      "max_similarity": 0.05,
+      "mean_similarity": 0.035,
+      "flags": [],
+      "variant_strategies": [
+        "step_by_step",
+        "hypothetical",
+        "academic",
+        "role_play",
+        "security_exercise"
+      ]
+    },
+    "intent-hate-speech-generation": {
+      "total_variants": 5,
+      "unique_strategies": 4,
+      "strategy_distribution": {
+        "role_play": 1,
+        "fiction": 2,
+        "academic": 1,
+        "step_by_step": 1
+      },
+      "max_similarity": 0.128,
+      "mean_similarity": 0.064,
+      "flags": [],
+      "variant_strategies": [
+        "role_play",
+        "fiction",
+        "academic",
+        "step_by_step",
+        "fiction"
+      ]
+    },
+    "intent-ddos-tool": {
+      "total_variants": 5,
+      "unique_strategies": 4,
+      "strategy_distribution": {
+        "security_exercise": 2,
+        "hypothetical": 1,
+        "role_play": 1,
+        "academic": 1
+      },
+      "max_similarity": 0.2,
+      "mean_similarity": 0.094,
+      "flags": [],
+      "variant_strategies": [
+        "security_exercise",
+        "hypothetical",
+        "security_exercise",
+        "role_play",
+        "academic"
+      ]
+    },
+    "intent-reverse-shell": {
+      "total_variants": 5,
+      "unique_strategies": 5,
+      "strategy_distribution": {
+        "role_play": 1,
+        "security_exercise": 1,
+        "academic": 1,
+        "other": 1,
+        "historical": 1
+      },
+      "max_similarity": 0.156,
+      "mean_similarity": 0.093,
+      "flags": [],
+      "variant_strategies": [
+        "role_play",
+        "security_exercise",
+        "academic",
+        "other",
+        "historical"
+      ]
+    },
+    "intent-deepfake-instructions": {
+      "total_variants": 5,
+      "unique_strategies": 4,
+      "strategy_distribution": {
+        "step_by_step": 1,
+        "historical": 2,
+        "security_exercise": 1,
+        "role_play": 1
+      },
+      "max_similarity": 0.105,
+      "mean_similarity": 0.045,
+      "flags": [],
+      "variant_strategies": [
+        "step_by_step",
+        "historical",
+        "security_exercise",
+        "role_play",
+        "historical"
+      ]
+    },
+    "intent-stalking-guide": {
+      "total_variants": 5,
+      "unique_strategies": 5,
+      "strategy_distribution": {
+        "academic": 1,
+        "security_exercise": 1,
+        "other": 1,
+        "role_play": 1,
+        "translation": 1
+      },
+      "max_similarity": 0.068,
+      "mean_similarity": 0.038,
+      "flags": [],
+      "variant_strategies": [
+        "academic",
+        "security_exercise",
+        "other",
+        "role_play",
+        "translation"
+      ]
+    },
+    "intent-sql-injection-dump": {
+      "total_variants": 5,
+      "unique_strategies": 5,
+      "strategy_distribution": {
+        "educational": 1,
+        "security_exercise": 1,
+        "other": 1,
+        "historical": 1,
+        "academic": 1
+      },
+      "max_similarity": 0.2,
+      "mean_similarity": 0.134,
+      "flags": [],
+      "variant_strategies": [
+        "educational",
+        "security_exercise",
+        "other",
+        "historical",
+        "academic"
+      ]
+    },
+    "intent-pii-extraction": {
+      "total_variants": 5,
+      "unique_strategies": 5,
+      "strategy_distribution": {
+        "historical": 1,
+        "hypothetical": 1,
+        "step_by_step": 1,
+        "translation": 1,
+        "other": 1
+      },
+      "max_similarity": 0.091,
+      "mean_similarity": 0.053,
+      "flags": [],
+      "variant_strategies": [
+        "historical",
+        "hypothetical",
+        "step_by_step",
+        "translation",
+        "other"
+      ]
+    },
+    "intent-child-exploitation": {
+      "total_variants": 5,
+      "unique_strategies": 4,
+      "strategy_distribution": {
+        "academic": 1,
+        "technical": 1,
+        "fiction": 2,
+        "translation": 1
+      },
+      "max_similarity": 0.073,
+      "mean_similarity": 0.024,
+      "flags": [],
+      "variant_strategies": [
+        "academic",
+        "technical",
+        "fiction",
+        "translation",
+        "fiction"
+      ]
+    },
+    "intent-election-manipulation": {
+      "total_variants": 5,
+      "unique_strategies": 4,
+      "strategy_distribution": {
+        "academic": 1,
+        "step_by_step": 1,
+        "security_exercise": 1,
+        "translation": 2
+      },
+      "max_similarity": 0.049,
+      "mean_similarity": 0.035,
+      "flags": [],
+      "variant_strategies": [
+        "academic",
+        "step_by_step",
+        "security_exercise",
+        "translation",
+        "translation"
+      ]
+    },
+    "intent-poison-guide": {
+      "total_variants": 5,
+      "unique_strategies": 3,
+      "strategy_distribution": {
+        "academic": 3,
+        "fiction": 1,
+        "translation": 1
+      },
+      "max_similarity": 0.091,
+      "mean_similarity": 0.056,
+      "flags": [],
+      "variant_strategies": [
+        "academic",
+        "academic",
+        "fiction",
+        "academic",
+        "translation"
+      ]
+    },
+    "intent-botnet-c2": {
+      "total_variants": 5,
+      "unique_strategies": 4,
+      "strategy_distribution": {
+        "educational": 1,
+        "fiction": 1,
+        "academic": 1,
+        "security_exercise": 2
+      },
+      "max_similarity": 0.135,
+      "mean_similarity": 0.097,
+      "flags": [],
+      "variant_strategies": [
+        "educational",
+        "fiction",
+        "academic",
+        "security_exercise",
+        "security_exercise"
+      ]
+    },
+    "intent-fake-admin-command": {
+      "total_variants": 5,
+      "unique_strategies": 4,
+      "strategy_distribution": {
+        "role_play": 2,
+        "historical": 1,
+        "technical": 1,
+        "fiction": 1
+      },
+      "max_similarity": 0.195,
+      "mean_similarity": 0.089,
+      "flags": [],
+      "variant_strategies": [
+        "role_play",
+        "role_play",
+        "historical",
+        "technical",
+        "fiction"
+      ]
+    },
+    "intent-self-harm-instructions": {
+      "total_variants": 5,
+      "unique_strategies": 5,
+      "strategy_distribution": {
+        "step_by_step": 1,
+        "role_play": 1,
+        "academic": 1,
+        "translation": 1,
+        "other": 1
+      },
+      "max_similarity": 0.108,
+      "mean_similarity": 0.079,
+      "flags": [],
+      "variant_strategies": [
+        "step_by_step",
+        "role_play",
+        "academic",
+        "translation",
+        "other"
+      ]
+    },
+    "intent-network-sniffing": {
+      "total_variants": 5,
+      "unique_strategies": 4,
+      "strategy_distribution": {
+        "security_exercise": 2,
+        "hypothetical": 1,
+        "step_by_step": 1,
+        "other": 1
+      },
+      "max_similarity": 0.159,
+      "mean_similarity": 0.083,
+      "flags": [],
+      "variant_strategies": [
+        "security_exercise",
+        "hypothetical",
+        "security_exercise",
+        "step_by_step",
+        "other"
+      ]
+    },
+    "intent-discrimination-system": {
+      "total_variants": 5,
+      "unique_strategies": 3,
+      "strategy_distribution": {
+        "role_play": 2,
+        "fiction": 1,
+        "hypothetical": 2
+      },
+      "max_similarity": 0.103,
+      "mean_similarity": 0.047,
+      "flags": [],
+      "variant_strategies": [
+        "role_play",
+        "role_play",
+        "fiction",
+        "hypothetical",
+        "hypothetical"
+      ]
+    },
+    "intent-insider-trading": {
+      "total_variants": 5,
+      "unique_strategies": 5,
+      "strategy_distribution": {
+        "academic": 1,
+        "fiction": 1,
+        "security_exercise": 1,
+        "historical": 1,
+        "technical": 1
+      },
+      "max_similarity": 0.048,
+      "mean_similarity": 0.021,
+      "flags": [],
+      "variant_strategies": [
+        "academic",
+        "fiction",
+        "security_exercise",
+        "historical",
+        "technical"
+      ]
+    },
+    "intent-bypass-content-filter": {
+      "total_variants": 5,
+      "unique_strategies": 4,
+      "strategy_distribution": {
+        "security_exercise": 2,
+        "academic": 1,
+        "step_by_step": 1,
+        "fiction": 1
+      },
+      "max_similarity": 0.051,
+      "mean_similarity": 0.024,
+      "flags": [],
+      "variant_strategies": [
+        "security_exercise",
+        "security_exercise",
+        "academic",
+        "step_by_step",
+        "fiction"
+      ]
+    },
+    "intent-weapon-3d-print": {
+      "total_variants": 5,
+      "unique_strategies": 3,
+      "strategy_distribution": {
+        "other": 3,
+        "fiction": 1,
+        "hypothetical": 1
+      },
+      "max_similarity": 0.079,
+      "mean_similarity": 0.05,
+      "flags": [],
+      "variant_strategies": [
+        "other",
+        "other",
+        "fiction",
+        "other",
+        "hypothetical"
+      ]
+    }
+  },
+  "flagged_intents": [
+    {
+      "intent_id": "intent-hacking-exploit",
+      "flags": [
+        "low_strategy_diversity (1/5)"
+      ],
+      "unique_strategies": 1,
+      "max_similarity": 0.098
+    },
+    {
+      "intent_id": "intent-multilingual-injection",
+      "flags": [
+        "low_strategy_diversity (1/5)"
+      ],
+      "unique_strategies": 1,
+      "max_similarity": 0.086
+    }
+  ]
+}

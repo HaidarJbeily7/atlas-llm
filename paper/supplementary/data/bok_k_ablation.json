@@ -1,0 +1,274 @@
+{
+  "overall": {
+    "k_1": {
+      "total": 320,
+      "successes": 180,
+      "asr": 56.25,
+      "ci": [
+        50.77,
+        61.58
+      ]
+    },
+    "k_3": {
+      "total": 320,
+      "successes": 269,
+      "asr": 84.06,
+      "ci": [
+        79.65,
+        87.67
+      ]
+    },
+    "k_5": {
+      "total": 320,
+      "successes": 292,
+      "asr": 91.25,
+      "ci": [
+        87.64,
+        93.88
+      ]
+    },
+    "marginal_gain_3_to_5": 7.2
+  },
+  "per_model": {
+    "claude-sonnet-4": {
+      "k_1": {
+        "total": 40,
+        "successes": 10,
+        "asr": 25.0,
+        "ci": [
+          14.19,
+          40.19
+        ]
+      },
+      "k_3": {
+        "total": 40,
+        "successes": 21,
+        "asr": 52.5,
+        "ci": [
+          37.5,
+          67.06
+        ]
+      },
+      "k_5": {
+        "total": 40,
+        "successes": 24,
+        "asr": 60.0,
+        "ci": [
+          44.6,
+          73.65
+        ]
+      },
+      "marginal_gain_3_to_5": 7.5
+    },
+    "gpt-4o": {
+      "k_1": {
+        "total": 40,
+        "successes": 16,
+        "asr": 40.0,
+        "ci": [
+          26.35,
+          55.4
+        ]
+      },
+      "k_3": {
+        "total": 40,
+        "successes": 34,
+        "asr": 85.0,
+        "ci": [
+          70.93,
+          92.94
+        ]
+      },
+      "k_5": {
+        "total": 40,
+        "successes": 37,
+        "asr": 92.5,
+        "ci": [
+          80.14,
+          97.42
+        ]
+      },
+      "marginal_gain_3_to_5": 7.5
+    },
+    "llama-3.3-70b-instruct": {
+      "k_1": {
+        "total": 40,
+        "successes": 26,
+        "asr": 65.0,
+        "ci": [
+          49.51,
+          77.87
+        ]
+      },
+      "k_3": {
+        "total": 40,
+        "successes": 38,
+        "asr": 95.0,
+        "ci": [
+          83.5,
+          98.62
+        ]
+      },
+      "k_5": {
+        "total": 40,
+        "successes": 39,
+        "asr": 97.5,
+        "ci": [
+          87.12,
+          99.56
+        ]
+      },
+      "marginal_gain_3_to_5": 2.5
+    },
+    "gemini-2.5-flash": {
+      "k_1": {
+        "total": 40,
+        "successes": 21,
+        "asr": 52.5,
+        "ci": [
+          37.5,
+          67.06
+        ]
+      },
+      "k_3": {
+        "total": 40,
+        "successes": 33,
+        "asr": 82.5,
+        "ci": [
+          68.05,
+          91.25
+        ]
+      },
+      "k_5": {
+        "total": 40,
+        "successes": 36,
+        "asr": 90.0,
+        "ci": [
+          76.95,
+          96.04
+        ]
+      },
+      "marginal_gain_3_to_5": 7.5
+    },
+    "gpt-4o-mini": {
+      "k_1": {
+        "total": 40,
+        "successes": 14,
+        "asr": 35.0,
+        "ci": [
+          22.13,
+          50.49
+        ]
+      },
+      "k_3": {
+        "total": 40,
+        "successes": 32,
+        "asr": 80.0,
+        "ci": [
+          65.24,
+          89.5
+        ]
+      },
+      "k_5": {
+        "total": 40,
+        "successes": 38,
+        "asr": 95.0,
+        "ci": [
+          83.5,
+          98.62
+        ]
+      },
+      "marginal_gain_3_to_5": 15.0
+    },
+    "qwen-2.5-72b-instruct": {
+      "k_1": {
+        "total": 40,
+        "successes": 28,
+        "asr": 70.0,
+        "ci": [
+          54.57,
+          81.93
+        ]
+      },
+      "k_3": {
+        "total": 40,
+        "successes": 36,
+        "asr": 90.0,
+        "ci": [
+          76.95,
+          96.04
+        ]
+      },
+      "k_5": {
+        "total": 40,
+        "successes": 40,
+        "asr": 100.0,
+        "ci": [
+          91.24,
+          100.0
+        ]
+      },
+      "marginal_gain_3_to_5": 10.0
+    },
+    "deepseek-chat-v3-0324": {
+      "k_1": {
+        "total": 40,
+        "successes": 29,
+        "asr": 72.5,
+        "ci": [
+          57.16,
+          83.89
+        ]
+      },
+      "k_3": {
+        "total": 40,
+        "successes": 37,
+        "asr": 92.5,
+        "ci": [
+          80.14,
+          97.42
+        ]
+      },
+      "k_5": {
+        "total": 40,
+        "successes": 39,
+        "asr": 97.5,
+        "ci": [
+          87.12,
+          99.56
+        ]
+      },
+      "marginal_gain_3_to_5": 5.0
+    },
+    "mistral-large-2411": {
+      "k_1": {
+        "total": 40,
+        "successes": 36,
+        "asr": 90.0,
+        "ci": [
+          76.95,
+          96.04
+        ]
+      },
+      "k_3": {
+        "total": 40,
+        "successes": 38,
+        "asr": 95.0,
+        "ci": [
+          83.5,
+          98.62
+        ]
+      },
+      "k_5": {
+        "total": 40,
+        "successes": 39,
+        "asr": 97.5,
+        "ci": [
+          87.12,
+          99.56
+        ]
+      },
+      "marginal_gain_3_to_5": 2.5
+    }
+  }
+}

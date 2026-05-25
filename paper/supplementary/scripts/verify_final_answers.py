@@ -77,7 +77,7 @@ def is_raw_unsafe(label: str) -> bool:
 # ---------------------------------------------------------------------------
 
 def main():
-    ledger_path = Path("docs/v6/artifacts/annotation_ledger.csv")
+    ledger_path = Path(__file__).resolve().parent.parent / "data" / "annotation_ledger.csv"
     if not ledger_path.exists():
         print("ERROR: annotation_ledger.csv not found. Run export_annotation_ledger.py first.")
         return
@@ -263,7 +263,7 @@ def main():
     print("6. EVIDENCE CARD METRICS")
     print("=" * 80)
 
-    ec_path = Path("docs/v6/artifacts/evidence_card.json")
+    ec_path = Path(__file__).resolve().parent.parent / "data" / "evidence_card.json"
     if ec_path.exists():
         with open(ec_path) as f:
             ec = json.load(f)
@@ -286,7 +286,7 @@ def main():
     print("7. BoK K ABLATION")
     print("=" * 80)
 
-    bok_k_path = Path("docs/v6/artifacts/bok_k_ablation.json")
+    bok_k_path = Path(__file__).resolve().parent.parent / "data" / "bok_k_ablation.json"
     if bok_k_path.exists():
         with open(bok_k_path) as f:
             bok_k = json.load(f)
@@ -321,7 +321,7 @@ def main():
     print("8. BoK SEQUENTIAL STOPPING SIMULATION")
     print("=" * 80)
 
-    seq_path = Path("docs/v6/artifacts/bok_sequential_stopping.json")
+    seq_path = Path(__file__).resolve().parent.parent / "data" / "bok_sequential_stopping.json"
     if seq_path.exists():
         with open(seq_path) as f:
             seq = json.load(f)
@@ -355,7 +355,7 @@ def main():
     print("9. BoK STRATEGY DIVERSITY AUDIT")
     print("=" * 80)
 
-    div_path = Path("docs/v6/artifacts/bok_diversity_audit.json")
+    div_path = Path(__file__).resolve().parent.parent / "data" / "bok_diversity_audit.json"
     if div_path.exists():
         with open(div_path) as f:
             div = json.load(f)

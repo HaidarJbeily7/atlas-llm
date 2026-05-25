@@ -1,0 +1,19 @@
+# Python dependencies for the ATLAS supplementary reproduction scripts.
+# Tested with Python 3.10 — 3.13.
+#
+# Install with:
+#     pip install -r requirements.txt
+#
+# Minimum versions are pinned to what was used to produce the paper results;
+# newer compatible releases should also work.
+
+# --- Core (required by every script in scripts/) ----------------------------
+numpy>=1.24
+scipy>=1.10
+
+# --- Regression analysis (mechanism_decomposition.py) -----------------------
+pandas>=2.0
+statsmodels>=0.14
+
+# --- Figures only (figures_src/*.py) ----------------------------------------
+matplotlib>=3.7

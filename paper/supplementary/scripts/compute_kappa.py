@@ -68,5 +68,7 @@ def analyze_ledger(ledger_path):
 
 
 if __name__ == "__main__":
-    path = sys.argv[1] if len(sys.argv) > 1 else "docs/v6/artifacts/annotation_ledger.csv"
+    from pathlib import Path
+    default = Path(__file__).resolve().parent.parent / "data" / "annotation_ledger.csv"
+    path = sys.argv[1] if len(sys.argv) > 1 else str(default)
     analyze_ledger(path)

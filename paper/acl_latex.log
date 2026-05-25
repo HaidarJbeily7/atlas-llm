@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.10.16)  24 MAY 2026 20:09
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.10.16)  25 MAY 2026 12:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -810,13 +810,13 @@ Underfull \hbox (badness 1199) in paragraph at lines 46--51
 
 
 
+
+[8]
 Underfull \hbox (badness 1024) in paragraph at lines 641--647
 \T1/ptm/m/n/10 (+20) Adam Perel-man, Aditya Ramesh, Aidan Clark,
  []
 
 
-
-[8]
 Underfull \hbox (badness 1867) in paragraph at lines 660--666
 \T1/ptm/m/n/10 (+20) Yang, Ji-axi Yang, Jin-gren Zhou, and 25 oth-
  []
@@ -826,25 +826,23 @@ Underfull \hbox (badness 4084) in paragraph at lines 676--682
 []\T1/ptm/m/n/10 (+20) Alexandra Souly, Qingyuan Lu, Dil-lon Bowen,
  []
 
+
+
 )
 
-
-
-[9
-
-]
-Underfull \hbox (badness 10000) in paragraph at lines 450--451
+[9]
+Underfull \hbox (badness 10000) in paragraph at lines 452--453
 \T1/ptm/m/n/10.95 (+20) All Mc-Ne-mar tests pair ob-ser-va-tions by
  []
 
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
-(caption)                particular \caption on input line 463.
+(caption)                particular \caption on input line 465.
 See the caption package documentation for explanation.
 
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
-(caption)                particular \caption on input line 507.
+(caption)                particular \caption on input line 509.
 See the caption package documentation for explanation.
 
 
@@ -854,12 +852,12 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
-(caption)                particular \caption on input line 537.
+(caption)                particular \caption on input line 539.
 See the caption package documentation for explanation.
 
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
-(caption)                particular \caption on input line 561.
+(caption)                particular \caption on input line 563.
 See the caption package documentation for explanation.
 
 
@@ -869,11 +867,11 @@ See the caption package documentation for explanation.
 ]
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
-(caption)                particular \caption on input line 599.
+(caption)                particular \caption on input line 601.
 See the caption package documentation for explanation.
 
 
-Underfull \hbox (badness 1838) in paragraph at lines 628--629
+Underfull \hbox (badness 1838) in paragraph at lines 630--631
  []\T1/ptm/b/n/10.95 (+20) SS-MT script au-thor-ing.[] \T1/ptm/m/n/10.95 (+20) 
 Es-ca-la-tion scripts
  []
@@ -882,11 +880,11 @@ Es-ca-la-tion scripts
 
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
-(caption)                particular \caption on input line 654.
+(caption)                particular \caption on input line 656.
 See the caption package documentation for explanation.
 
 
-Overfull \hbox (1.67651pt too wide) in paragraph at lines 657--669
+Overfull \hbox (1.67651pt too wide) in paragraph at lines 659--671
  [][] 
  []
 
@@ -896,25 +894,25 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 [11]
-Underfull \hbox (badness 10000) in paragraph at lines 684--685
+Underfull \hbox (badness 10000) in paragraph at lines 686--687
 []\T1/ptm/b/n/10.95 (+20) Experiment con-fig\T1/ptm/m/n/10.95 (+20) : Ex-per-i-
 ment ID
  []
 
 
-Underfull \hbox (badness 4366) in paragraph at lines 684--685
+Underfull \hbox (badness 4366) in paragraph at lines 686--687
 \T1/pcr/m/n/10.95 20260505_003630\T1/ptm/m/n/10.95 (+20) ; 8 tar-get mod-els $\
 OMS/cmsy/m/n/10.95 ^^B$
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 686--687
+Underfull \hbox (badness 10000) in paragraph at lines 688--689
 \T1/ptm/m/n/10.95 (+20) (\T1/pcr/m/n/10.95 annotation_ledger.csv\T1/ptm/m/n/10.
 95 (+20) ) with per-
  []
 
 
-Underfull \hbox (badness 2521) in paragraph at lines 686--687
+Underfull \hbox (badness 2521) in paragraph at lines 688--689
 \T1/ptm/m/n/10.95 (+20) (\T1/pcr/m/n/10.95 compute_kappa.py\T1/ptm/m/n/10.95 (+
 20) ) con-firms all 1,920
  []
@@ -932,13 +930,13 @@ Package rerunfilecheck Info: File `acl_latex.out' has not changed.
 (rerunfilecheck)             Checksum: 6C5455DE27C25CB84C460EEC815FE0C6;4336.
  ) 
 Here is how much of TeX's memory you used:
- 16603 strings out of 473190
- 261800 string characters out of 5715799
- 894615 words of memory out of 5000000
- 39052 multiletter control sequences out of 15000+600000
+ 16605 strings out of 473190
+ 261818 string characters out of 5715799
+ 895236 words of memory out of 5000000
+ 39053 multiletter control sequences out of 15000+600000
  637476 words of font info for 393 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 84i,14n,93p,25434b,642s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 84i,14n,93p,25434b,634s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
 ></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><
 /usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></u
@@ -956,10 +954,10 @@ fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/type
 1/urw/times/utmbi8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/urw/tim
 es/utmr8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/urw/times/utmri8a
 .pfb>
-Output written on acl_latex.pdf (12 pages, 478094 bytes).
+Output written on acl_latex.pdf (12 pages, 479532 bytes).
 PDF statistics:
- 716 PDF objects out of 1000 (max. 8388607)
- 602 compressed objects within 7 object streams
- 125 named destinations out of 1000 (max. 500000)
+ 718 PDF objects out of 1000 (max. 8388607)
+ 604 compressed objects within 7 object streams
+ 126 named destinations out of 1000 (max. 500000)
  72933 words of extra memory for PDF output out of 74296 (max. 10000000)
 

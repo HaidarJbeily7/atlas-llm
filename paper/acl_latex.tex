@@ -430,6 +430,8 @@ The mechanism is \textbf{any-of-K false-positive accumulation}: each additional 
 
 This work evaluates LLM safety to improve defensive capabilities. All experiments were conducted in controlled research settings with no deployment of harmful outputs. The 40 harm intents are drawn from established red-teaming taxonomies \cite{mazeika2024harmbench}. We do not release successful attack prompts or harmful model outputs. The API cost of all 1,920 attacks was \$24 USD; human annotation required an additional ${\sim}$48 person-hours. Annotators were offered regular breaks and the option to skip particularly disturbing content categories (none exercised this option). We notified affected model providers of high-ASR findings prior to submission, following responsible disclosure practices. We acknowledge that characterizing attack mechanisms could inform adversaries; however, we believe the defensive value---particularly the finding that LLM-crafted prompting shows the largest association with a frontier attacker, and that human validation is essential---outweighs this risk.
 
+\paragraph{Use of AI Assistants.} We used general-purpose LLM assistants during paper preparation in three capacities: (i) prose editing, grammar correction, and paraphrasing of author-written content; (ii) literature search assistance and surfacing of related-work candidates, all of which were manually verified and read before inclusion; and (iii) initial drafting of experimental artifacts---specifically harm-intent phrasings, SS-MT escalation script templates, and BoK strategy seeds---which were subsequently reviewed, edited, and validated by the authors prior to use in experiments. All research design choices, statistical analyses, interpretations, claims, and conclusions are the authors' own. The use of DeepSeek-R1 as the attacker model in the adaptive conditions (\S\ref{sec:design}) is a research artifact---part of the system under study---rather than authorial assistance, and is documented in the methodology.
+
 % ============================================================
 % REFERENCES
 % ============================================================
@@ -677,10 +679,10 @@ All 40 harm intents are shared across every model and condition. Intent categori
 \section{Reproducibility and Code Availability}
 \label{app:code}
 
-ATLAS is an open-source Python framework. The experiment configuration, analysis scripts, and human annotation ledger are provided as supplementary materials. Key components:
+ATLAS is implemented as an in-house Python framework for automated LLM red-teaming. The experiment configuration, analysis scripts, and human annotation ledger are provided as supplementary materials. Key components:
 
 \begin{itemize}
-    \item \textbf{Framework}: ATLAS scan engine with configurable probes, detectors, and attacker models. Supports all six experimental conditions via YAML configuration.
+    \item \textbf{Framework}: in-house ATLAS scan engine with configurable probes, detectors, and attacker models. Supports all six experimental conditions via YAML configuration.
     \item \textbf{Experiment config}: Experiment ID \texttt{20260505\_003630}; 8 target models $\times$ 6 conditions $\times$ 40 intents = 1,920 findings.
     \item \textbf{Analysis pipeline}: SQL-backed database with all raw findings; Python scripts for McNemar tests, logistic regression, bootstrap CIs, budget curve decomposition, and counterfactual analysis.
     \item \textbf{Human annotations}: Full annotation ledger (\texttt{annotation\_ledger.csv}) with per-finding verdicts from both annotators and adjudicator. The ledger contains post-adjudication consensus labels; the pre-adjudication raw labels (from which $\kappa{=}0.81$ was computed) are available in the annotation platform's database and will be exported on request. A verification script (\texttt{compute\_kappa.py}) confirms all 1,920 findings, 100\% double-annotation coverage, and FP/FN counts matching Table~\ref{tab:asr}.

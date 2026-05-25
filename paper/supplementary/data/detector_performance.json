@@ -1,0 +1,62 @@
+{
+  "_description": "Per-detector precision, recall, and F1 against human ground-truth labels across all six experimental conditions. Reproduces Table 4 (extremes) and Appendix Table 6 (full) in the paper. Computed from per-detector verdict logs (not retained in the released ledger to keep raw model outputs out of the supplementary).",
+  "_units": "All values in percent.",
+  "_condition_names": {
+    "direct_single_turn": "OSS-ST",
+    "scripted_multi_turn": "SS-MT",
+    "adaptive_single_query_st": "ASQ-ST",
+    "adaptive_single_turn": "AMQ-ST",
+    "adaptive_multi_turn": "AMQ-MT",
+    "best_of_k_st": "BoK-ST"
+  },
+  "safety_judge": {
+    "direct_single_turn":       {"precision": 98.73, "recall": 99.68, "f1": 99.20},
+    "adaptive_single_query_st": {"precision": 98.43, "recall": 99.68, "f1": 99.05},
+    "adaptive_single_turn":     {"precision": 97.45, "recall": 98.08, "f1": 97.76},
+    "best_of_k_st":             {"precision": 92.99, "recall": 97.99, "f1": 95.42},
+    "adaptive_multi_turn":      {"precision": 91.00, "recall": 96.92, "f1": 93.87},
+    "scripted_multi_turn":      {"precision": 77.67, "recall": 99.20, "f1": 87.12}
+  },
+  "llm_judge": {
+    "direct_single_turn":       {"precision": 97.48, "recall": 99.36, "f1": 98.73},
+    "adaptive_single_query_st": {"precision": 97.33, "recall": 93.89, "f1": 95.58},
+    "adaptive_single_turn":     {"precision": 98.64, "recall": 92.09, "f1": 95.25},
+    "scripted_multi_turn":      {"precision": 96.92, "recall": 91.00, "f1": 93.87},
+    "best_of_k_st":             {"precision": 93.64, "recall": 87.75, "f1": 90.60},
+    "adaptive_multi_turn":      {"precision": 96.17, "recall": 80.97, "f1": 87.92}
+  },
+  "semantic_judge": {
+    "direct_single_turn":       {"precision": 98.74, "recall": 100.00, "f1": 99.37},
+    "adaptive_single_query_st": {"precision": 97.74, "recall": 97.12,  "f1": 97.43},
+    "adaptive_single_turn":     {"precision": 97.37, "recall": 94.87,  "f1": 96.10},
+    "best_of_k_st":             {"precision": 92.68, "recall": 97.98,  "f1": 95.26},
+    "adaptive_multi_turn":      {"precision": 85.47, "recall": 91.34,  "f1": 88.31},
+    "scripted_multi_turn":      {"precision": 61.98, "recall": 96.52,  "f1": 75.49}
+  },
+  "keyword": {
+    "direct_single_turn":       {"precision": 95.53, "recall": 91.45, "f1": 93.45},
+    "scripted_multi_turn":      {"precision": 93.39, "recall": 74.34, "f1": 82.78},
+    "adaptive_single_query_st": {"precision": 97.44, "recall": 60.51, "f1": 74.66},
+    "adaptive_multi_turn":      {"precision": 88.66, "recall": 57.72, "f1": 69.92},
+    "adaptive_single_turn":     {"precision": 96.25, "recall": 49.04, "f1": 64.97},
+    "best_of_k_st":             {"precision": 92.52, "recall": 44.01, "f1": 59.65}
+  },
+  "refusal": {
+    "adaptive_single_turn":     {"precision": 88.41, "recall": 84.72, "f1": 86.53},
+    "best_of_k_st":             {"precision": 88.73, "recall": 84.43, "f1": 86.53},
+    "adaptive_single_query_st": {"precision": 82.13, "recall": 89.51, "f1": 85.66},
+    "direct_single_turn":       {"precision": 70.65, "recall": 96.90, "f1": 81.72},
+    "scripted_multi_turn":      {"precision": 76.81, "recall": 82.81, "f1": 79.70},
+    "adaptive_multi_turn":      {"precision": 65.05, "recall": 85.84, "f1": 74.01}
+  },
+  "summary": {
+    "min_f1": 59.65,
+    "max_f1": 99.37,
+    "min_f1_pair": "keyword on BoK-ST",
+    "max_f1_pair": "semantic_judge on OSS-ST",
+    "safety_judge_min_f1": 87.12,
+    "safety_judge_min_precision_on_ss_mt": 77.67,
+    "keyword_min_recall_on_bok_st": 44.01,
+    "note_paper_f1_range_claim": "Paper §1 states 'F1 ranging from 59.7% to 99.4%'. Min F1 = 59.65% (keyword on BoK-ST). The 99.4 figure is recall (LLM Judge on OSS-ST = 99.36%) and Safety Judge OSS-ST F1 = 99.20%; max F1 in the full table is 99.37% (semantic_judge on OSS-ST)."
+  }
+}
