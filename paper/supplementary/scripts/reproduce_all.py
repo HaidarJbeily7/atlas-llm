@@ -131,7 +131,7 @@ def check_per_condition(asr: dict) -> None:
               f"{label} raw ASR = {expected['raw']:.1f}%",
               f"observed {obs['raw']:.1f}%")
         check(close(obs["adj"], expected["adj"], 0.1),
-              f"{label} adjusted ASR = {expected['adj']:.1f}%",
+              f"{label} validated ASR = {expected['adj']:.1f}%",
               f"observed {obs['adj']:.1f}%")
         check(obs["fp"] == expected["fp"] and obs["fn"] == expected["fn"],
               f"{label} FP/FN = {expected['fp']}/{expected['fn']}",

@@ -76,7 +76,7 @@ Each additional variant gives the detector another chance to produce a false pos
 
 **Without human validation**: Scripted multi-turn (51.2% raw ASR) is a moderately effective baseline
 
-**With human validation**: Scripted multi-turn (37.5% adjusted ASR) is weak; 13.7pp was FP inflation — the largest measurement error of any condition
+**With human validation**: Scripted multi-turn (37.5% validated ASR) is weak; 13.7pp was FP inflation — the largest measurement error of any condition
 
 **Mechanism**: Scripted dialogues produce ambiguous outputs that trigger detector FP. 51 of 320 findings were false positives (15.9% FP rate).
 
@@ -86,7 +86,7 @@ Each additional variant gives the detector another chance to produce a false pos
 
 **With human validation**: PAIR-5 (85.9%) matches BoK (85.6%) while realizing only 1.6 target calls on average (68% fewer queries)
 
-**Mechanism**: FP inflation in BoK masks PAIR's query efficiency advantage. Practitioners choosing BoK over PAIR based on raw ASR would use 3x more target queries for equivalent adjusted ASR.
+**Mechanism**: FP inflation in BoK masks PAIR's query efficiency advantage. Practitioners choosing BoK over PAIR based on raw ASR would use 3x more target queries for equivalent validated ASR.
 
 ## Summary: Why Human Validation Is Non-Negotiable
 

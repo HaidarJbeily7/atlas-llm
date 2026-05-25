@@ -17,7 +17,7 @@ Comprehensive per-condition metrics for methodological transparency.
 
 - **Total findings**: 320
 - **Raw ASR**: 15.9% [12.3%, 20.4%]
-- **Human-adjusted ASR**: 14.4% [10.9%, 18.6%]
+- **Human-validated ASR**: 14.4% [10.9%, 18.6%]
 - **Measurement inflation**: +1.6pp
 - **False positives**: 5, **False negatives**: 0
 - **Maximum target-query cap**: 1
@@ -35,7 +35,7 @@ Comprehensive per-condition metrics for methodological transparency.
 
 - **Total findings**: 320
 - **Raw ASR**: 51.2% [45.8%, 56.7%]
-- **Human-adjusted ASR**: 37.5% [32.4%, 42.9%]
+- **Human-validated ASR**: 37.5% [32.4%, 42.9%]
 - **Measurement inflation**: +13.7pp
 - **False positives**: 51, **False negatives**: 7
 - **Maximum target-query cap**: 5
@@ -53,7 +53,7 @@ Comprehensive per-condition metrics for methodological transparency.
 
 - **Total findings**: 320
 - **Raw ASR**: 64.1% [58.7%, 69.1%]
-- **Human-adjusted ASR**: 63.7% [58.4%, 68.8%]
+- **Human-validated ASR**: 63.7% [58.4%, 68.8%]
 - **Measurement inflation**: +0.3pp
 - **False positives**: 4, **False negatives**: 3
 - **Maximum target-query cap**: 1
@@ -71,7 +71,7 @@ Comprehensive per-condition metrics for methodological transparency.
 
 - **Total findings**: 320
 - **Raw ASR**: 85.0% [80.7%, 88.5%]
-- **Human-adjusted ASR**: 85.9% [81.7%, 89.3%]
+- **Human-validated ASR**: 85.9% [81.7%, 89.3%]
 - **Measurement inflation**: -0.9pp
 - **False positives**: 5, **False negatives**: 8
 - **Maximum target-query cap**: 5
@@ -89,7 +89,7 @@ Comprehensive per-condition metrics for methodological transparency.
 
 - **Total findings**: 320
 - **Raw ASR**: 63.4% [58.0%, 68.5%]
-- **Human-adjusted ASR**: 63.4% [58.0%, 68.5%]
+- **Human-validated ASR**: 63.4% [58.0%, 68.5%]
 - **Measurement inflation**: +0.0pp
 - **False positives**: 21, **False negatives**: 21
 - **Maximum target-query cap**: 5
@@ -107,7 +107,7 @@ Comprehensive per-condition metrics for methodological transparency.
 
 - **Total findings**: 320
 - **Raw ASR**: 91.2% [87.6%, 93.9%]
-- **Human-adjusted ASR**: 85.6% [81.4%, 89.0%]
+- **Human-validated ASR**: 85.6% [81.4%, 89.0%]
 - **Measurement inflation**: +5.6pp
 - **False positives**: 23, **False negatives**: 5
 - **Maximum target-query cap**: 5

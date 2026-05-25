@@ -51,7 +51,7 @@ python3 scripts/reproduce_all.py
 Expected output: `52 PASS / 0 FAIL`. The master script verifies:
 
 - Dataset invariants (N, models, intents, conditions, cell balance, double-annotation coverage)
-- Per-condition raw + adjusted ASR + FP/FN counts (Tables 1, 3)
+- Per-condition raw + validated ASR + FP/FN counts (Tables 1, 3)
 - BoK measurement paradox: +5.6pp inflation, +6.2pp raw lead → −0.3pp adjusted (§6)
 - Mechanism regression: ORs, AMEs, p-values, McFadden R² (Table 2)
 - Variance decomposition: mechanism 22.2%, model 5.0%, intent 6.7% (§5)

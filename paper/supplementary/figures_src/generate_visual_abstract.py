@@ -55,7 +55,7 @@ def load_panel_data():
     ec = json.loads((DATA / 'evidence_card.json').read_text())
     md = json.loads((DATA / 'mechanism_decomposition.json').read_text())
 
-    # Panel A: conditions × mechanism encoding × adjusted ASR
+    # Panel A: conditions × mechanism encoding × validated ASR
     # The (llm, fb, mt, div) encoding mirrors Table 1 in the paper.
     conditions_meta = [
         ('baselines', 'OSS-ST',          'direct_single_turn',       0, 0, 0, 0),

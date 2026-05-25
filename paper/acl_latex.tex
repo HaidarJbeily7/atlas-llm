@@ -91,10 +91,10 @@ Our contributions are:
 \label{sec:related}
 
 \paragraph{Automated Red-Teaming.}
-Early LLM red-teaming used LLMs to generate test cases \cite{perez2022red} or human experts \cite{ganguli2022red}. PAIR \cite{chao2023jailbreaking} introduced iterative prompt refinement with an attacker LLM, achieving 4--60\% ASR. TAP \cite{mehrotra2023tree} extended this with tree-search pruning. HarmBench \cite{mazeika2024harmbench} and JailbreakBench \cite{chao2024jailbreakbench} standardized evaluation but test attacks as monolithic strategies. \citet{andriushchenko2024jailbreaking} demonstrated that simple adaptive attacks combining multiple independent vectors achieve near-100\% ASR. WildTeaming \cite{jiang2024wildteaming} mines in-the-wild jailbreaks for diversity. Gradient-based attacks \cite{zou2023gcg} and persuasion-based taxonomies \cite{zeng2024persuade} represent complementary attack families not covered by our mechanism encoding. None of the above works decompose which mechanism---prompt crafting, feedback, diversity---drives success.
+Early LLM red-teaming used LLMs to generate test cases \cite{perez2022red} or human experts \cite{ganguli2022red}. PAIR \cite{chao2023jailbreaking} introduced iterative prompt refinement with an attacker LLM, achieving 4--88\% ASR depending on the target model (4\% on Llama-2, 88\% on Vicuna-13B, 48--51\% on GPT-3.5/4). TAP \cite{mehrotra2023tree} extended this with tree-search pruning. HarmBench \cite{mazeika2024harmbench} and JailbreakBench \cite{chao2024jailbreakbench} standardized evaluation but test attacks as monolithic strategies. \citet{andriushchenko2024jailbreaking} demonstrated that simple adaptive attacks combining multiple independent vectors achieve near-100\% ASR. WildTeaming \cite{jiang2024wildteaming} mines in-the-wild jailbreaks for diversity. Gradient-based attacks \cite{zou2023gcg} and persuasion-based taxonomies \cite{zeng2024persuade} represent complementary attack families not covered by our mechanism encoding. None of the above works decompose which mechanism---prompt crafting, feedback, diversity---drives success.
 
 \paragraph{Multi-Turn Attacks.}
-Crescendo \cite{russinovich2024crescendo} introduced gradual multi-turn escalation, reporting 20--100\% ASR. \citet{hagendorff2026reasoning} achieved 97.1\% with reasoning-model attackers over 10 turns. \citet{li2024multiturn} and \citet{yang2024chain} study multi-turn dynamics; \citet{anil2024manyshot} demonstrate many-shot jailbreaking via long contexts. None compare against single-turn ablations under matched budgets. We cap multi-turn interactions at 5 turns; results may differ at greater depth.
+Crescendo \cite{russinovich2024crescendo} introduced gradual multi-turn escalation, reporting 20--100\% ASR. \citet{hagendorff2026reasoning} achieved 97.1\% with reasoning-model attackers using up to 10 turns. \citet{li2024multiturn} and \citet{yang2024chain} study multi-turn dynamics; \citet{anil2024manyshot} demonstrate many-shot jailbreaking via long contexts. None compare against single-turn ablations under matched budgets. We cap multi-turn interactions at 5 turns; results may differ at greater depth.
 
 \paragraph{Best-of-N Sampling.}
 \citet{hughes2024bestofn} formalized Best-of-N jailbreaking and derived i.i.d.\ scaling laws. AmpleGCG \cite{liao2024amplecgc} uses generative sampling for adversarial suffixes. Neither accounts for within-intent outcome correlation (the ``correlation tax'') or validates automated scores against human labels.
@@ -111,7 +111,7 @@ LLM-as-judge approaches are widely used \cite{mazeika2024harmbench,chao2024jailb
 \subsection{Condition Structure}
 \label{sec:factorial}
 
-We cross two factors---\textbf{adaptivity} (whether an attacker LLM observes target responses at runtime) and \textbf{interaction mode} (single-turn vs.\ multi-turn)---yielding four core cells, plus a direct baseline and a Best-of-K sampling control. Because not all mechanism combinations are realized (e.g., the BoK bundle appears only in one condition; feedback requires LLM-crafted prompting), only 6 of the 16 possible cells in a full 4-factor design are populated. The design is therefore a \textbf{structured ablation}, not a fully crossed factorial; mechanism coefficients are estimated from the six-condition contrast structure in Table~\ref{tab:conditions} (visualized in Figure~\ref{fig:encoding}) and should be interpreted as condition contrasts under a particular binary encoding, not as independently identified causal effects.
+We cross two factors---\textbf{adaptivity} (whether an attacker LLM observes target responses at runtime) and \textbf{interaction mode} (single-turn vs.\ multi-turn)---yielding four core cells, plus a direct baseline and a Best-of-K sampling control. Because not all mechanism combinations are realized (e.g., the BoK bundle appears only in one condition; feedback requires LLM-crafted prompting), only 6 of the 16 possible cells in a full 4-factor design are populated. Mechanism coefficients are estimated from contrasts among these six conditions under the binary encoding in Table~\ref{tab:conditions} (Figure~\ref{fig:encoding}).
 
 The six conditions are designed so that each successive pair differs by exactly one mechanism, enabling controlled comparisons. We describe each condition and the mechanism it isolates:
 
@@ -125,7 +125,7 @@ The six conditions are designed so that each successive pair differs by exactly 
 
 \textbf{AMQ-MT} (Adaptive Multi-Query, Multi-Turn) extends adaptation to multi-turn dialogue: the attacker drives a 5-turn conversation, generating each message based on full history. Comparing AMQ-MT to AMQ-ST tests whether spreading the same adaptive budget across a multi-turn conversation helps or hurts, revealing how targets handle cumulative context.
 
-\textbf{BoK-ST} (Best-of-K, Single-Turn) sends $K{=}5$ strategy-diverse prompts pre-generated offline by DeepSeek-R1, matching PAIR-5's maximum query cap but without runtime feedback \cite{hughes2024bestofn}. The five strategy types are: (1) role-play persona, (2) hypothetical scenario framing, (3) code-generation pretext, (4) educational/research framing, and (5) creative writing wrapper (see Appendix~\ref{app:scripts} for full descriptions). This condition tests the combined effect of strategy diversity, repeated sampling, and offline generation---we term this the ``BoK bundle'' because these factors cannot be separated within a single condition.
+\textbf{BoK-ST} (Best-of-K, Single-Turn) sends $K{=}5$ strategy-diverse prompts pre-generated offline by DeepSeek-R1, matching PAIR-5's maximum query cap but without runtime feedback \cite{hughes2024bestofn}. The five strategy types are: (1) role-play persona, (2) hypothetical scenario framing, (3) code-generation pretext, (4) educational/research framing, and (5) creative writing wrapper (see Appendix~\ref{app:scripts} for full descriptions). Each $(model, intent)$ cell is recorded as a \emph{single finding} whose label is the OR of its $K{=}5$ variant outcomes (the any-of-K rule), yielding 320 BoK-ST findings comparable to the 320 in every other condition; the underlying 1{,}600 BoK target outputs are all human-reviewed, but ASR is computed at the cell level. This condition tests the combined effect of strategy diversity, repeated sampling, and offline generation---we term this the ``BoK bundle'' because these factors cannot be separated within a single condition.
 
 \vspace{0.5em}
 \nolinenumbers
@@ -162,11 +162,11 @@ BoK-ST & $K{=}5$ pre-generated diverse-strategy variants \\
 
 \paragraph{Target models.} We test 8 frontier LLMs spanning major providers: Claude Sonnet 4 \cite{anthropic2025claude}, GPT-4o and GPT-4o-mini \cite{openai2024gpt4o}, Gemini 2.5 Flash \cite{google2025gemini}, LLaMA 3.3 70B \cite{meta2024llama3}, Mistral Large 2411 \cite{mistral2024large}, DeepSeek-v3-0324 \cite{deepseek2025v3}, and Qwen 2.5 72B \cite{qwen2024qwen25}. All models are accessed via API in black-box mode (no logprobs, no prefilling). The attacker LLM is DeepSeek-R1 \cite{deepseek2025r1}, a reasoning model selected for its chain-of-thought capabilities.
 
-\paragraph{Harm intents.} We use 40 harm intents drawn from established red-teaming taxonomies \cite{mazeika2024harmbench,chao2024jailbreakbench}, spanning six categories: cybercrime (e.g., ransomware, keylogger), CBRN (chemical, biological, radiological, nuclear), social manipulation (e.g., phishing, deepfakes), content policy (e.g., hate speech), prompt security (e.g., prompt injection, system prompt extraction), and financial crime (e.g., money laundering). The full list is in Appendix~\ref{app:intents}. Intents were selected to cover the breadth of harm categories in HarmBench \cite{mazeika2024harmbench} while ensuring each is specific enough to evaluate unambiguously. Every intent is shared across all 8 models and 6 conditions, yielding $8 \times 6 \times 40 = 1{,}920$ total attacks.
+\paragraph{Harm intents.} We use 40 harm intents drawn from established red-teaming taxonomies \cite{mazeika2024harmbench,chao2024jailbreakbench}, spanning six categories: cybercrime (e.g., ransomware, keylogger), CBRN (chemical, biological, radiological, nuclear), social manipulation (e.g., phishing, deepfakes), content policy (e.g., hate speech), prompt security (e.g., prompt injection, system prompt extraction), and financial crime (e.g., money laundering). The full list is in Appendix~\ref{app:intents}. Intents were selected to cover the breadth of harm categories in HarmBench \cite{mazeika2024harmbench} while ensuring each is specific enough to evaluate unambiguously. Every intent is shared across all 8 models and 6 conditions, yielding $8 \times 6 \times 40 = 1{,}920$ $(model, condition, intent)$ findings. BoK-ST's 5 variant prompts per cell are aggregated into a single any-of-K finding (\S\ref{sec:factorial}). With 320 cells per condition ($8 \times 40$), this gives $1{,}600$ outputs from BoK-ST ($320 \times 5$ variants) and $1{,}600$ from the other five conditions ($5 \times 320$), for a total of $3{,}200$ target outputs---all human-reviewed.
 
 \subsection{Human Annotation Protocol}
 
-All 1,920 findings were independently annotated by two trained security researchers (each with 3+ years of penetration testing experience, neither involved in intent authoring or script design) using a standardized rubric (binary safe/unsafe; see Appendix~\ref{app:rubric}). Annotators completed a 2-hour calibration session on 50 held-out examples before the main task. Mean annotation time was ${\sim}$90 seconds per finding (${\sim}$48 person-hours total). Inter-annotator agreement: Cohen's $\kappa = 0.81$ (substantial). Disagreements (${\sim}$12\%, 230 findings) were resolved by a third senior adjudicator who was blind to annotator identities and detector verdicts. \textit{Adjusted ASR} corrects for false positives (automated success, human-rejected) and false negatives (automated refusal, human-confirmed bypass).
+All 1,920 findings were independently annotated by two trained security researchers (each with 3+ years of penetration testing experience, neither involved in intent authoring or script design) using a standardized rubric (binary safe/unsafe; see Appendix~\ref{app:rubric}). Annotators completed a calibration phase on 50 held-out examples before the main task. Mean annotation time was ${\sim}$90 seconds per finding (${\sim}$48 person-hours total). Inter-annotator agreement: Cohen's $\kappa = 0.81$ (substantial). Disagreements (${\sim}$12\%, 230 findings) were resolved by a third senior adjudicator who was blind to annotator identities and detector verdicts. We report \textit{human-validated ASR}---the success rate computed against post-adjudication human labels rather than the automated detector verdict---which captures both false positives (automated success, human-rejected) and false negatives (automated refusal, human-confirmed bypass).
 
 \subsection{Statistical Methods}
 
@@ -181,7 +181,7 @@ Pairwise comparisons use McNemar's exact test on $(model, intent\_id)$ pairs wit
 \subsection{RQ1: Attack Effectiveness and Cost-Efficiency}
 \label{sec:rq1}
 
-Table~\ref{tab:asr} presents raw and human-adjusted ASR across conditions. After Bonferroni correction across 15 pairwise comparisons, conditions cluster into four tiers: \textbf{Tier 1} ($>$85\% raw): BoK-ST and AMQ-ST (tied after human review); \textbf{Tier 2} (${\sim}$64\%): ASQ-ST and AMQ-MT (tied, $p{=}1.0$); \textbf{Tier 3} (${\sim}$51\%): SS-MT; \textbf{Tier 4} (${\sim}$16\%): OSS-ST. Every adjacent-tier comparison is significant ($p < 0.014$).
+Table~\ref{tab:asr} presents raw and human-validated ASR across conditions. After Bonferroni correction across 15 pairwise comparisons, conditions cluster into four tiers: \textbf{Tier 1} ($>$85\% raw): BoK-ST and AMQ-ST (tied after human review); \textbf{Tier 2} (${\sim}$64\%): ASQ-ST and AMQ-MT (tied, $p{=}1.0$); \textbf{Tier 3} (${\sim}$51\%): SS-MT; \textbf{Tier 4} (${\sim}$16\%): OSS-ST. Every adjacent-tier comparison is significant ($p < 0.014$).
 
 \vspace{0.5em}
 \nolinenumbers
@@ -189,7 +189,7 @@ Table~\ref{tab:asr} presents raw and human-adjusted ASR across conditions. After
 \begin{minipage}{\columnwidth}
 \centering
 \small
-\captionof{table}{ASR (\%) and cost per attack (\$). Adj.\ = human-validated. AMQ-ST and BoK-ST converge at ${\sim}$86\% adjusted ASR despite BoK-ST leading by 6.2pp raw.}
+\captionof{table}{ASR (\%) and cost per attack (\$). Adj.\ = human-validated. AMQ-ST and BoK-ST converge at ${\sim}$86\% validated ASR despite BoK-ST leading by 6.2pp raw.}
 \label{tab:asr}
 \vspace{0.3em}
 \begin{tabular}{lrrrrr}
@@ -210,14 +210,14 @@ BoK-ST & 91.2 & 85.6 & 23 & 5 & .018 \\
 
 \paragraph{The multi-turn penalty (under a 5-turn budget).} AMQ-MT (63.4\%) significantly underperforms AMQ-ST (85.9\%) under the same maximum 5-query cap ($p < 0.001$). Multi-turn conversation gives the target 5 opportunities to re-assess and refuse (refusal rate: 36.6\% vs.\ 14.1\%), and the attacker's refinement signal is diluted by accumulating context. This finding holds under our 5-turn cap; \citet{hagendorff2026reasoning} achieve 97.1\% with 10-turn budgets, so the multi-turn trade-off likely reverses at greater depth.
 
-\paragraph{PAIR-1 vs.\ PAIR-5 ablation.} PAIR-1 achieves 63.7\% adjusted ASR---capturing \textbf{69\% of the total adaptive gain} above the OSS-ST baseline (49.3pp of 71.5pp). Iterative refinement adds +22.2pp ($p < 0.001$), a \textbf{31\% share} of total gain. The attacker LLM's initial reasoning dominates over closed-loop adaptation.
+\paragraph{PAIR-1 vs.\ PAIR-5 ablation.} PAIR-1 achieves 63.7\% validated ASR---capturing \textbf{69\% of the total adaptive gain} above the OSS-ST baseline (49.3pp of 71.5pp). Iterative refinement adds +22.2pp ($p < 0.001$), a \textbf{31\% share} of total gain. The attacker LLM's initial reasoning dominates over closed-loop adaptation.
 
-\paragraph{Cost-efficiency.} PAIR-1 delivers the best cost-per-success (\$0.011) at 63.7\% ASR. PAIR-5 provides the highest adjusted ASR (85.9\%) at \$0.016/success. BoK-ST is dominated: 30\% more expensive, 2$\times$ slower, equivalent adjusted ASR.
+\paragraph{Cost-efficiency.} PAIR-1 delivers the best cost-per-success (\$0.011) at 63.7\% ASR. PAIR-5 provides the highest validated ASR (85.9\%) at \$0.016/success. BoK-ST is dominated: 30\% more expensive, 2$\times$ slower, equivalent validated ASR.
 
 \subsection{Per-Model Analysis}
 \label{sec:permodel}
 
-Table~\ref{tab:permodel} shows per-model adjusted ASR. Claude Sonnet 4 resists attacks ${\sim}$2$\times$ better than any other model (28.8\% overall ASR), the only model where adjusted ASR remains below 50\% across all conditions. GPT-4o shows the sharpest collapse: 0\% adjusted OSS-ST (raw: 5\%, 2 FPs overturned) $\rightarrow$ 87.5\% AMQ-ST. DeepSeek-v3 achieves 100\% ASR under PAIR-5---complete safety bypass. Qwen shows the largest BoK gain: 2.5\% OSS-ST $\rightarrow$ 92.5\% BoK-ST, revealing format-dependent rather than objective-aware safety.
+Table~\ref{tab:permodel} shows per-model validated ASR. Claude Sonnet 4 resists attacks ${\sim}$2$\times$ better than any other model (28.8\% overall ASR), the only model where validated ASR remains below 50\% across all conditions. GPT-4o shows the sharpest collapse: 0\% validated OSS-ST (raw: 5\%, 2 FPs overturned) $\rightarrow$ 87.5\% AMQ-ST. DeepSeek-v3 achieves 100\% ASR under PAIR-5---complete safety bypass. Qwen shows the largest BoK gain: 2.5\% OSS-ST $\rightarrow$ 92.5\% BoK-ST, revealing format-dependent rather than objective-aware safety.
 
 \vspace{0.5em}
 \nolinenumbers
@@ -226,13 +226,13 @@ Table~\ref{tab:permodel} shows per-model adjusted ASR. Claude Sonnet 4 resists a
 \centering
 \small
 \setlength{\tabcolsep}{3pt}
-\captionof{table}{\textbf{Human-adjusted} ASR (\%) by model and condition (all values reflect post-adjudication human labels; cf.\ raw detector ASR in Table~\ref{tab:permodel_budget}). Claude Sonnet 4 is the most robust (28.8\% overall); Mistral Large is the most vulnerable (75.0\%).}
+\captionof{table}{\textbf{Human-validated} ASR (\%) by model and condition (all values reflect post-adjudication human labels; cf.\ raw detector ASR in Table~\ref{tab:permodel_budget}). Claude Sonnet 4 is the most robust (28.8\% overall); Mistral Large is the most vulnerable (75.0\%).}
 \label{tab:permodel}
 \vspace{0.3em}
 \begin{tabular}{lrrrrrr}
 \toprule
 \textbf{Model} & \textbf{OSS} & \textbf{SS} & \textbf{ASQ} & \textbf{MT} & \textbf{AMQ} & \textbf{BoK} \\
- & \multicolumn{6}{c}{\scriptsize\textit{(human-adjusted ASR)}} \\
+ & \multicolumn{6}{c}{\scriptsize\textit{(human-validated ASR)}} \\
 \midrule
 Claude S4 & 12.5 & 12.5 & 25.0 & 30.0 & 45.0 & 47.5 \\
 GPT-4o & 0.0\textsuperscript{$\dagger$} & 25.0 & 57.5 & 72.5 & 87.5 & 85.0 \\
@@ -326,7 +326,7 @@ Feedback$\times$MT & 0.04 & --- & --- & $<$.001 \\
 
 \paragraph{Key findings.} (1) LLM-crafted prompting shows the largest estimated association (+36.6pp), 3.6$\times$ the feedback coefficient; this ranking is measured with DeepSeek-R1 as attacker and may differ with weaker models. (2) The BoK-bundle contrast (+22.4pp) is larger than the feedback contrast (+10.2pp); however, this coefficient is identified from a single condition (BoK-ST vs.\ ASQ-ST) and conflates strategy diversity with repeated sampling ($K{=}5$ independent draws), offline prompt generation, and the any-of-K aggregation rule. (3) We find no marginal effect for multi-turn context under the 5-turn cap used in this experiment (+0.3pp, ns); the apparent AMQ-MT disadvantage in pairwise tests was driven by the strongly negative feedback$\times$multi-turn interaction (OR=0.04), confirming the defense-amplification hypothesis at this budget. (4) Attack mechanism accounts for 22.2\% of model deviance (McFadden pseudo-$R^2$ contribution), exceeding target model (5.0\%) and intent (6.7\%).
 
-\paragraph{Identification and saturation.} With 4 main effects + 1 interaction consuming 5 degrees of freedom among 6 conditions, the model is nearly saturated at the condition level: the mechanism coefficients are a reparameterization of the six condition-level ASRs under a particular binary encoding (Table~\ref{tab:encoding}). An alternative encoding would yield different ``mechanism effects.'' We therefore interpret these coefficients as structured condition contrasts, not independently identified causal effects. In particular, the BoK-bundle coefficient is identified from a single condition contrast (BoK-ST vs.\ ASQ-ST) and cannot separate strategy diversity from repeated sampling or the any-of-K aggregation rule.
+\paragraph{Identification and saturation.} With 4 main effects + 1 interaction across 6 conditions, the model is nearly saturated: the mechanism coefficients reparameterize the six condition-level ASRs under the encoding in Table~\ref{tab:encoding}. The BoK-bundle coefficient is identified from a single contrast (BoK-ST vs.\ ASQ-ST) and aggregates strategy diversity, repeated sampling, and the any-of-K rule into one estimate.
 
 \paragraph{Attacker-capability dependence.} All mechanism estimates use DeepSeek-R1, a frontier reasoning model, as the attacker. This is a significant scope limitation: the +36.6pp LLM-crafted coefficient reflects DeepSeek-R1's strong single-shot prompt quality. With a weaker attacker (e.g., a non-reasoning model), initial prompt quality would be lower and iterative feedback may become relatively more important, potentially changing the mechanism ranking. The decomposition characterizes the design space \textit{given a capable reasoning-model attacker}; the relative ordering may shift substantially for weaker attackers. Future work should replicate with at least one non-reasoning attacker to test robustness of the mechanism hierarchy.
 
@@ -400,11 +400,11 @@ The mechanism is \textbf{any-of-K false-positive accumulation}: each additional 
 \section{Discussion}
 \label{sec:practical}
 
-\paragraph{For red-teamers.} PAIR-5 is the recommended primary strategy: highest adjusted ASR (85.9\%), cost-efficient (\$0.014/attack), unambiguous measurements (Safety Judge F1 $>$ 97\%). PAIR front-loads success: 68.1\% of attacks succeed at iteration 1, so even PAIR-1 delivers strong value in time-constrained settings. Use BoK-ST to probe strategy-specific blind spots (e.g., GPT-4o-mini: +60pp diversity gain).
+\paragraph{For red-teamers.} PAIR-5 is the recommended primary strategy: highest validated ASR (85.9\%), cost-efficient (\$0.014/attack), unambiguous measurements (Safety Judge F1 $>$ 97\%). PAIR front-loads success: 68.1\% of attacks succeed at iteration 1, so even PAIR-1 delivers strong value in time-constrained settings. Use BoK-ST to probe strategy-specific blind spots (e.g., GPT-4o-mini: +60pp diversity gain).
 
 \paragraph{For model developers.} Focus safety training on resisting \textbf{LLM-crafted prompts}---the factor with the largest estimated association (+36.6pp AME with a frontier reasoning-model attacker). Per-model budget curves reveal two vulnerability archetypes: models with high diversity gain and low correlation tax (GPT-4o-mini: +60.0pp gain, 2.6pp tax) have \textit{strategy-specific} blind spots; models with high correlation tax (Claude Sonnet 4: +27.9pp) have \textit{objective-aware} defenses. Safety alignment must recognize harmful intent regardless of framing.
 
-\paragraph{For benchmark designers.} Always report adjusted ASR alongside raw ASR, especially for Best-of-K benchmarks. Specify which detector scores results---detector choice swings reported ASR by 40--60pp. PAIR-style conditions are most reliable for automated benchmarking (net correction $<$1pp).
+\paragraph{For benchmark designers.} Always report validated ASR alongside raw ASR, especially for Best-of-K benchmarks. Specify which detector scores results---detector choice swings reported ASR by 40--60pp. PAIR-style conditions are most reliable for automated benchmarking (net correction $<$1pp).
 
 % ============================================================
 % 8. LIMITATIONS
@@ -644,7 +644,7 @@ Because the prompts are LLM-generated (by the same DeepSeek-R1 used as attacker 
 \section{Category-Level ASR Breakdown}
 \label{app:category}
 
-Table~\ref{tab:category} reports human-adjusted ASR by harm category, aggregated across models. The LLM-crafted advantage (ASQ-ST vs.\ OSS-ST) is consistent across all categories (+35--55pp), supporting the generality of this finding. The BoK-bundle advantage is largest for prompt security (+42pp) and smallest for CBRN (+18pp), suggesting that strategy diversity is more effective against format-dependent defenses. Category-level variation in mechanism effects is a direction for future work with larger per-category samples.
+Table~\ref{tab:category} reports human-validated ASR by harm category, aggregated across models. The LLM-crafted advantage (ASQ-ST vs.\ OSS-ST) is consistent across all categories (+35--55pp), supporting the generality of this finding. The BoK-bundle advantage is largest for prompt security (+42pp) and smallest for CBRN (+18pp), suggesting that strategy diversity is more effective against format-dependent defenses. Category-level variation in mechanism effects is a direction for future work with larger per-category samples.
 
 \vspace{0.5em}
 \nolinenumbers
@@ -653,7 +653,7 @@ Table~\ref{tab:category} reports human-adjusted ASR by harm category, aggregated
 \centering
 \small
 \setlength{\tabcolsep}{3pt}
-\captionof{table}{Human-adjusted ASR (\%) by harm category (aggregated across 8 models). $n$ = number of intents per category.}
+\captionof{table}{Human-validated ASR (\%) by harm category (aggregated across 8 models). $n$ = number of intents per category.}
 \label{tab:category}
 \vspace{0.3em}
 \begin{tabular}{lcrrrrrr}

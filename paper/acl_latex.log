@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.10.16)  25 MAY 2026 12:43
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.10.16)  25 MAY 2026 16:11
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -679,6 +679,17 @@ ly LLM red-
 
 
 [2]
+Underfull \hbox (badness 1939) in paragraph at lines 128--129
+\T1/ptm/m/n/10.95 (+20) strategy-diverse prompts pre-generated of-fline
+ []
+
+
+Underfull \hbox (badness 2134) in paragraph at lines 128--129
+\T1/ptm/m/n/10.95 (+20) et al.[][], [][]2024[][]). The five strat-egy types are
+:
+ []
+
+
 
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
@@ -705,7 +716,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 148--149
 rse-
  []
 
-<figures/fig_panel_a.pdf, id=240, 561.7587pt x 244.86732pt>
+<figures/fig_panel_a.pdf, id=238, 561.7587pt x 244.86732pt>
 File: figures/fig_panel_a.pdf Graphic file (type pdf)
 <use figures/fig_panel_a.pdf>
 Package pdftex.def Info: figures/fig_panel_a.pdf  used on input line 156.
@@ -713,9 +724,6 @@ Package pdftex.def Info: figures/fig_panel_a.pdf  used on input line 156.
 
 
 [3 <./figures/fig_panel_a.pdf>]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
 
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
@@ -723,13 +731,12 @@ Package caption Warning: The option `hypcap=true' will be ignored for this
 See the caption package documentation for explanation.
 
 
+
+[4]
 Underfull \hbox (badness 1622) in paragraph at lines 215--216
 \T1/ptm/m/n/10.95 (+20) per-success ($0.011) at 63.7% ASR. PAIR-5
  []
 
-
-
-[4]
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
 (caption)                particular \caption on input line 229.
@@ -741,27 +748,30 @@ Package caption Warning: The option `hypcap=true' will be ignored for this
 See the caption package documentation for explanation.
 
 
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
 
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
 (caption)                particular \caption on input line 301.
 See the caption package documentation for explanation.
 
-<figures/fig_panel_b.pdf, id=338, 502.71928pt x 249.3037pt>
+<figures/fig_panel_b.pdf, id=337, 502.71928pt x 249.3037pt>
 File: figures/fig_panel_b.pdf Graphic file (type pdf)
 <use figures/fig_panel_b.pdf>
 Package pdftex.def Info: figures/fig_panel_b.pdf  used on input line 322.
 (pdftex.def)             Requested size: 219.08614pt x 108.64783pt.
 
 
-[5 <./figures/fig_panel_b.pdf>]
+[5]
 
 LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 3
 46.
 (/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 )
-<figures/fig_budget.pdf, id=380, 932.3081pt x 318.06142pt>
+<figures/fig_budget.pdf, id=357, 932.3081pt x 318.06142pt>
 File: figures/fig_budget.pdf Graphic file (type pdf)
 <use figures/fig_budget.pdf>
 Package pdftex.def Info: figures/fig_budget.pdf  used on input line 353.
@@ -772,17 +782,18 @@ Package caption Warning: The option `hypcap=true' will be ignored for this
 (caption)                particular \caption on input line 369.
 See the caption package documentation for explanation.
 
-<figures/fig_panel_c.pdf, id=383, 445.86577pt x 273.11736pt>
-File: figures/fig_panel_c.pdf Graphic file (type pdf)
-<use figures/fig_panel_c.pdf>
-Package pdftex.def Info: figures/fig_panel_c.pdf  used on input line 390.
-(pdftex.def)             Requested size: 219.08614pt x 134.20374pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
-[6 <./figures/fig_budget.pdf>]
+[6 <./figures/fig_panel_b.pdf> <./figures/fig_budget.pdf>]
+<figures/fig_panel_c.pdf, id=425, 445.86577pt x 273.11736pt>
+File: figures/fig_panel_c.pdf Graphic file (type pdf)
+<use figures/fig_panel_c.pdf>
+Package pdftex.def Info: figures/fig_panel_c.pdf  used on input line 390.
+(pdftex.def)             Requested size: 219.08614pt x 134.20374pt.
+
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 417--418
@@ -798,6 +809,8 @@ Underfull \hbox (badness 1946) in paragraph at lines 16--26
  []
 
 
+
+
 Underfull \hbox (badness 1253) in paragraph at lines 37--43
 \T1/ptm/m/n/10 (+20) Se-hwag, Edgar Do-briban, Nico-las Flam-mar-ion,
  []
@@ -806,8 +819,6 @@ Underfull \hbox (badness 1253) in paragraph at lines 37--43
 Underfull \hbox (badness 1199) in paragraph at lines 46--51
 []\T1/ptm/m/n/10 (+20) Patrick Chao, Alexan-der Robey, Edgar Do-briban,
  []
-
-
 
 
 
@@ -822,11 +833,11 @@ Underfull \hbox (badness 1867) in paragraph at lines 660--666
  []
 
 
+
+
 Underfull \hbox (badness 4084) in paragraph at lines 676--682
 []\T1/ptm/m/n/10 (+20) Alexandra Souly, Qingyuan Lu, Dil-lon Bowen,
  []
-
-
 
 )
 
@@ -930,13 +941,13 @@ Package rerunfilecheck Info: File `acl_latex.out' has not changed.
 (rerunfilecheck)             Checksum: 6C5455DE27C25CB84C460EEC815FE0C6;4336.
  ) 
 Here is how much of TeX's memory you used:
- 16605 strings out of 473190
- 261818 string characters out of 5715799
- 895236 words of memory out of 5000000
+ 16602 strings out of 473190
+ 261794 string characters out of 5715799
+ 897150 words of memory out of 5000000
  39053 multiletter control sequences out of 15000+600000
- 637476 words of font info for 393 fonts, out of 8000000 for 9000
+ 637346 words of font info for 391 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 84i,14n,93p,25434b,634s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 84i,14n,93p,25434b,626s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
 ></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><
 /usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></u
@@ -954,10 +965,10 @@ fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/type
 1/urw/times/utmbi8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/urw/tim
 es/utmr8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/urw/times/utmri8a
 .pfb>
-Output written on acl_latex.pdf (12 pages, 479532 bytes).
+Output written on acl_latex.pdf (12 pages, 480391 bytes).
 PDF statistics:
- 718 PDF objects out of 1000 (max. 8388607)
- 604 compressed objects within 7 object streams
+ 719 PDF objects out of 1000 (max. 8388607)
+ 605 compressed objects within 7 object streams
  126 named destinations out of 1000 (max. 500000)
  72933 words of extra memory for PDF output out of 74296 (max. 10000000)
 
